@@ -575,7 +575,9 @@ img[src^="data:image/webp"]{image-rendering:auto!important}
 #chat.off{display:none!important}
 #buffs{position:absolute;left:0;top:calc(100% + 6px);display:flex;flex-wrap:wrap;gap:4px;pointer-events:auto}#buffs:empty{display:none}
 #tip{position:absolute;z-index:60;max-width:260px;padding:8px 10px;border-radius:10px;background:rgba(12,16,34,.95);border:1px solid rgba(255,210,120,.45);box-shadow:0 6px 18px rgba(0,0,0,.5);font-size:12px;line-height:1.4;pointer-events:none;color:#e8ecff}#tip b{color:#ffe07a;font-size:13px}#tip .tlv{color:#9fd8ff;font-size:11px;margin-left:4px}#tip div{margin:3px 0}#tip small{display:block;opacity:.8}#tip small.warn{color:#ff9a8a;opacity:1}#tip small.nx{color:#9ef0b0;opacity:1}
+#gmann{position:absolute;left:50%;top:70px;transform:translateX(-50%);z-index:80;padding:10px 22px;border-radius:12px;background:rgba(40,24,6,.9);border:1px solid #ffcf4a;color:#ffe9a0;font-size:16px;font-weight:700;opacity:0;pointer-events:none;max-width:80%;text-align:center}#gmann.on{animation:gmann 7s ease forwards}@keyframes gmann{0%{opacity:0;top:50px}8%{opacity:1;top:70px}85%{opacity:1}100%{opacity:0}}
 #auth{z-index:200}.authc{max-width:380px;margin:auto}.atabs{display:flex;gap:6px;margin:6px 0 12px}.atabs button{flex:1;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:inherit;font:inherit;cursor:pointer}.atabs button.on{background:rgba(255,210,74,.18);border-color:#ffd24a;color:#ffe07a}#auth .fld input{width:100%}.alink{background:none;border:0;color:#9fd8ff;font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin:6px auto 0;display:block}.aor{display:flex;align-items:center;gap:8px;margin:12px 0;opacity:.6;font-size:12px}.aor:before,.aor:after{content:'';flex:1;height:1px;background:rgba(255,255,255,.2)}.gbtn{width:100%;background:#fff!important;color:#222!important}.gbtn b{color:#4285f4;margin-right:6px}#aview .btn.big{width:100%;margin-top:6px}.amsg{min-height:18px;margin-top:8px;font-size:12px;text-align:center}.amsg.bad{color:#ff9a8a}.amsg.ok{color:#9ef0b0}.acct{display:flex;justify-content:center;gap:8px;align-items:center;font-size:12px;opacity:.85;margin:-4px 0 6px}.acct .alink{margin:0}
+#pinv{position:absolute;left:50%;bottom:110px;transform:translateX(-50%);z-index:90;padding:12px 16px;text-align:center;font-size:14px}#pinv .btns{display:flex;gap:8px;justify-content:center;margin-top:8px}.pinvrow{display:flex;gap:6px;margin:8px 0}.pinvrow input{flex:1}.plist{display:flex;flex-direction:column;gap:4px}.prow{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:10px;background:rgba(255,255,255,.04)}.prow .l{flex:1}.prow small{display:block;opacity:.7;font-size:11px}.prow.off{opacity:.5}.pdot{width:8px;height:8px;border-radius:50%;background:#5ee08a}.prow.off .pdot{background:#777}.php{display:block;height:4px;border-radius:2px;background:#3a1420;margin-top:3px;overflow:hidden}.php i{display:block;height:100%;background:#ff4f64}#ptyhud{position:absolute;left:0;top:calc(100% + 40px);display:flex;flex-direction:column;gap:3px;min-width:130px}#ptyhud:empty{display:none}#ptyhud .pth{font-size:10px;color:#9ef08a;font-weight:700}#ptyhud .pm{font-size:11px;padding:3px 6px;border-radius:6px;background:rgba(10,14,30,.7)}#ptyhud .pm.off{opacity:.5}
 </style>
 
 <div id="game">
@@ -1261,9 +1263,9 @@ function dmgMob(m,mult,col,o={}){if(S.inv>gt){S.inv=0;toast('สถานะอ�
  m.hp-=dmg;m.agg=true;m.ret=false;m.flash=.12;m.hitT=gt;S.combat=gt;hitFx(m,o.kind||'phys',crit);if(o.stun&&!m.T.boss)m.stun=gt+o.stun;if(o.slow)m.slow=gt+o.slow;if(!m.T.boss&&P){const a=Math.atan2(m.y-P.y,m.x-P.x),nx=m.x+Math.cos(a)*4,ny=m.y+Math.sin(a)*4;if(canStand(nx,ny)){m.x=nx;m.y=ny}}float(m.x,m.y-m.T.r*1.6,(crit?'คริ! ':'')+dmg,crit?'#ffd166':(col||'#ffffff'),crit);
  if(m.hp<=0)killMob(m);return dmg}
 function killMob(m){const T=m.T;removeMob(m);P.kills++;P.mk=P.mk||{};if(!P.mk[m.type]){P.mk[m.type]=0;toast('📖 บันทึก '+T.n+' ลงสมุดมอนสเตอร์แล้ว')}P.mk[m.type]++;
- const B=m.rb?1.5:1,ex=Math.round(T.exp*B),g=Math.round((T.gold[0]+(R()*(T.gold[1]-T.gold[0]+1)|0))*B);if(m.rb){chat('sys','',P.name+' ปราบ'+mobName(m)+'! รางวัล ×1.5 · เกิดใหม่ใน 5 นาที','#ff9ad5');toast('ปราบ'+mobName(m)+'! รางวัล ×1.5')}
+ const B=m.rb?1.5:1,PB=typeof partyBonus==='function'?partyBonus():1,ex=Math.round(T.exp*B*PB),g=Math.round((T.gold[0]+(R()*(T.gold[1]-T.gold[0]+1)|0))*B);if(m.rb){chat('sys','',P.name+' ปราบ'+mobName(m)+'! รางวัล ×1.5 · เกิดใหม่ใน 5 นาที','#ff9ad5');toast('ปราบ'+mobName(m)+'! รางวัล ×1.5')}
  P.gold+=g;sfx('coin');gainBoth(ex,mobName(m),P.x,P.y-92);TXT.push({x:P.x,y:P.y-124,s:'+'+g+' ทอง',c:'#ffd966',t:0});
- const dr=D().drop*B;for(const [id,p] of T.loot)if(R()<Math.min(1,p*dr))dropAt(m,id,0);
+ const dr=D().drop*B*PB;for(const [id,p] of T.loot)if(R()<Math.min(1,p*dr))dropAt(m,id,0);
  for(const [tier,p] of T.gear||[])if(R()<Math.min(1,p*dr)){const pool=GEAR_T[tier],id=pool[R()*pool.length|0];dropAt(m,id,0,makeInst(id,rollRarity(dr*(T.rboost||1))))}
  {const po=Math.min(.45,.004*T.lv*T.lv/4+.002)*(T.boss?12:1)*dr;if(R()<po)dropAt(m,'orew',0);if(R()<po)dropAt(m,'orea',0)}
  if(T.card&&R()<Math.min(1,T.card*dr)){dropAt(m,'c_'+m.type,0);chat('sys','',T.n+' ดรอปการ์ด!')}
@@ -2209,7 +2211,7 @@ function heroAt(e,look,name,nameCol,me){const pose=me?poseOf():(e.gest&&e.gest.u
  if(me&&P){const d=D(),w=22,bx=x-11,by=headY-6;lc.fillStyle='#0a0d1a';lc.fillRect(bx-1,by-1,w+2,6);
   lc.fillStyle='#3a1420';lc.fillRect(bx,by,w,2);lc.fillStyle=P.hp/d.mhp<.3&&Math.floor(gt*4)%2?'#ff9aa8':'#ff4f64';lc.fillRect(bx,by,Math.max(0,Math.round(w*P.hp/d.mhp)),2);
   lc.fillStyle='#14213a';lc.fillRect(bx,by+3,w,1);lc.fillStyle='#4f8dff';lc.fillRect(bx,by+3,Math.max(0,Math.round(w*P.mp/d.mmp)),1)}
- if(name&&(!P||P.opts.names||me))LBL.push([name,x*2,(me?headY-8:headY-3)*2,nameCol,11]);e._hh=y-headY+16;return y}
+ if(name&&(!P||P.opts.names||me))LBL.push([me&&typeof ISGM!=='undefined'&&ISGM?'[GM] '+name:name,x*2,(me?headY-8:headY-3)*2,me&&typeof ISGM!=='undefined'&&ISGM?'#ffcf4a':nameCol,11]);e._hh=y-headY+16;return y}
 function drawNpc(n){if(P&&!n.wander||P&&n.wander&&gt<n.wt){const dp=Math.hypot(P.x-n.x,P.y-n.y);if(dp<120)n.fx=P.x>=n.x?1:-1;if(!n.gnext)n.gnext=gt+2+R()*6;if(gt>n.gnext){n.gnext=gt+5+R()*8;const k=dp<120?'wave':(R()<.5?'hop':'wave');n.gest={k,t0:gt,dur:k==='hop'?.45:.9,until:gt+(k==='hop'?.45:.9)}}}
  const y=heroAt(n,n.look||NPCLOOK[n.id],n.n,'#f0d28a',false);const q=n.id==='elder'&&P?questMark():n.id==='jobmaster'&&P&&P.cls==='novice'&&P.jlv>=10&&!(P.spts>0)?'!':null;
  if(q)LBL.push([q,ax(n.x)*2,(y-(n._hh||42)+Math.floor(gt*3)%2)*2,q==='?'?'#a2e05a':'#ffd24a',22])}
@@ -2711,13 +2713,13 @@ $('#bar').addEventListener('drop',e=>{const b=e.target.closest('.sk[data-h]');if
 function useHot(j){const e=P.hot[j];if(!e)return toast('ช่อง '+hotKey(j)+' ว่างอยู่');if(e.t==='s')return useSkill(e.i);if(!countItem(e.id))return toast('ไม่มี '+IT[e.id].n+' ในกระเป๋า');useItem(e.id)}
 function setHot(j,e){for(let k=0;k<10;k++){const x=P.hot[k];if(x&&e&&x.t===e.t&&(x.i===e.i&&x.id===e.id))P.hot[k]=null}P.hot[j]=e;S.assign=null;buildBar();save()}
 function startAssign(e){S.assign=e;$('#bar').classList.add('assigning');toast('กดปุ่ม 1–9, 0 หรือคลิกช่องปุ่มลัดด้านล่างเพื่อวาง')}
-const MENU=[['char','ตัวละคร','C','bust'],['inv','กระเป๋า','I','bag'],['skill','สกิล','K','star'],['life','ทักษะชีวิต','G','leaf'],['quest','เควส','L','scroll'],['map','แผนที่','M','map'],['book','สมุดมอนสเตอร์','B','eye'],['opt','ตั้งค่า','O','gear']];
-const WICON={farm:'leaf',life:'leaf',refine:'hammer',job:'crown',bank:'chest',char:'bust',inv:'bag',skill:'star',quest:'scroll',shop:'shop',map:'map',opt:'gear',book:'eye'};
+const MENU=[['char','ตัวละคร','C','bust'],['inv','กระเป๋า','I','bag'],['skill','สกิล','K','star'],['life','ทักษะชีวิต','G','leaf'],['quest','เควส','L','scroll'],['map','แผนที่','M','map'],['book','สมุดมอนสเตอร์','B','eye'],['party','ปาร์ตี้','P','shieldg'],['opt','ตั้งค่า','O','gear']];
+const WICON={farm:'leaf',life:'leaf',refine:'hammer',job:'crown',bank:'chest',char:'bust',inv:'bag',skill:'star',quest:'scroll',shop:'shop',map:'map',opt:'gear',book:'eye',party:'shieldg'};
 function buildMenu(){$('#menu').innerHTML=MENU.map(([k,n,c,g])=>`<button data-w="${k}" title="${n} (${c})"><img src="${glyphURL(g)}" alt=""><span>${n}</span><kbd>${c}</kbd></button>`).join('')+`<button class="chatbtn" data-w="chat" title="แชท"><img src="${glyphURL('chat')}" alt=""><span>แชท</span></button>`}
 
 /* ================= windows ================= */
 let selSlot=null,shopCat='pot',curWin=null,selInv=-1,dropArm=-1,shopTab='buy',delArm=false;
-const WIN={farm:['ปลูกผัก · ฟาร์มชุมชน',rFarm],life:['ทักษะชีวิต · ตัดไม้ ขุดแร่ เก็บสมุนไพร',rLife],refine:['ตีบวก · ช่างตีเหล็กฮอลแกน',rRefine],job:['เปลี่ยนอาชีพ · อาจารย์เซเรน',rJob],bank:['คลังฝากของ · ใช้ร่วมกันทุกตัวละคร',rBank],char:['ตัวละคร',rChar],inv:['กระเป๋า',rInv],skill:['สกิล',rSkill],quest:['เควส · ผู้เฒ่าอิลวา',rQuest],shop:['ร้านค้า · พ่อค้าโบรัน',rShop],map:['แผนที่โลก',rMap],book:['สมุดมอนสเตอร์',rBook],opt:['ตั้งค่า',rOpt]};
+const WIN={farm:['ปลูกผัก · ฟาร์มชุมชน',rFarm],life:['ทักษะชีวิต · ตัดไม้ ขุดแร่ เก็บสมุนไพร',rLife],refine:['ตีบวก · ช่างตีเหล็กฮอลแกน',rRefine],job:['เปลี่ยนอาชีพ · อาจารย์เซเรน',rJob],bank:['คลังฝากของ · ใช้ร่วมกันทุกตัวละคร',rBank],char:['ตัวละคร',rChar],inv:['กระเป๋า',rInv],skill:['สกิล',rSkill],quest:['เควส · ผู้เฒ่าอิลวา',rQuest],shop:['ร้านค้า · พ่อค้าโบรัน',rShop],map:['แผนที่โลก',rMap],party:['ปาร์ตี้',rParty],book:['สมุดมอนสเตอร์',rBook],opt:['ตั้งค่า',rOpt]};
 function openWin(k,force){if(k==='chat'){toggleChat();return}if(curWin===k&&!force){closeWin();return}curWin=k;selInv=-1;selSlot=null;dropArm=-1;delArm=false;$('#win').hidden=false;$('#win').classList.toggle('wide',k==='inv'||k==='bank'||k==='job'||k==='book');$('#wt').innerHTML=`<img src="${glyphURL(WICON[k])}" alt="">${esc(WIN[k][0])}`;rWin();document.querySelectorAll('#menu button').forEach(b=>b.classList.toggle('on',b.dataset.w===k))}
 let WPOS=null;
 function toggleChat(force){const c=$('#chat'),off=force!=null?!force:!c.classList.contains('off');c.classList.toggle('off',off);if(!off){c.classList.add('show');const r=c.getBoundingClientRect(),g=$('#game').getBoundingClientRect();if(r.right<g.left+40||r.left>g.right-40||r.top>g.bottom-20||r.bottom<g.top+20){for(const p of ['left','top','bottom','right','width'])c.style.removeProperty(p);try{localStorage.removeItem('eldria-chatpos')}catch(e){}}}try{localStorage.setItem('eldria-chatoff',off?'1':'0')}catch(e){}toast(off?'ซ่อนแชท · กด H เพื่อเปิด':'เปิดแชท · กด H เพื่อซ่อน')}
@@ -2977,8 +2979,8 @@ function sendChat(msg){msg=msg.trim();if(!msg)return;
  if(msg[0]==='/'){const c=msg.slice(1).split(' ')[0].toLowerCase();
   if(c==='help')chat('sys','','คำสั่ง: /town กลับเมือง · /where ดูตำแหน่ง · /clear ล้างแชท');
   else if(c==='town')doTp();else if(c==='where')chat('sys','','คุณอยู่ที่ '+ZONES[zoneOf(P.x,P.y)].n+' ('+Math.floor(P.x/TS)+', '+Math.floor(P.y/TS)+')');
-  else if(c==='clear')$('#log').innerHTML='';else chat('sys','','ไม่รู้จักคำสั่งนี้ พิมพ์ /help');return}
- chat('all',P.name,msg);S.say=msg;S.sayT=gt+4;netChat(msg)}
+  else if(c==='clear')$('#log').innerHTML='';else if(!gmCmd(c,msg.slice(c.length+2).trim()))chat('sys','','ไม่รู้จักคำสั่งนี้ พิมพ์ /help');return}
+ if(typeof MUTEU!=='undefined'&&MUTEU>Date.now()){chat('sys','','คุณถูกห้ามแชทอีก '+Math.ceil((MUTEU-Date.now())/60000)+' นาที');return}chat('all',(ISGM?'[GM] ':'')+P.name,msg,ISGM?'#ffcf4a':undefined);S.say=msg;S.sayT=gt+4;netChat(msg)}
 
 /* ================= input ================= */
 const keyOf=e=>e.code&&e.code.startsWith('Key')?e.code.slice(3).toLowerCase():e.code&&e.code.startsWith('Digit')?e.code.slice(5):e.code&&e.code.startsWith('Numpad')&&/\d$/.test(e.code)?e.code.slice(-1):e.key.toLowerCase();
@@ -2995,7 +2997,7 @@ window.addEventListener('keydown',e=>{if(!P||$('#login').hidden===false)return;c
  if(/^[0-9]$/.test(k)){const j=k==='0'?9:+k-1;if(S.assign)setHot(j,S.assign);else useHot(j);return}
  if(k==='q')return usePot('hp');if(k==='e')return usePot('mp');
  if(k==='h'){toggleChat();return}
- const W={g:'life',c:'char',i:'inv',k:'skill',l:'quest',m:'map',o:'opt',b:'book'}[k];if(W)openWin(W)});
+ const W={g:'life',c:'char',i:'inv',k:'skill',l:'quest',m:'map',o:'opt',b:'book',p:'party'}[k];if(W)openWin(W)});
 window.addEventListener('keyup',e=>{keys[keyOf(e)]=false;keys[e.key.toLowerCase()]=false});
 window.addEventListener('blur',()=>{for(const k in keys)keys[k]=false});
 cv.addEventListener('pointerdown',e=>{if(!P||S.dead)return;if(document.activeElement===$('#ci'))$('#ci').blur();
@@ -3090,7 +3092,7 @@ document.addEventListener('click',async e=>{const t=e.target.closest('[data-av],
  }catch(err){amsg(aerr(err))}});
 async function onAuthed(u){UID=u.uid;authView('loading');CKEY_U=CKEY+'-'+UID;
  try{const snap=await FDB.ref('users/'+UID+'/data').get();if(snap.exists()){localStorage.setItem(ckey(),snap.val())}}catch(e){console.warn(e)}
- $('#auth').style.display='none';buildLogin();netStart()}
+ $('#auth').style.display='none';buildLogin();netStart();gmInit(u);partyInit()}
 function netBoot(){authUI();if(typeof firebase==='undefined'){amsg('โหลด Firebase ไม่ได้ ตรวจสอบอินเทอร์เน็ต');return}
  FB=firebase.initializeApp(FBCFG);FDB=firebase.database();
  FB.auth().onAuthStateChanged(u=>{if(!u){UID=null;$('#auth').style.display='';authView('login');return}
@@ -3100,17 +3102,87 @@ let NETT=0,LASTPUB='',CHATREF=null,JOINT=0;
 function netStart(){if(NETT)return;JOINT=Date.now();
  const pref=FDB.ref('presence');
  pref.on('child_added',s=>{if(s.key!==UID)OTHERS[s.key]=Object.assign({id:s.key,x:s.val().x,y:s.val().y},s.val())});
- pref.on('child_changed',s=>{if(s.key===UID)return;const o=OTHERS[s.key]||(OTHERS[s.key]={id:s.key,x:s.val().x,y:s.val().y});const v=s.val();o.tx=v.x;o.ty=v.y;o.mv=Math.hypot(v.x-o.x,v.y-o.y)>1?gt:o.mv;Object.assign(o,{n:v.n,c:v.c,sx:v.sx,hs:v.hs,hc:v.hc,ec:v.ec,fx:v.fx,lv:v.lv,d:v.d,hp:v.hp});if(v.pk&&v.pt!==o.pt0){o.pt0=v.pt;o.gest={k:v.pk,t0:gt,dur:v.pk==='atk'?.25:.45,until:gt+(v.pk==='atk'?.25:.45)}}if(v.say&&v.say!==o.say0){o.say0=v.say;o.say=v.say;o.sayT=gt+4}});
+ pref.on('child_changed',s=>{if(s.key===UID)return;const o=OTHERS[s.key]||(OTHERS[s.key]={id:s.key,x:s.val().x,y:s.val().y});const v=s.val();o.tx=v.x;o.ty=v.y;o.mv=Math.hypot(v.x-o.x,v.y-o.y)>1?gt:o.mv;Object.assign(o,{gm:v.gm,n:v.n,c:v.c,sx:v.sx,hs:v.hs,hc:v.hc,ec:v.ec,fx:v.fx,lv:v.lv,d:v.d,hp:v.hp});if(v.pk&&v.pt!==o.pt0){o.pt0=v.pt;o.gest={k:v.pk,t0:gt,dur:v.pk==='atk'?.25:.45,until:gt+(v.pk==='atk'?.25:.45)}}if(v.say&&v.say!==o.say0){o.say0=v.say;o.say=v.say;o.sayT=gt+4}});
  pref.on('child_removed',s=>{delete OTHERS[s.key]});
- CHATREF=FDB.ref('chat');CHATREF.orderByChild('t').startAt(JOINT-1000).limitToLast(30).on('child_added',s=>{const v=s.val();if(!v||v.u===UID)return;chat('all',v.n,v.m)});
+ CHATREF=FDB.ref('chat');CHATREF.orderByChild('t').startAt(JOINT-1000).limitToLast(30).on('child_added',s=>{const v=s.val();if(!v||v.u===UID)return;chat('all',(v.gm?'[GM] ':'')+v.n,v.m,v.gm?'#ffcf4a':undefined)});
  NETT=setInterval(netTick,120)}
 function netTick(){if(!netOK())return;const me=FDB.ref('presence/'+UID);if(!P){if(LASTPUB){me.remove();LASTPUB=''}return}
- const ps=poseOf(),v={n:P.name,c:P.cls,sx:P.sex||'m',hs:P.hs??0,hc:P.hc??4,ec:P.ec??0,x:Math.round(P.x),y:Math.round(P.y),fx:P.fx||1,lv:P.lv,d:S.dead?1:0,hp:Math.round(P.hp/D().mhp*100),pk:ps||'',pt:ps&&S.pose?Math.round(S.pose.t0*100):0,say:S.sayT>gt?S.say:'',t:firebase.database.ServerValue.TIMESTAMP};
+ const ps=poseOf(),v={n:P.name,c:P.cls,sx:P.sex||'m',hs:P.hs??0,hc:P.hc??4,ec:P.ec??0,x:Math.round(P.x),y:Math.round(P.y),fx:P.fx||1,lv:P.lv,d:S.dead?1:0,hp:Math.round(P.hp/D().mhp*100),gm:ISGM?1:0,pk:ps||'',pt:ps&&S.pose?Math.round(S.pose.t0*100):0,say:S.sayT>gt?S.say:'',t:firebase.database.ServerValue.TIMESTAMP};
  const k=JSON.stringify({...v,t:0});if(k===LASTPUB)return;LASTPUB=k;me.set(v);me.onDisconnect().remove()}
-function netChat(m){if(!netOK()||!P)return;CHATREF.push({u:UID,n:P.name,m:m.slice(0,120),t:Date.now()})}
+function netChat(m){if(!netOK()||!P)return;if(MUTEU>Date.now()){chat('sys','','คุณถูกห้ามแชทอีก '+Math.ceil((MUTEU-Date.now())/60000)+' นาที');return}CHATREF.push({u:UID,n:P.name,m:m.slice(0,120),t:Date.now(),gm:ISGM?1:0})}
 function drawOther(o){if(o.tx!=null){const k=.25;o.x+=(o.tx-o.x)*k;o.y+=(o.ty-o.y)*k}if(Math.abs(o.tx-o.x)+Math.abs(o.ty-o.y)>1)o.mv=gt;
- const look=classLook(o.c||'novice',{sex:o.sx,hs:o.hs,hc:o.hc,ec:o.ec});const y=heroAt(o,look,o.n+(o.lv?' Lv'+o.lv:''),'#9fe0ff',false);
+ const look=classLook(o.c||'novice',{sex:o.sx,hs:o.hs,hc:o.hc,ec:o.ec});const y=heroAt(o,look,(o.gm?'[GM] ':'')+(inParty(o.id)?'♦ ':'')+o.n+(o.lv?' Lv'+o.lv:''),o.gm?'#ffcf4a':inParty(o.id)?'#9ef08a':'#9fe0ff',false);
  if(o.sayT>gt){const x=ax(o.x);LBL.push(['💬 '+o.say,x*2,(y-(o._hh||40)-6)*2,'#ffffff',12])}}
+/* ---- admin / GM ---- */
+const ADMINS=['nopkan00@gmail.com'];let ISGM=false,MUTEU=0;
+function gmInit(u){ISGM=!!(u.email&&u.emailVerified&&ADMINS.includes(u.email.toLowerCase()));
+ FDB.ref('kick/'+UID).on('value',s=>{const v=s.val();if(v&&v>JOINT){FDB.ref('kick/'+UID).remove().catch(()=>{});if(P)save();alert('คุณถูกแอดมินเตะออกจากเกม');location.reload()}});
+ FDB.ref('mute/'+UID).on('value',s=>{MUTEU=s.val()||0});
+ FDB.ref('announce').orderByChild('t').startAt(Date.now()).on('child_added',s=>{const v=s.val();if(!v)return;showAnnounce(v.m)});
+ FDB.ref('chat').on('child_removed',()=>{});FDB.ref('chatclear').on('value',s=>{const v=s.val();if(v&&v>JOINT)$('#log').innerHTML=''});
+ if(ISGM)setTimeout(()=>chat('sys','','[GM] โหมดแอดมินเปิดอยู่ · พิมพ์ /gm ดูคำสั่ง','#ffcf4a'),1500)}
+function showAnnounce(m){let d=$('#gmann');if(!d){d=document.createElement('div');d.id='gmann';document.getElementById('game').appendChild(d)}d.textContent='📢 '+m;d.classList.remove('on');void d.offsetWidth;d.classList.add('on');chat('sys','','📢 ประกาศ: '+m,'#ffcf4a');sfx&&sfx('lvl')}
+const findP=n=>Object.values(OTHERS).find(o=>o.n===n)||Object.values(OTHERS).find(o=>o.n&&o.n.toLowerCase().startsWith(n.toLowerCase()));
+function gmCmd(c,arg){if(c==='invite'){pInvite(arg);return true}if(c==='leave'){pLeave();return true}if(c==='p'||c==='party'){if(arg)pChat(arg);return true}if(!ISGM){chat('sys','','คำสั่งนี้สำหรับแอดมินเท่านั้น');return true}
+ const say=t=>chat('sys','','[GM] '+t,'#ffcf4a');
+ if(c==='gm'){say('/announce ข้อความ · /kick ชื่อ · /mute ชื่อ นาที · /unmute ชื่อ · /clearchat · /goto ชื่อ · /item รหัส จำนวน · /lv เลข · /gold เลข · /who');return true}
+ if(c==='announce'){if(!arg)return say('ใส่ข้อความด้วย'),true;FDB.ref('announce').push({m:arg.slice(0,140),t:Date.now()});return true}
+ if(c==='who'){say('ออนไลน์ '+(Object.keys(OTHERS).length+1)+' คน: '+[P.name,...Object.values(OTHERS).map(o=>o.n)].join(', '));return true}
+ if(['kick','mute','unmute','goto'].includes(c)){const parts=arg.split(' '),nm=c==='mute'&&parts.length>1?parts.slice(0,-1).join(' '):arg,o=findP(nm.trim());if(!o)return say('ไม่พบผู้เล่น "'+nm+'"'),true;
+  if(c==='kick'){FDB.ref('kick/'+o.id).set(Date.now()+5000);say('เตะ '+o.n+' แล้ว')}
+  if(c==='mute'){const mins=+parts[parts.length-1]||10;FDB.ref('mute/'+o.id).set(Date.now()+mins*60000);say('ห้ามแชท '+o.n+' '+mins+' นาที')}
+  if(c==='unmute'){FDB.ref('mute/'+o.id).remove();say('ยกเลิกห้ามแชท '+o.n)}
+  if(c==='goto'){P.x=o.x+20;P.y=o.y;S.moveTo=null;S.path=null;say('วาปไปหา '+o.n)}return true}
+ if(c==='clearchat'){FDB.ref('chat').remove();FDB.ref('chatclear').set(Date.now());$('#log').innerHTML='';say('ล้างแชทรวมแล้ว');return true}
+ if(c==='item'){const [id,q]=arg.split(' ');if(!IT[id])return say('ไม่มีไอเทมรหัส "'+id+'"'),true;addItem(id,Math.max(1,Math.min(999,+q||1)));say('ได้รับ '+IT[id].n);refreshWin(['inv']);return true}
+ if(c==='lv'){const n=Math.max(1,Math.min(99,+arg||1));P.lv=n;P.exp=0;clampHp();say('ตั้ง Base Lv เป็น '+n);return true}
+ if(c==='gold'){P.gold+=Math.max(0,+arg||0);say('เพิ่มทอง '+(+arg||0));return true}
+ return false}
+/* ---- party (max 10, +1% EXP & drop per online member) ---- */
+let MYPID=null,PARTY=null,PREF=null,PCHAT=null;const PMAX=10;
+const pMembers=()=>PARTY&&PARTY.members?Object.keys(PARTY.members):[];
+const pOnline=()=>pMembers().filter(u=>u===UID||OTHERS[u]);
+function partyBonus(){const n=pOnline().length;return n>=2?1+n*.01:1}
+const inParty=u=>!!(PARTY&&PARTY.members&&PARTY.members[u]);
+function partyInit(){FDB.ref('users/'+UID+'/pid').on('value',s=>setPid(s.val()));
+ FDB.ref('pinvite/'+UID).on('value',s=>{const v=s.val();if(v&&v.pid&&v.t>Date.now()-120000)showInvite(v);else hideInvite()})}
+function setPid(pid){if(pid===MYPID)return;if(PREF)PREF.off();if(PCHAT)PCHAT.off();PREF=PCHAT=null;MYPID=pid;PARTY=null;
+ if(pid){PREF=FDB.ref('parties/'+pid);PREF.on('value',s=>{const v=s.val();if(!v||!v.members||!v.members[UID]){if(MYPID===pid){FDB.ref('users/'+UID+'/pid').remove();if(PARTY)chat('sys','','คุณออกจากปาร์ตี้แล้ว','#9ef08a')}PARTY=null;MYPID=null;pRefresh();return}
+   const was=PARTY?pMembers():null;PARTY=v;if(was){for(const u of pMembers())if(!was.includes(u))chat('sys','',v.members[u].n+' เข้าร่วมปาร์ตี้','#9ef08a');for(const u of was)if(!v.members[u])chat('sys','','สมาชิกคนหนึ่งออกจากปาร์ตี้','#9ef08a')}pRefresh()});
+  const t0=Date.now();PCHAT=FDB.ref('pchat/'+pid);PCHAT.orderByChild('t').startAt(t0-1000).limitToLast(30).on('child_added',s=>{const v=s.val();if(v&&v.u!==UID)chat('party',v.n,v.m,'#9ef08a')})}
+ pRefresh()}
+function pRefresh(){if(typeof refreshWin==='function')refreshWin(['party']);drawPartyHud()}
+async function pInvite(name){if(!netOK())return;const o=findP(name.trim());if(!o){toast('ไม่พบผู้เล่น "'+name+'" ที่ออนไลน์');return}
+ if(inParty(o.id)){toast(o.n+' อยู่ในปาร์ตี้แล้ว');return}if(pMembers().length>=PMAX){toast('ปาร์ตี้เต็มแล้ว ('+PMAX+' คน)');return}
+ let pid=MYPID;if(!pid){pid=FDB.ref('parties').push().key;await FDB.ref('parties/'+pid).set({leader:UID,members:{[UID]:{n:P.name}}});await FDB.ref('users/'+UID+'/pid').set(pid)}
+ await FDB.ref('pinvite/'+o.id).set({pid,from:UID,fn:P.name,t:Date.now()});toast('ส่งคำเชิญให้ '+o.n+' แล้ว')}
+async function pAccept(v){try{const s=await FDB.ref('parties/'+v.pid+'/members').get();const n=s.exists()?Object.keys(s.val()).length:0;if(!n){toast('ปาร์ตี้นี้ถูกยุบแล้ว');return}if(n>=PMAX){toast('ปาร์ตี้เต็มแล้ว');return}
+  if(MYPID)await pLeave(true);await FDB.ref('parties/'+v.pid+'/members/'+UID).set({n:P?P.name:'?'});await FDB.ref('users/'+UID+'/pid').set(v.pid);toast('เข้าร่วมปาร์ตี้ของ '+v.fn+' แล้ว')}catch(e){toast('เข้าปาร์ตี้ไม่ได้');console.warn(e)}finally{FDB.ref('pinvite/'+UID).remove()}}
+async function pLeave(quiet){if(!MYPID||!PARTY)return;const pid=MYPID,others=pMembers().filter(u=>u!==UID);
+ if(PARTY.leader===UID){if(!others.length)await FDB.ref('parties/'+pid).remove();else{await FDB.ref('parties/'+pid+'/leader').set(others[0]);await FDB.ref('parties/'+pid+'/members/'+UID).remove()}}
+ else await FDB.ref('parties/'+pid+'/members/'+UID).remove();
+ await FDB.ref('users/'+UID+'/pid').remove();if(!quiet)toast('ออกจากปาร์ตี้แล้ว')}
+function pKick(u){if(PARTY&&PARTY.leader===UID&&u!==UID)FDB.ref('parties/'+MYPID+'/members/'+u).remove()}
+function pChat(m){if(!MYPID){chat('sys','','คุณยังไม่มีปาร์ตี้');return}FDB.ref('pchat/'+MYPID).push({u:UID,n:P.name,m:m.slice(0,120),t:Date.now()});chat('party',P.name,m,'#9ef08a')}
+function showInvite(v){let d=$('#pinv');if(!d){d=document.createElement('div');d.id='pinv';d.className='frame';document.getElementById('game').appendChild(d)}
+ d.innerHTML=`<b>${esc(v.fn)}</b> ชวนคุณเข้าปาร์ตี้<div class="btns"><button class="btn pri" data-pi="y">เข้าร่วม</button><button class="btn" data-pi="n">ปฏิเสธ</button></div>`;d.hidden=false;d._v=v}
+function hideInvite(){const d=$('#pinv');if(d)d.hidden=true}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-pi],[data-pa]');if(!b)return;
+ if(b.dataset.pi){const v=$('#pinv')._v;hideInvite();if(b.dataset.pi==='y')pAccept(v);else FDB.ref('pinvite/'+UID).remove();return}
+ const a=b.dataset.pa;if(a==='inv'){const i=$('#pinvn');if(i&&i.value.trim())pInvite(i.value)}else if(a==='leave')pLeave();else if(a==='kick')pKick(b.dataset.u)});
+function rParty(){if(!netOK())return '<div class="note">ต้องเข้าสู่ระบบออนไลน์ก่อน</div>';
+ const ms=pMembers(),on=pOnline().length,pb=partyBonus();
+ let h=`<div class="note">ปาร์ตี้ได้สูงสุด ${PMAX} คน · โบนัส EXP และอัตราดรอป +1% ต่อสมาชิกที่ออนไลน์ 1 คน · ตอนนี้ <b style="color:#9ef08a">+${Math.round((pb-1)*100)}%</b> (${on}/${ms.length||1} ออนไลน์)</div>`;
+ h+=`<div class="pinvrow"><input id="pinvn" maxlength="16" placeholder="ชื่อผู้เล่นที่ออนไลน์"><button class="btn pri" data-pa="inv">เชิญเข้าปาร์ตี้</button></div>`;
+ if(!ms.length)h+='<div class="note">ยังไม่มีปาร์ตี้ · เชิญผู้เล่นเพื่อสร้างปาร์ตี้ หรือพิมพ์ /invite ชื่อ ในแชท</div>';
+ else{h+='<div class="plist">';for(const u of ms){const me=u===UID,o=OTHERS[u],nm=PARTY.members[u].n,online=me||!!o,cls=me?P.cls:o&&o.c,lv=me?P.lv:o&&o.lv,hp=me?Math.round(P.hp/D().mhp*100):o?o.hp:0;
+  h+=`<div class="prow${online?'':' off'}"><span class="pdot"></span><div class="l"><b>${PARTY.leader===u?'👑 ':''}${esc(nm)}${me?' (คุณ)':''}</b><small>${online?(cls&&CLS[cls]?CLS[cls].n:'')+(lv?' · Lv '+lv:''):'ออฟไลน์'}</small>${online?`<i class="php"><i style="width:${hp||0}%"></i></i>`:''}</div>${PARTY.leader===UID&&!me?`<button class="btn" data-pa="kick" data-u="${u}">เตะ</button>`:''}</div>`}
+  h+=`</div><button class="btn bad" data-pa="leave" style="margin-top:8px">ออกจากปาร์ตี้</button>`}
+ return h+'<div class="note" style="margin-top:8px">คำสั่งแชท: /invite ชื่อ · /p ข้อความ (แชทปาร์ตี้) · /leave</div>'}
+function drawPartyHud(){let d=$('#ptyhud');if(!d){d=document.createElement('div');d.id='ptyhud';const pf=$('#pf');if(!pf)return;pf.appendChild(d)}
+ const ms=pMembers().filter(u=>u!==UID);if(!ms.length){d.innerHTML='';return}
+ d.innerHTML=`<div class="pth">ปาร์ตี้ +${Math.round((partyBonus()-1)*100)}%</div>`+ms.map(u=>{const o=OTHERS[u];return `<div class="pm${o?'':' off'}"><span>${esc(PARTY.members[u].n)}</span><i class="php"><i style="width:${o?o.hp||0:0}%"></i></i></div>`}).join('')}
+setInterval(()=>{if(PARTY)drawPartyHud()},1000);
 
 netBoot();
 document.addEventListener('click',e=>{if(e.target.id==='acctout'&&FB){if(UID)FDB.ref('presence/'+UID).remove();FB.auth().signOut().then(()=>location.reload())}});
