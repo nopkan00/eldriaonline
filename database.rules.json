@@ -83,6 +83,30 @@
           ".validate": "newData.child('u').val() === auth.uid && newData.child('m').isString() && newData.child('m').val().length <= 120"
         }
       }
+    },
+    "whisper": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".indexOn": [
+          "t"
+        ],
+        "$m": {
+          ".write": "auth != null && !data.exists() && newData.child('from').val() === auth.uid",
+          ".validate": "newData.child('m').isString() && newData.child('m').val().length <= 120"
+        }
+      }
+    },
+    "tradereq": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && ((auth.uid === $uid && !newData.exists()) || (newData.exists() && newData.child('from').val() === auth.uid))"
+      }
+    },
+    "trade": {
+      "$tid": {
+        ".read": "auth != null && (data.child('a').val() === auth.uid || data.child('b').val() === auth.uid)",
+        ".write": "auth != null && ((!data.exists() && newData.child('a').val() === auth.uid) || data.child('a').val() === auth.uid || data.child('b').val() === auth.uid)"
+      }
     }
   }
 }

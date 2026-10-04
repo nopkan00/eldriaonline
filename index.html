@@ -578,6 +578,7 @@ img[src^="data:image/webp"]{image-rendering:auto!important}
 #gmann{position:absolute;left:50%;top:70px;transform:translateX(-50%);z-index:80;padding:10px 22px;border-radius:12px;background:rgba(40,24,6,.9);border:1px solid #ffcf4a;color:#ffe9a0;font-size:16px;font-weight:700;opacity:0;pointer-events:none;max-width:80%;text-align:center}#gmann.on{animation:gmann 7s ease forwards}@keyframes gmann{0%{opacity:0;top:50px}8%{opacity:1;top:70px}85%{opacity:1}100%{opacity:0}}
 #auth{z-index:200}.authc{max-width:380px;margin:auto}.atabs{display:flex;gap:6px;margin:6px 0 12px}.atabs button{flex:1;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:inherit;font:inherit;cursor:pointer}.atabs button.on{background:rgba(255,210,74,.18);border-color:#ffd24a;color:#ffe07a}#auth .fld input{width:100%}.alink{background:none;border:0;color:#9fd8ff;font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin:6px auto 0;display:block}.aor{display:flex;align-items:center;gap:8px;margin:12px 0;opacity:.6;font-size:12px}.aor:before,.aor:after{content:'';flex:1;height:1px;background:rgba(255,255,255,.2)}.gbtn{width:100%;background:#fff!important;color:#222!important}.gbtn b{color:#4285f4;margin-right:6px}#aview .btn.big{width:100%;margin-top:6px}.amsg{min-height:18px;margin-top:8px;font-size:12px;text-align:center}.amsg.bad{color:#ff9a8a}.amsg.ok{color:#9ef0b0}.acct{display:flex;justify-content:center;gap:8px;align-items:center;font-size:12px;opacity:.85;margin:-4px 0 6px}.acct .alink{margin:0}
 #pinv{position:absolute;left:50%;bottom:110px;transform:translateX(-50%);z-index:90;padding:12px 16px;text-align:center;font-size:14px}#pinv .btns{display:flex;gap:8px;justify-content:center;margin-top:8px}.pinvrow{display:flex;gap:6px;margin:8px 0}.pinvrow input{flex:1}.plist{display:flex;flex-direction:column;gap:4px}.prow{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:10px;background:rgba(255,255,255,.04)}.prow .l{flex:1}.prow small{display:block;opacity:.7;font-size:11px}.prow.off{opacity:.5}.pdot{width:8px;height:8px;border-radius:50%;background:#5ee08a}.prow.off .pdot{background:#777}.php{display:block;height:4px;border-radius:2px;background:#3a1420;margin-top:3px;overflow:hidden}.php i{display:block;height:100%;background:#ff4f64}#ptyhud{position:absolute;left:0;top:calc(100% + 40px);display:flex;flex-direction:column;gap:3px;min-width:130px}#ptyhud:empty{display:none}#ptyhud .pth{font-size:10px;color:#9ef08a;font-weight:700}#ptyhud .pm{font-size:11px;padding:3px 6px;border-radius:6px;background:rgba(10,14,30,.7)}#ptyhud .pm.off{opacity:.5}
+#pmenu{position:absolute;z-index:95;min-width:160px;padding:8px;display:flex;flex-direction:column;gap:3px}#pmenu b{font-size:13px;color:#ffe07a}#pmenu small{font-size:11px;opacity:.7;margin-bottom:4px}#pmenu button{text-align:left;padding:6px 8px;border-radius:8px;border:0;background:rgba(255,255,255,.06);color:inherit;font:inherit;font-size:13px;cursor:pointer}#pmenu button:hover{background:rgba(255,210,74,.2)}#treq{position:absolute;left:50%;bottom:170px;transform:translateX(-50%);z-index:90;padding:12px 16px;text-align:center}#treq .btns{display:flex;gap:8px;justify-content:center;margin-top:8px}#trade{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:85;width:min(560px,calc(100% - 24px));max-height:calc(100% - 40px);overflow:auto;padding:12px}#trade .th{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}#trade .tcols{display:grid;grid-template-columns:1fr 1fr;gap:8px}#trade .tcol{padding:8px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);min-height:120px;display:flex;flex-direction:column;gap:4px}#trade .tcol.lk{border-color:#ffd24a;background:rgba(255,210,74,.08)}#trade h4{margin:0 0 4px;font-size:13px}#trade .tit{display:flex;align-items:center;gap:6px;font:inherit;font-size:12px;color:inherit;background:rgba(0,0,0,.2);border:0;border-radius:6px;padding:2px 6px;text-align:left;cursor:pointer}#trade .tit .ic{width:26px;height:26px}#trade .tg{margin-top:auto;font-size:12px;display:flex;gap:6px;align-items:center}#trade .tg input{width:100px}#trade .tbtns{display:flex;gap:8px;justify-content:center;margin:10px 0}#trade .tinvg{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:4px;margin-top:6px}#trade .tinv{position:relative;border:0;background:rgba(255,255,255,.05);border-radius:6px;padding:2px;cursor:pointer}#trade .tinv em{position:absolute;right:2px;bottom:0;font-size:9px;font-style:normal}
 </style>
 
 <div id="game">
@@ -3092,7 +3093,7 @@ document.addEventListener('click',async e=>{const t=e.target.closest('[data-av],
  }catch(err){amsg(aerr(err))}});
 async function onAuthed(u){UID=u.uid;authView('loading');CKEY_U=CKEY+'-'+UID;
  try{const snap=await FDB.ref('users/'+UID+'/data').get();if(snap.exists()){localStorage.setItem(ckey(),snap.val())}}catch(e){console.warn(e)}
- $('#auth').style.display='none';buildLogin();netStart();gmInit(u);partyInit()}
+ $('#auth').style.display='none';buildLogin();netStart();gmInit(u);partyInit();pmInit()}
 function netBoot(){authUI();if(typeof firebase==='undefined'){amsg('โหลด Firebase ไม่ได้ ตรวจสอบอินเทอร์เน็ต');return}
  FB=firebase.initializeApp(FBCFG);FDB=firebase.database();
  FB.auth().onAuthStateChanged(u=>{if(!u){UID=null;$('#auth').style.display='';authView('login');return}
@@ -3123,7 +3124,7 @@ function gmInit(u){ISGM=!!(u.email&&u.emailVerified&&ADMINS.includes(u.email.toL
  if(ISGM)setTimeout(()=>chat('sys','','[GM] โหมดแอดมินเปิดอยู่ · พิมพ์ /gm ดูคำสั่ง','#ffcf4a'),1500)}
 function showAnnounce(m){let d=$('#gmann');if(!d){d=document.createElement('div');d.id='gmann';document.getElementById('game').appendChild(d)}d.textContent='📢 '+m;d.classList.remove('on');void d.offsetWidth;d.classList.add('on');chat('sys','','📢 ประกาศ: '+m,'#ffcf4a');sfx&&sfx('lvl')}
 const findP=n=>Object.values(OTHERS).find(o=>o.n===n)||Object.values(OTHERS).find(o=>o.n&&o.n.toLowerCase().startsWith(n.toLowerCase()));
-function gmCmd(c,arg){if(c==='invite'){pInvite(arg);return true}if(c==='leave'){pLeave();return true}if(c==='p'||c==='party'){if(arg)pChat(arg);return true}if(!ISGM){chat('sys','','คำสั่งนี้สำหรับแอดมินเท่านั้น');return true}
+function gmCmd(c,arg){if(c==='w'||c==='whisper'){const sp=arg.indexOf(' ');if(sp<1){chat('sys','','ใช้ /w ชื่อ ข้อความ');return true}whisper(arg.slice(0,sp),arg.slice(sp+1));return true}if(c==='r'&&LASTW){if(arg)whisper(LASTW,arg);return true}if(c==='trade'){const o=findP(arg);if(o)tReq(o);else chat('sys','','ไม่พบผู้เล่น +arg+');return true}if(c==='invite'){pInvite(arg);return true}if(c==='leave'){pLeave();return true}if(c==='p'||c==='party'){if(arg)pChat(arg);return true}if(!ISGM){chat('sys','','คำสั่งนี้สำหรับแอดมินเท่านั้น');return true}
  const say=t=>chat('sys','','[GM] '+t,'#ffcf4a');
  if(c==='gm'){say('/announce ข้อความ · /kick ชื่อ · /mute ชื่อ นาที · /unmute ชื่อ · /clearchat · /goto ชื่อ · /item รหัส จำนวน · /lv เลข · /gold เลข · /who');return true}
  if(c==='announce'){if(!arg)return say('ใส่ข้อความด้วย'),true;FDB.ref('announce').push({m:arg.slice(0,140),t:Date.now()});return true}
@@ -3183,6 +3184,59 @@ function drawPartyHud(){let d=$('#ptyhud');if(!d){d=document.createElement('div'
  const ms=pMembers().filter(u=>u!==UID);if(!ms.length){d.innerHTML='';return}
  d.innerHTML=`<div class="pth">ปาร์ตี้ +${Math.round((partyBonus()-1)*100)}%</div>`+ms.map(u=>{const o=OTHERS[u];return `<div class="pm${o?'':' off'}"><span>${esc(PARTY.members[u].n)}</span><i class="php"><i style="width:${o?o.hp||0:0}%"></i></i></div>`}).join('')}
 setInterval(()=>{if(PARTY)drawPartyHud()},1000);
+/* ---- right-click player menu, whisper, trade ---- */
+function otherAt(wx,wy){let b=null,bd=1e9;for(const id in OTHERS){const o=OTHERS[id];if(o.d)continue;const d=Math.hypot(o.x-wx,o.y-14-wy);if(d<26&&d<bd){b=o;bd=d}}return b}
+function pmenu(o,cx,cy){let m=$('#pmenu');if(!m){m=document.createElement('div');m.id='pmenu';m.className='frame';document.getElementById('game').appendChild(m)}
+ m.innerHTML=`<b>${esc(o.n)}</b><small>${o.c&&CLS[o.c]?CLS[o.c].n:''}${o.lv?' · Lv '+o.lv:''}</small><button data-pm="party">👥 เชิญเข้าปาร์ตี้</button><button data-pm="chat">💬 แชทส่วนตัว</button><button data-pm="trade">🤝 แลกเปลี่ยนของ</button>`;
+ m._o=o;m.hidden=false;const g=$('#game').getBoundingClientRect();m.style.left=Math.min(cx-g.left,g.width-170)+'px';m.style.top=Math.min(cy-g.top,g.height-160)+'px'}
+const hidePm=()=>{const m=$('#pmenu');if(m)m.hidden=true};
+function pmInit(){cv.addEventListener('contextmenu',e=>{if(!netOK()||!P)return;const r=cv.getBoundingClientRect(),wx=(e.clientX-r.left)*2/AS+cam.x,wy=(e.clientY-r.top)*2/AS+cam.y,o=otherAt(wx,wy);if(!o)return;e.preventDefault();e.stopImmediatePropagation();pmenu(o,e.clientX,e.clientY)},true);
+ document.addEventListener('pointerdown',e=>{if(!e.target.closest('#pmenu'))hidePm()});
+ document.addEventListener('click',e=>{const b=e.target.closest('[data-pm]');if(!b)return;const o=$('#pmenu')._o;hidePm();if(!o)return;
+  if(b.dataset.pm==='party')pInvite(o.n);else if(b.dataset.pm==='chat'){const c=$('#chat');c.classList.remove('off');c.classList.add('show');$('#ci').value='/w '+o.n+' ';$('#ci').focus()}else tReq(o)});
+ FDB.ref('whisper/'+UID).orderByChild('t').startAt(Date.now()).on('child_added',s=>{const v=s.val();if(v){LASTW=v.fn;chat('w',v.fn+' → คุณ',v.m,'#e8a0ff')}});
+ FDB.ref('tradereq/'+UID).on('value',s=>{const v=s.val();if(v&&v.t>Date.now()-60000&&!TRD)showTReq(v);else{const d=$('#treq');if(d)d.hidden=true}})}
+let LASTW=null;
+function whisper(name,m){const o=findP(name);if(!o){chat('sys','','ไม่พบผู้เล่น "'+name+'" ที่ออนไลน์');return}FDB.ref('whisper/'+o.id).push({from:UID,fn:P.name,m:m.slice(0,120),t:Date.now()});chat('w','คุณ → '+o.n,m,'#e8a0ff')}
+/* trade */
+let TRD=null,TREF=null,TID=null,TMY=null,TOFF={items:[],gold:0};
+function tReq(o){if(TRD){toast('กำลังแลกเปลี่ยนอยู่');return}const tid=FDB.ref('trade').push().key;
+ FDB.ref('trade/'+tid).set({a:UID,b:o.id,an:P.name,bn:o.n,st:'wait',t:Date.now()}).then(()=>{FDB.ref('tradereq/'+o.id).set({tid,from:UID,fn:P.name,t:Date.now()});toast('ส่งคำขอแลกเปลี่ยนให้ '+o.n+' แล้ว');tOpen(tid)})}
+function showTReq(v){let d=$('#treq');if(!d){d=document.createElement('div');d.id='treq';d.className='frame';document.getElementById('game').appendChild(d)}
+ d.innerHTML=`<b>${esc(v.fn)}</b> ขอแลกเปลี่ยนของกับคุณ<div class="btns"><button class="btn pri" data-tq="y">ตกลง</button><button class="btn" data-tq="n">ปฏิเสธ</button></div>`;d._v=v;d.hidden=false}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-tq],[data-tr]');if(!b)return;
+ if(b.dataset.tq){const v=$('#treq')._v;$('#treq').hidden=true;FDB.ref('tradereq/'+UID).remove();if(b.dataset.tq==='y'){FDB.ref('trade/'+v.tid+'/st').set('open');tOpen(v.tid)}else FDB.ref('trade/'+v.tid+'/st').set('cancel');return}
+ const a=b.dataset.tr;if(!TRD)return;const side=TRD[TMY]||{};
+ if(a==='add'){if(side.lock)return;const s=P.inv[+b.dataset.i];if(!s)return;if(stack(s.id)){const have=countItem(s.id),f=TOFF.items.find(x=>x.o.id===s.id);if(f){if(f.o.q<have)f.o.q++}else TOFF.items.push({o:{id:s.id,q:1}})}else{const j=JSON.stringify(s);if(TOFF.items.some(x=>!stack(x.o.id)&&JSON.stringify(x.o)===j))return;if(TOFF.items.length>=12)return toast('ใส่ได้สูงสุด 12 ช่อง');TOFF.items.push({o:JSON.parse(j)})}tPush()}
+ else if(a==='rm'){if(side.lock)return;const k=+b.dataset.i,x=TOFF.items[k];if(x&&stack(x.o.id)&&x.o.q>1)x.o.q--;else TOFF.items.splice(k,1);tPush()}
+ else if(a==='lock'){if(!side.lock){TOFF.gold=Math.max(0,Math.min(P.gold,Math.floor(+$('#tgold').value||0)))}FDB.ref('trade/'+TID+'/'+TMY).set({items:TOFF.items,gold:TOFF.gold,lock:!side.lock,ok:false})}
+ else if(a==='ok'){const ot=TRD[TMY==='sa'?'sb':'sa']||{};if(!side.lock||!ot.lock)return;if(!tCheck(ot))return;FDB.ref('trade/'+TID+'/'+TMY+'/ok').set(true)}
+ else if(a==='x'){FDB.ref('trade/'+TID+'/st').set('cancel')}});
+function tPush(){FDB.ref('trade/'+TID+'/'+TMY).set({items:TOFF.items,gold:TOFF.gold,lock:false,ok:false});tRender()}
+function tHave(){for(const x of TOFF.items){if(stack(x.o.id)){if(countItem(x.o.id)<x.o.q)return false}else if(!P.inv.some(s=>JSON.stringify(s)===JSON.stringify(x.o)))return false}return P.gold>=TOFF.gold}
+function tCheck(ot){if(!tHave()){toast('ของในรายการไม่ครบแล้ว · ยกเลิกล็อกแล้วแก้ไขใหม่');return false}
+ const freeAfter=INV-P.inv.length+TOFF.items.filter(x=>!stack(x.o.id)).length,need=(ot.items||[]).filter(x=>!stack(x.o.id)||!P.inv.some(s=>s.id===x.o.id)).length;if(need>freeAfter){toast('กระเป๋าไม่พอสำหรับของที่จะได้รับ');return false}return true}
+function tOpen(tid){TID=tid;TOFF={items:[],gold:0};TREF=FDB.ref('trade/'+tid);TREF.on('value',s=>{const v=s.val();if(!v){tClose();return}TRD=v;TMY=v.a===UID?'sa':'sb';
+  if(v.st==='cancel'){toast('การแลกเปลี่ยนถูกยกเลิก');tClose();return}
+  const me=v[TMY]||{},ot=v[TMY==='sa'?'sb':'sa']||{};
+  if(me.ok&&!ot.lock)FDB.ref('trade/'+TID+'/'+TMY+'/ok').set(false);
+  if(me.ok&&ot.ok&&!v['done_'+TMY]){tApply(ot);FDB.ref('trade/'+TID+'/done_'+TMY).set(true);return}
+  if(v.done_sa&&v.done_sb){toast('แลกเปลี่ยนสำเร็จ!');sfx('lvl');setTimeout(()=>{if(TMY==='sa')TREF&&TREF.remove();tClose()},300);return}
+  tRender()})}
+function tApply(ot){for(const x of TOFF.items){if(stack(x.o.id))removeItem(x.o.id,x.o.q);else{const j=JSON.stringify(x.o),i=P.inv.findIndex(s=>JSON.stringify(s)===j);if(i>=0)P.inv.splice(i,1)}}P.gold-=TOFF.gold;
+ for(const x of ot.items||[]){if(!IT[x.o.id])continue;if(stack(x.o.id))addItem(x.o.id,x.o.q);else if(P.inv.length<INV)P.inv.push(x.o)}P.gold+=ot.gold||0;
+ chat('sys','','แลกเปลี่ยนกับ '+(TMY==='sa'?TRD.bn:TRD.an)+' สำเร็จ','#9ef08a');refreshWin(['inv','char']);save()}
+function tClose(){if(TREF)TREF.off();TREF=null;TRD=null;TID=null;const d=$('#trade');if(d)d.hidden=true}
+function tRender(){if(!TRD)return;let d=$('#trade');if(!d){d=document.createElement('div');d.id='trade';d.className='frame';document.getElementById('game').appendChild(d)}d.hidden=false;
+ const me=TRD[TMY]||{},otk=TMY==='sa'?'sb':'sa',ot=TRD[otk]||{},on=TMY==='sa'?TRD.bn:TRD.an;
+ const list=(it,mine)=>(it||[]).map((x,k)=>`<button class="tit" ${mine&&!me.lock?`data-tr="rm" data-i="${k}"`:''} title="${esc(IT[x.o.id]?IT[x.o.id].n:x.o.id)}">${icon(x.o)}<span>${esc(IT[x.o.id]?IT[x.o.id].n:x.o.id)}${x.o.q>1?' ×'+x.o.q:''}${x.o.ref?' +'+x.o.ref:''}</span></button>`).join('')||'<div class="note">ยังไม่มีของ</div>';
+ const inv=P.inv.map((s,i)=>`<button class="tinv" data-tr="add" data-i="${i}" title="${esc(IT[s.id].n)}">${icon(s)}${s.q>1?`<em>${s.q}</em>`:''}</button>`).join('');
+ const wait=TRD.st==='wait';
+ d.innerHTML=`<div class="th"><b>🤝 แลกเปลี่ยนกับ ${esc(on)}</b><button class="btn" data-tr="x">ยกเลิก</button></div>${wait?'<div class="note">รออีกฝ่ายตอบรับ...</div>':''}
+ <div class="tcols"><div class="tcol${me.lock?' lk':''}"><h4>ของคุณ ${me.lock?'🔒':''}${me.ok?' ✔':''}</h4>${list(TOFF.items,1)}<div class="tg">ทอง <input id="tgold" type="number" min="0" max="${P.gold}" value="${me.lock?me.gold||0:TOFF.gold}" ${me.lock?'disabled':''}></div></div>
+ <div class="tcol${ot.lock?' lk':''}"><h4>${esc(on)} ${ot.lock?'🔒':''}${ot.ok?' ✔':''}</h4>${list(ot.items,0)}<div class="tg">ทอง <b>${(ot.gold||0).toLocaleString()}</b></div></div></div>
+ <div class="tbtns"><button class="btn" data-tr="lock" ${wait?'disabled':''}>${me.lock?'ปลดล็อก':'ล็อกรายการ'}</button><button class="btn pri" data-tr="ok" ${me.lock&&ot.lock&&!me.ok?'':'disabled'}>ยืนยันแลกเปลี่ยน</button></div>
+ ${me.lock?'':`<div class="note">คลิกของในกระเป๋าเพื่อใส่ · คลิกของที่ใส่แล้วเพื่อเอาออก · ทั้งสองฝ่ายล็อกแล้วกดยืนยัน</div><div class="tinvg">${inv}</div>`}`}
 
 netBoot();
 document.addEventListener('click',e=>{if(e.target.id==='acctout'&&FB){if(UID)FDB.ref('presence/'+UID).remove();FB.auth().signOut().then(()=>location.reload())}});
