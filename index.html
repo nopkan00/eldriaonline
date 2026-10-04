@@ -1,5 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>เอลเดรีย ออนไลน์</title>
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Eldria Online</title></head><body><title>เอลเดรีย ออนไลน์</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@700&family=Chakra+Petch:wght@500;600;700&family=Kanit:wght@400;500;600&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
@@ -576,6 +575,7 @@ img[src^="data:image/webp"]{image-rendering:auto!important}
 #chat.off{display:none!important}
 #buffs{position:absolute;left:0;top:calc(100% + 6px);display:flex;flex-wrap:wrap;gap:4px;pointer-events:auto}#buffs:empty{display:none}
 #tip{position:absolute;z-index:60;max-width:260px;padding:8px 10px;border-radius:10px;background:rgba(12,16,34,.95);border:1px solid rgba(255,210,120,.45);box-shadow:0 6px 18px rgba(0,0,0,.5);font-size:12px;line-height:1.4;pointer-events:none;color:#e8ecff}#tip b{color:#ffe07a;font-size:13px}#tip .tlv{color:#9fd8ff;font-size:11px;margin-left:4px}#tip div{margin:3px 0}#tip small{display:block;opacity:.8}#tip small.warn{color:#ff9a8a;opacity:1}#tip small.nx{color:#9ef0b0;opacity:1}
+#auth{z-index:200}.authc{max-width:380px;margin:auto}.atabs{display:flex;gap:6px;margin:6px 0 12px}.atabs button{flex:1;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:inherit;font:inherit;cursor:pointer}.atabs button.on{background:rgba(255,210,74,.18);border-color:#ffd24a;color:#ffe07a}#auth .fld input{width:100%}.alink{background:none;border:0;color:#9fd8ff;font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin:6px auto 0;display:block}.aor{display:flex;align-items:center;gap:8px;margin:12px 0;opacity:.6;font-size:12px}.aor:before,.aor:after{content:'';flex:1;height:1px;background:rgba(255,255,255,.2)}.gbtn{width:100%;background:#fff!important;color:#222!important}.gbtn b{color:#4285f4;margin-right:6px}#aview .btn.big{width:100%;margin-top:6px}.amsg{min-height:18px;margin-top:8px;font-size:12px;text-align:center}.amsg.bad{color:#ff9a8a}.amsg.ok{color:#9ef0b0}.acct{display:flex;justify-content:center;gap:8px;align-items:center;font-size:12px;opacity:.85;margin:-4px 0 6px}.acct .alink{margin:0}
 </style>
 
 <div id="game">
@@ -618,7 +618,7 @@ img[src^="data:image/webp"]{image-rendering:auto!important}
   <div id="login" class="over">
     <div class="card frame">
       <div class="langsw"><button data-lang="th">TH</button><button data-lang="en">EN</button></div>
-      <div class="logo"><h1>ELDRIA</h1><p>เอลเดรีย ออนไลน์</p></div>
+      <div class="logo"><h1>ELDRIA</h1><p>เอลเดรีย ออนไลน์</p></div><div class="acct"><span id="acctem"></span><button class="alink" id="acctout">ออกจากบัญชี</button></div>
       <div id="slots" class="slots"></div>
       <div id="create" hidden>
         <div class="fld"><label for="nm">ชื่อตัวละคร</label><input id="nm" maxlength="12" placeholder="เช่น อัศวินเงา"></div>
@@ -639,6 +639,7 @@ img[src^="data:image/webp"]{image-rendering:auto!important}
   </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
 (()=>{
 'use strict';
@@ -1048,10 +1049,11 @@ let DROPS=[],M=[],FX=[],TXT=[],timers=[],gt=0,mid=0;
 const cam={x:TWN.x-400,y:TWN.y-300};
 /* 5 character slots in one store; the old single-character save moves into slot 1 */
 const SKEY='eldria-online-save-1',CKEY='eldria-chars-v1',NSLOT=5;let curSlot=0;
-function loadChars(){let d=null;try{d=JSON.parse(localStorage.getItem(CKEY)||'null')}catch(e){}
+let CKEY_U=null;const ckey=()=>CKEY_U||CKEY;
+function loadChars(){let d=null;try{d=JSON.parse(localStorage.getItem(ckey())||'null')}catch(e){}
  if(!d||!Array.isArray(d.slots)){d={slots:Array(NSLOT).fill(null)};try{const old=JSON.parse(localStorage.getItem(SKEY)||'null');if(old&&CLS[old.cls])d.slots[0]=old}catch(e){}}
  while(d.slots.length<NSLOT)d.slots.push(null);d.slots=d.slots.slice(0,NSLOT).map(p=>p&&CLS[p.cls]?p:null);return d}
-function storeChars(d){try{localStorage.setItem(CKEY,JSON.stringify(d))}catch(e){}}
+function storeChars(d){try{localStorage.setItem(ckey(),JSON.stringify(d))}catch(e){}if(typeof cloudSave==='function')cloudSave(d)}
 /* storage is shared by every character on this browser */
 let BANK={items:[],gold:0};const BANKCAP=60;
 function save(){if(!P)return;const d=loadChars();let SP=P;if(typeof PSTAT!=='undefined'&&(PSTAT||PSKILL)){SP={...P};if(PSTAT){SP.pts=PSTAT.pts;for(const k in PSTAT.st)SP[k]=PSTAT.st[k]}if(PSKILL){SP.skl=PSKILL.skl;SP.psl=PSKILL.psl;SP.spts=PSKILL.spts}}d.slots[curSlot]=SP;d.last=curSlot;d.bank=BANK;storeChars(d)}
@@ -2350,9 +2352,9 @@ function render(){const sk=S.shake||0;CX=Math.round(cam.x/2+(R()-.5)*sk);CY=Math
  for(const [cx,cy] of WARPS){const wi=WARPIMG[Math.floor(gt/.09)%WARPIMG.length];if(wi.complete&&wi.naturalWidth){const w=wi.naturalWidth/2,h=wi.naturalHeight/2;lc.save();lc.globalCompositeOperation='lighter';lc.imageSmoothingEnabled=true;lc.drawImage(wi,Math.round(cx-w/2),Math.round(cy-h*.6),w,h);lc.globalAlpha=.25+.1*Math.sin(gt*3);lc.drawImage(wi,Math.round(cx-w/2),Math.round(cy-h*.6),w,h);lc.restore()}else{lc.globalAlpha=.35+.15*Math.sin(gt*4);pxDisc(cx,cy,9,6,'#b86cff');lc.globalAlpha=1}}
  const ents=[];for(const n of NPCS)ents.push([n.y,0,n]);
  for(const m of M)if(m.x>cam.x-80&&m.x<cam.x+VW+80&&m.y>cam.y-80&&m.y<cam.y+VH+80)ents.push([m.y,2,m]);
- for(const d of DROPS)ents.push([d.y-6,5,d]);for(const n of NODES)if(n.x>cam.x-60&&n.x<cam.x+VW+60&&n.y>cam.y-40&&n.y<cam.y+VH+80)ents.push([n.y-2,6,n]);for(const c of CRIT)if(c.x>cam.x-60&&c.x<cam.x+VW+60&&c.y>cam.y-40&&c.y<cam.y+VH+60)ents.push([c.y,9,c]);for(const b of BLDS){const bx=b.x*TS,by=(b.y+b.h)*TS;if(bx<cam.x+VW+40&&bx+b.w*TS>cam.x-40&&by>cam.y-40&&by-b.h*TS-140<cam.y+VH)ents.push([by-1,8,b])}for(const o of OBJS)if(o.x>cam.x-80&&o.x<cam.x+VW+80&&o.y>cam.y-40&&o.y<cam.y+VH+80)ents.push([o.y-2,7,o]);for(const tr of trees)ents.push([(tr[1]+1)*TS-2,4,tr]);if(Math.abs(TWN.x-cam.x-VW/2)<VW&&Math.abs(TWN.y-cam.y-VH/2)<VH)ents.push([TWN.y+6,10,0]);if(P&&(!S.dead||(HEROFS[P.cls]&&heroOk(P.cls))))ents.push([P.y,3,P]);
+ for(const d of DROPS)ents.push([d.y-6,5,d]);for(const n of NODES)if(n.x>cam.x-60&&n.x<cam.x+VW+60&&n.y>cam.y-40&&n.y<cam.y+VH+80)ents.push([n.y-2,6,n]);for(const c of CRIT)if(c.x>cam.x-60&&c.x<cam.x+VW+60&&c.y>cam.y-40&&c.y<cam.y+VH+60)ents.push([c.y,9,c]);for(const b of BLDS){const bx=b.x*TS,by=(b.y+b.h)*TS;if(bx<cam.x+VW+40&&bx+b.w*TS>cam.x-40&&by>cam.y-40&&by-b.h*TS-140<cam.y+VH)ents.push([by-1,8,b])}for(const o of OBJS)if(o.x>cam.x-80&&o.x<cam.x+VW+80&&o.y>cam.y-40&&o.y<cam.y+VH+80)ents.push([o.y-2,7,o]);for(const tr of trees)ents.push([(tr[1]+1)*TS-2,4,tr]);if(Math.abs(TWN.x-cam.x-VW/2)<VW&&Math.abs(TWN.y-cam.y-VH/2)<VH)ents.push([TWN.y+6,10,0]);if(P&&(!S.dead||(HEROFS[P.cls]&&heroOk(P.cls))))ents.push([P.y,3,P]);for(const id in OTHERS){const o=OTHERS[id];if(!o.d&&o.x>cam.x-80&&o.x<cam.x+VW+80&&o.y>cam.y-80&&o.y<cam.y+VH+80)ents.push([o.y,11,o])}
  ents.sort((a,b)=>a[0]-b[0]);
- for(const [,k,e] of ents){if(k===10)drawSakura();else if(k===9)drawCrit(e);else if(k===8)drawBld(e);else if(k===6)drawNode(e);else if(k===7)drawObj(e);else if(k===0)drawNpc(e);else if(k===2)drawMob(e);else if(k===4){if(e[2])drawProp(e[2],e[0],e[1]);else drawTree(e[0],e[1])}else if(k===5)drawDrop(e);else{heroAt(P,playerLook(),P.name,'#ffffff',true);if(S.inv>gt){const x=ax(P.x),y=ay(P.y)-11,left=S.inv-gt;if(left>2||Math.floor(gt*8)%2){lc.globalAlpha=.16+.06*Math.sin(gt*6);pxDisc(x,y,11,14,'#ffe07a');lc.globalAlpha=.85;pxRing(x,y,11,14,'#fff0a0',true,Math.floor(gt*10));lc.globalAlpha=1}LBL.push(['อมตะ '+Math.ceil(left)+' วิ',x*2,(y-31)*2,'#ffe07a',10])}}}
+ for(const [,k,e] of ents){if(k===11)drawOther(e);else if(k===10)drawSakura();else if(k===9)drawCrit(e);else if(k===8)drawBld(e);else if(k===6)drawNode(e);else if(k===7)drawObj(e);else if(k===0)drawNpc(e);else if(k===2)drawMob(e);else if(k===4){if(e[2])drawProp(e[2],e[0],e[1]);else drawTree(e[0],e[1])}else if(k===5)drawDrop(e);else{heroAt(P,playerLook(),P.name,'#ffffff',true);if(S.inv>gt){const x=ax(P.x),y=ay(P.y)-11,left=S.inv-gt;if(left>2||Math.floor(gt*8)%2){lc.globalAlpha=.16+.06*Math.sin(gt*6);pxDisc(x,y,11,14,'#ffe07a');lc.globalAlpha=.85;pxRing(x,y,11,14,'#fff0a0',true,Math.floor(gt*10));lc.globalAlpha=1}LBL.push(['อมตะ '+Math.ceil(left)+' วิ',x*2,(y-31)*2,'#ffe07a',10])}}}
  drawButterflies();drawFx();
  if(P&&S.aim!=null&&!S.dead){const ps=skAt(P.cls,S.aim,Math.max(1,skL(S.aim))),r=Math.round((ps.range||6)*TS/2);lc.globalAlpha=.55;pxRing(ax(P.x),ay(P.y),r,Math.round(r*.55),'#5ee0d0',true,Math.floor(gt*12));lc.globalAlpha=1;
   if(ps.type==='aoe'&&MPOS){const wx=HOV?HOV.x:MPOS[0]*2/AS+cam.x,wy=HOV?HOV.y:MPOS[1]*2/AS+cam.y,ok=Math.hypot(wx-P.x,wy-P.y)<=(ps.range||6)*TS,rr=Math.round(ps.rad*TS/2),col=ok?'#5ee0d0':'#ff5a6a';lc.globalAlpha=.18;pxDisc(ax(wx),ay(wy),rr,Math.round(rr*.55),col);lc.globalAlpha=.9;pxRing(ax(wx),ay(wy),rr,Math.round(rr*.55),col,true,Math.floor(gt*14));lc.globalAlpha=1}if(HOV){const hx=ax(HOV.x),hy=ay(HOV.y)+1,hr=Math.round(HOV.T.r*.6)+5;pxRing(hx,hy,hr,4,'#5ee0d0');pxRing(hx,hy,hr+2,5,'#ffffff',true,Math.floor(gt*16))}}
@@ -2976,7 +2978,7 @@ function sendChat(msg){msg=msg.trim();if(!msg)return;
   if(c==='help')chat('sys','','คำสั่ง: /town กลับเมือง · /where ดูตำแหน่ง · /clear ล้างแชท');
   else if(c==='town')doTp();else if(c==='where')chat('sys','','คุณอยู่ที่ '+ZONES[zoneOf(P.x,P.y)].n+' ('+Math.floor(P.x/TS)+', '+Math.floor(P.y/TS)+')');
   else if(c==='clear')$('#log').innerHTML='';else chat('sys','','ไม่รู้จักคำสั่งนี้ พิมพ์ /help');return}
- chat('all',P.name,msg);S.say=msg;S.sayT=gt+4}
+ chat('all',P.name,msg);S.say=msg;S.sayT=gt+4;netChat(msg)}
 
 /* ================= input ================= */
 const keyOf=e=>e.code&&e.code.startsWith('Key')?e.code.slice(3).toLowerCase():e.code&&e.code.startsWith('Digit')?e.code.slice(5):e.code&&e.code.startsWith('Numpad')&&/\d$/.test(e.code)?e.code.slice(-1):e.key.toLowerCase();
@@ -3052,7 +3054,66 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
  chat('sys','','ยินดีต้อนรับสู่เอลเดรีย ออนไลน์, '+P.name+'!');
  chat('sys','','คุยกับผู้เฒ่าอิลวา (มีเครื่องหมาย !) เพื่อรับเควสแรก · พิมพ์ /help ดูคำสั่งแชท');
  save()}
-buildLogin();
+/* ================= ONLINE: Firebase auth, cloud save, multiplayer ================= */
+const FBCFG={apiKey:"AIzaSyBS9s41O2LqMO0oqosmlyW_RlVTq0lFXvg",authDomain:"eldriaonline.firebaseapp.com",databaseURL:"https://eldriaonline-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"eldriaonline",storageBucket:"eldriaonline.firebasestorage.app",messagingSenderId:"551790949526",appId:"1:551790949526:web:0295cf9da523146e8b3eb7"};
+let FB=null,FDB=null,UID=null,NETREADY=false,CLOUDT=0;const OTHERS={};
+function netOK(){return !!(FB&&UID&&FDB)}
+function cloudSave(d){if(!netOK())return;clearTimeout(CLOUDT);CLOUDT=setTimeout(()=>{FDB.ref('users/'+UID+'/data').set(JSON.stringify(d)).catch(e=>console.warn('cloud save',e))},1500)}
+function authUI(){const o=document.createElement('div');o.id='auth';o.className='over';o.innerHTML=`<div class="card frame authc">
+ <div class="logo"><h1>ELDRIA</h1><p>เอลเดรีย ออนไลน์</p></div>
+ <div id="aview"></div><div id="amsg" class="amsg"></div></div>`;document.getElementById('game').appendChild(o);authView('login')}
+function authView(v,extra){const a=$('#aview');$('#amsg').textContent='';$('#amsg').className='amsg';
+ if(v==='login'||v==='signup')a.innerHTML=`<div class="atabs"><button data-av="login" class="${v==='login'?'on':''}">เข้าสู่ระบบ</button><button data-av="signup" class="${v==='signup'?'on':''}">สมัครสมาชิก</button></div>
+  <div class="fld"><label>อีเมล (Gmail)</label><input id="aem" type="email" autocomplete="email" placeholder="you@gmail.com"></div>
+  <div class="fld"><label>รหัสผ่าน (อย่างน้อย 6 ตัว)</label><input id="apw" type="password" autocomplete="${v==='login'?'current-password':'new-password'}" minlength="6"></div>
+  ${v==='signup'?'<div class="fld"><label>ยืนยันรหัสผ่าน</label><input id="apw2" type="password" autocomplete="new-password"></div>':''}
+  <button class="btn pri big" data-aa="${v}">${v==='login'?'เข้าสู่ระบบ':'สมัครและส่งอีเมลยืนยัน'}</button>
+  ${v==='login'?'<button class="alink" data-aa="forgot">ลืมรหัสผ่าน?</button>':''}
+  <div class="aor"><span>หรือ</span></div><button class="btn big gbtn" data-aa="google"><b>G</b> เข้าสู่ระบบด้วย Google</button>`;
+ else if(v==='verify')a.innerHTML=`<div class="note">ส่งลิงก์ยืนยันไปที่ <b>${esc(extra||'')}</b> แล้ว · เปิด Gmail กดลิงก์ในอีเมล (ดูในโฟลเดอร์สแปมด้วย) แล้วกลับมากดปุ่มด้านล่าง</div>
+  <button class="btn pri big" data-aa="checkv">ยืนยันแล้ว เข้าเกม</button><button class="btn" data-aa="resend">ส่งอีเมลอีกครั้ง</button><button class="alink" data-aa="logout">ออกจากระบบ</button>`;
+ else if(v==='loading')a.innerHTML='<div class="note">กำลังเชื่อมต่อเซิร์ฟเวอร์...</div>'}
+function amsg(t,ok){const m=$('#amsg');m.textContent=t;m.className='amsg'+(ok?' ok':' bad')}
+const AERR={'auth/invalid-email':'รูปแบบอีเมลไม่ถูกต้อง','auth/email-already-in-use':'อีเมลนี้สมัครแล้ว ลองเข้าสู่ระบบ','auth/weak-password':'รหัสผ่านต้องมีอย่างน้อย 6 ตัว','auth/invalid-credential':'อีเมลหรือรหัสผ่านไม่ถูกต้อง','auth/wrong-password':'อีเมลหรือรหัสผ่านไม่ถูกต้อง','auth/user-not-found':'ไม่พบบัญชีนี้','auth/too-many-requests':'ลองหลายครั้งเกินไป รอสักครู่','auth/popup-closed-by-user':'ปิดหน้าต่างล็อกอินก่อนเสร็จ','auth/unauthorized-domain':'โดเมนนี้ยังไม่ได้รับอนุญาตใน Firebase (Authorized domains)','auth/network-request-failed':'เชื่อมต่อเครือข่ายไม่ได้'};
+const aerr=e=>AERR[e&&e.code]||((e&&e.message)||'เกิดข้อผิดพลาด');
+document.addEventListener('click',async e=>{const t=e.target.closest('[data-av],[data-aa]');if(!t||!t.closest('#auth'))return;
+ if(t.dataset.av)return authView(t.dataset.av);const a=t.dataset.aa,au=FB.auth();
+ try{
+  if(a==='login'||a==='signup'){const em=$('#aem').value.trim(),pw=$('#apw').value;if(pw.length<6)return amsg('รหัสผ่านต้องมีอย่างน้อย 6 ตัว');
+   if(a==='signup'){if(pw!==$('#apw2').value)return amsg('รหัสผ่านทั้งสองช่องไม่ตรงกัน');const c=await au.createUserWithEmailAndPassword(em,pw);await c.user.sendEmailVerification();authView('verify',em)}
+   else await au.signInWithEmailAndPassword(em,pw)}
+  else if(a==='forgot'){const em=$('#aem').value.trim();if(!em)return amsg('ใส่อีเมลก่อน แล้วกดลืมรหัสผ่าน');await au.sendPasswordResetEmail(em);amsg('ส่งลิงก์ตั้งรหัสผ่านใหม่ไปที่อีเมลแล้ว',true)}
+  else if(a==='google'){const p=new firebase.auth.GoogleAuthProvider();await au.signInWithPopup(p)}
+  else if(a==='resend'){await au.currentUser.sendEmailVerification();amsg('ส่งอีเมลยืนยันอีกครั้งแล้ว',true)}
+  else if(a==='checkv'){await au.currentUser.reload();if(au.currentUser.emailVerified){await au.currentUser.getIdToken(true);onAuthed(au.currentUser)}else amsg('ยังไม่ได้ยืนยัน · กดลิงก์ในอีเมลก่อน')}
+  else if(a==='logout'){await au.signOut()}
+ }catch(err){amsg(aerr(err))}});
+async function onAuthed(u){UID=u.uid;authView('loading');CKEY_U=CKEY+'-'+UID;
+ try{const snap=await FDB.ref('users/'+UID+'/data').get();if(snap.exists()){localStorage.setItem(ckey(),snap.val())}}catch(e){console.warn(e)}
+ $('#auth').style.display='none';buildLogin();netStart()}
+function netBoot(){authUI();if(typeof firebase==='undefined'){amsg('โหลด Firebase ไม่ได้ ตรวจสอบอินเทอร์เน็ต');return}
+ FB=firebase.initializeApp(FBCFG);FDB=firebase.database();
+ FB.auth().onAuthStateChanged(u=>{if(!u){UID=null;$('#auth').style.display='';authView('login');return}
+  const pw=u.providerData.some(p=>p.providerId==='password');if(pw&&!u.emailVerified){$('#auth').style.display='';authView('verify',u.email);return}onAuthed(u)})}
+/* ---- presence + chat ---- */
+let NETT=0,LASTPUB='',CHATREF=null,JOINT=0;
+function netStart(){if(NETT)return;JOINT=Date.now();
+ const pref=FDB.ref('presence');
+ pref.on('child_added',s=>{if(s.key!==UID)OTHERS[s.key]=Object.assign({id:s.key,x:s.val().x,y:s.val().y},s.val())});
+ pref.on('child_changed',s=>{if(s.key===UID)return;const o=OTHERS[s.key]||(OTHERS[s.key]={id:s.key,x:s.val().x,y:s.val().y});const v=s.val();o.tx=v.x;o.ty=v.y;o.mv=Math.hypot(v.x-o.x,v.y-o.y)>1?gt:o.mv;Object.assign(o,{n:v.n,c:v.c,sx:v.sx,hs:v.hs,hc:v.hc,ec:v.ec,fx:v.fx,lv:v.lv,d:v.d,hp:v.hp});if(v.pk&&v.pt!==o.pt0){o.pt0=v.pt;o.gest={k:v.pk,t0:gt,dur:v.pk==='atk'?.25:.45,until:gt+(v.pk==='atk'?.25:.45)}}if(v.say&&v.say!==o.say0){o.say0=v.say;o.say=v.say;o.sayT=gt+4}});
+ pref.on('child_removed',s=>{delete OTHERS[s.key]});
+ CHATREF=FDB.ref('chat');CHATREF.orderByChild('t').startAt(JOINT-1000).limitToLast(30).on('child_added',s=>{const v=s.val();if(!v||v.u===UID)return;chat('all',v.n,v.m)});
+ NETT=setInterval(netTick,120)}
+function netTick(){if(!netOK())return;const me=FDB.ref('presence/'+UID);if(!P){if(LASTPUB){me.remove();LASTPUB=''}return}
+ const ps=poseOf(),v={n:P.name,c:P.cls,sx:P.sex||'m',hs:P.hs??0,hc:P.hc??4,ec:P.ec??0,x:Math.round(P.x),y:Math.round(P.y),fx:P.fx||1,lv:P.lv,d:S.dead?1:0,hp:Math.round(P.hp/D().mhp*100),pk:ps||'',pt:ps&&S.pose?Math.round(S.pose.t0*100):0,say:S.sayT>gt?S.say:'',t:firebase.database.ServerValue.TIMESTAMP};
+ const k=JSON.stringify({...v,t:0});if(k===LASTPUB)return;LASTPUB=k;me.set(v);me.onDisconnect().remove()}
+function netChat(m){if(!netOK()||!P)return;CHATREF.push({u:UID,n:P.name,m:m.slice(0,120),t:Date.now()})}
+function drawOther(o){if(o.tx!=null){const k=.25;o.x+=(o.tx-o.x)*k;o.y+=(o.ty-o.y)*k}if(Math.abs(o.tx-o.x)+Math.abs(o.ty-o.y)>1)o.mv=gt;
+ const look=classLook(o.c||'novice',{sex:o.sx,hs:o.hs,hc:o.hc,ec:o.ec});const y=heroAt(o,look,o.n+(o.lv?' Lv'+o.lv:''),'#9fe0ff',false);
+ if(o.sayT>gt){const x=ax(o.x);LBL.push(['💬 '+o.say,x*2,(y-(o._hh||40)-6)*2,'#ffffff',12])}}
+
+netBoot();
+document.addEventListener('click',e=>{if(e.target.id==='acctout'&&FB){if(UID)FDB.ref('presence/'+UID).remove();FB.auth().signOut().then(()=>location.reload())}});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-lang]');if(b){setLang(b.dataset.lang);sfx&&P&&sfx('ui')}});
 setLang(LANG);
 
@@ -3068,5 +3129,4 @@ window.addEventListener('beforeunload',()=>{if(P)save()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)save()});
 })();
 </script>
-
 </body></html>
