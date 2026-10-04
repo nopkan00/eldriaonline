@@ -1,112 +1,152 @@
 {
-  "rules": {
-    "users": {
-      "$uid": {
-        ".read": "auth != null && auth.uid === $uid",
-        ".write": "auth != null && auth.uid === $uid",
-        "data": {
-          ".validate": "newData.isString() && newData.val().length < 900000"
-        },
-        "pid": {
-          ".validate": "newData.isString()"
-        }
-      }
+ "rules": {
+  "users": {
+   "$uid": {
+    ".read": "auth != null && auth.uid === $uid",
+    ".write": "auth != null && auth.uid === $uid",
+    "data": {
+     ".validate": "newData.isString() && newData.val().length < 900000"
     },
-    "presence": {
-      ".read": "auth != null",
-      "$uid": {
-        ".write": "auth != null && auth.uid === $uid",
-        "gm": {
-          ".validate": "newData.val() === 0 || (auth.token.email === 'nopkan00@gmail.com' && auth.token.email_verified === true)"
-        }
-      }
-    },
-    "chat": {
-      ".read": "auth != null",
-      ".write": "auth != null && auth.token.email === 'nopkan00@gmail.com' && auth.token.email_verified === true && !newData.exists()",
-      ".indexOn": [
-        "t"
-      ],
-      "$msg": {
-        ".write": "auth != null && !data.exists() && (!root.child('mute').child(auth.uid).exists() || root.child('mute').child(auth.uid).val() < now)",
-        ".validate": "newData.child('u').val() === auth.uid && newData.child('m').isString() && newData.child('m').val().length <= 120 && (!newData.child('gm').exists() || newData.child('gm').val() === 0 || auth.token.email === 'nopkan00@gmail.com')"
-      }
-    },
-    "announce": {
-      ".read": "auth != null",
-      ".indexOn": [
-        "t"
-      ],
-      ".write": "auth != null && auth.token.email === 'nopkan00@gmail.com' && auth.token.email_verified === true"
-    },
-    "chatclear": {
-      ".read": "auth != null",
-      ".write": "auth != null && auth.token.email === 'nopkan00@gmail.com' && auth.token.email_verified === true"
-    },
-    "kick": {
-      "$uid": {
-        ".read": "auth != null && auth.uid === $uid",
-        ".write": "auth != null && ((auth.token.email === 'nopkan00@gmail.com' && auth.token.email_verified === true) || (auth.uid === $uid && !newData.exists()))"
-      }
-    },
-    "mute": {
-      "$uid": {
-        ".read": "auth != null && auth.uid === $uid",
-        ".write": "auth != null && auth.token.email === 'nopkan00@gmail.com' && auth.token.email_verified === true"
-      }
-    },
-    "parties": {
-      "$pid": {
-        ".read": "auth != null",
-        ".write": "auth != null && ((!data.exists() && newData.child('leader').val() === auth.uid && newData.child('members').child(auth.uid).exists()) || data.child('leader').val() === auth.uid)",
-        "members": {
-          "$uid": {
-            ".write": "auth != null && ((auth.uid === $uid && (!newData.exists() || root.child('pinvite').child(auth.uid).child('pid').val() === $pid)) || data.parent().parent().child('leader').val() === auth.uid)"
-          }
-        }
-      }
-    },
-    "pinvite": {
-      "$uid": {
-        ".read": "auth != null && auth.uid === $uid",
-        ".write": "auth != null && ((auth.uid === $uid && !newData.exists()) || (newData.exists() && newData.child('from').val() === auth.uid))"
-      }
-    },
-    "pchat": {
-      "$pid": {
-        ".read": "auth != null && root.child('parties').child($pid).child('members').child(auth.uid).exists()",
-        ".indexOn": [
-          "t"
-        ],
-        "$m": {
-          ".write": "auth != null && !data.exists() && root.child('parties').child($pid).child('members').child(auth.uid).exists()",
-          ".validate": "newData.child('u').val() === auth.uid && newData.child('m').isString() && newData.child('m').val().length <= 120"
-        }
-      }
-    },
-    "whisper": {
-      "$uid": {
-        ".read": "auth != null && auth.uid === $uid",
-        ".indexOn": [
-          "t"
-        ],
-        "$m": {
-          ".write": "auth != null && !data.exists() && newData.child('from').val() === auth.uid",
-          ".validate": "newData.child('m').isString() && newData.child('m').val().length <= 120"
-        }
-      }
-    },
-    "tradereq": {
-      "$uid": {
-        ".read": "auth != null && auth.uid === $uid",
-        ".write": "auth != null && ((auth.uid === $uid && !newData.exists()) || (newData.exists() && newData.child('from').val() === auth.uid))"
-      }
-    },
-    "trade": {
-      "$tid": {
-        ".read": "auth != null && (data.child('a').val() === auth.uid || data.child('b').val() === auth.uid)",
-        ".write": "auth != null && ((!data.exists() && newData.child('a').val() === auth.uid) || data.child('a').val() === auth.uid || data.child('b').val() === auth.uid)"
-      }
+    "pid": {
+     ".validate": "newData.isString()"
     }
+   }
+  },
+  "presence": {
+   ".read": "auth != null",
+   "$uid": {
+    ".write": "auth != null && auth.uid === $uid",
+    "gm": {
+     ".validate": "newData.val() === 0 || (auth.token.email === 'nopkan00@gmail.com' && auth.token.email_verified === true)"
+    }
+   }
+  },
+  "chat": {
+   ".read": "auth != null",
+   ".write": "auth != null && auth.token.email === 'nopkan00@gmail.com' && auth.token.email_verified === true && !newData.exists()",
+   ".indexOn": [
+    "t"
+   ],
+   "$msg": {
+    ".write": "auth != null && !data.exists() && (!root.child('mute').child(auth.uid).exists() || root.child('mute').child(auth.uid).val() < now)",
+    ".validate": "newData.child('u').val() === auth.uid && newData.child('m').isString() && newData.child('m').val().length <= 120 && (!newData.child('gm').exists() || newData.child('gm').val() === 0 || auth.token.email === 'nopkan00@gmail.com')"
+   }
+  },
+  "announce": {
+   ".read": "auth != null",
+   ".indexOn": [
+    "t"
+   ],
+   ".write": "auth != null && auth.token.email === 'nopkan00@gmail.com' && auth.token.email_verified === true"
+  },
+  "chatclear": {
+   ".read": "auth != null",
+   ".write": "auth != null && auth.token.email === 'nopkan00@gmail.com' && auth.token.email_verified === true"
+  },
+  "kick": {
+   "$uid": {
+    ".read": "auth != null && auth.uid === $uid",
+    ".write": "auth != null && ((auth.token.email === 'nopkan00@gmail.com' && auth.token.email_verified === true) || (auth.uid === $uid && !newData.exists()))"
+   }
+  },
+  "mute": {
+   "$uid": {
+    ".read": "auth != null && auth.uid === $uid",
+    ".write": "auth != null && auth.token.email === 'nopkan00@gmail.com' && auth.token.email_verified === true"
+   }
+  },
+  "parties": {
+   "$pid": {
+    ".read": "auth != null",
+    ".write": "auth != null && ((!data.exists() && newData.child('leader').val() === auth.uid && newData.child('members').child(auth.uid).exists()) || data.child('leader').val() === auth.uid)",
+    "members": {
+     "$uid": {
+      ".write": "auth != null && ((auth.uid === $uid && (!newData.exists() || root.child('pinvite').child(auth.uid).child('pid').val() === $pid)) || data.parent().parent().child('leader').val() === auth.uid)"
+     }
+    }
+   }
+  },
+  "pinvite": {
+   "$uid": {
+    ".read": "auth != null && auth.uid === $uid",
+    ".write": "auth != null && ((auth.uid === $uid && !newData.exists()) || (newData.exists() && newData.child('from').val() === auth.uid))"
+   }
+  },
+  "pchat": {
+   "$pid": {
+    ".read": "auth != null && root.child('parties').child($pid).child('members').child(auth.uid).exists()",
+    ".indexOn": [
+     "t"
+    ],
+    "$m": {
+     ".write": "auth != null && !data.exists() && root.child('parties').child($pid).child('members').child(auth.uid).exists()",
+     ".validate": "newData.child('u').val() === auth.uid && newData.child('m').isString() && newData.child('m').val().length <= 120"
+    }
+   }
+  },
+  "whisper": {
+   "$uid": {
+    ".read": "auth != null && auth.uid === $uid",
+    ".indexOn": [
+     "t"
+    ],
+    "$m": {
+     ".write": "auth != null && !data.exists() && newData.child('from').val() === auth.uid",
+     ".validate": "newData.child('m').isString() && newData.child('m').val().length <= 120"
+    }
+   }
+  },
+  "tradereq": {
+   "$uid": {
+    ".read": "auth != null && auth.uid === $uid",
+    ".write": "auth != null && ((auth.uid === $uid && !newData.exists()) || (newData.exists() && newData.child('from').val() === auth.uid))"
+   }
+  },
+  "trade": {
+   "$tid": {
+    ".read": "auth != null && (data.child('a').val() === auth.uid || data.child('b').val() === auth.uid)",
+    ".write": "auth != null && ((!data.exists() && newData.child('a').val() === auth.uid) || data.child('a').val() === auth.uid || data.child('b').val() === auth.uid)"
+   }
+  },
+  "mobhost": {
+   ".read": "auth != null",
+   ".write": "auth != null"
+  },
+  "mobs": {
+   ".read": "auth != null",
+   ".write": "auth != null"
+  },
+  "mobhit": {
+   ".read": "auth != null",
+   ".write": "auth != null",
+   "$h": {
+    ".validate": "!newData.exists() || newData.child('u').val() === auth.uid"
+   }
+  },
+  "mobatk": {
+   "$uid": {
+    ".read": "auth != null && auth.uid === $uid",
+    ".write": "auth != null"
+   }
+  },
+  "mobkill": {
+   "$uid": {
+    ".read": "auth != null && auth.uid === $uid",
+    ".write": "auth != null"
+   }
+  },
+  "fxev": {
+   ".read": "auth != null",
+   ".indexOn": [
+    "ts"
+   ],
+   "$e": {
+    ".write": "auth != null && ((!data.exists() && newData.child('u').val() === auth.uid) || (data.exists() && !newData.exists() && data.child('u').val() === auth.uid))"
+   }
+  },
+  "nodes": {
+   ".read": "auth != null",
+   ".write": "auth != null"
   }
+ }
 }
