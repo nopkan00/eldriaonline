@@ -147,6 +147,16 @@
   "nodes": {
    ".read": "auth != null",
    ".write": "auth != null"
+  },
+  "drops": {
+   ".read": "auth != null",
+   ".write": "auth != null"
+  },
+  "pexp": {
+   "$uid": {
+    ".read": "auth != null && auth.uid === $uid",
+    ".write": "auth != null"
+   }
   }
  }
 }

@@ -579,6 +579,7 @@ img[src^="data:image/webp"]{image-rendering:auto!important}
 #auth{z-index:200}.authc{max-width:380px;margin:auto}.atabs{display:flex;gap:6px;margin:6px 0 12px}.atabs button{flex:1;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:inherit;font:inherit;cursor:pointer}.atabs button.on{background:rgba(255,210,74,.18);border-color:#ffd24a;color:#ffe07a}#auth .fld input{width:100%}.alink{background:none;border:0;color:#9fd8ff;font:inherit;font-size:12px;cursor:pointer;text-decoration:underline;margin:6px auto 0;display:block}.aor{display:flex;align-items:center;gap:8px;margin:12px 0;opacity:.6;font-size:12px}.aor:before,.aor:after{content:'';flex:1;height:1px;background:rgba(255,255,255,.2)}.gbtn{width:100%;background:#fff!important;color:#222!important}.gbtn b{color:#4285f4;margin-right:6px}#aview .btn.big{width:100%;margin-top:6px}.amsg{min-height:18px;margin-top:8px;font-size:12px;text-align:center}.amsg.bad{color:#ff9a8a}.amsg.ok{color:#9ef0b0}.acct{display:flex;justify-content:center;gap:8px;align-items:center;font-size:12px;opacity:.85;margin:-4px 0 6px}.acct .alink{margin:0}
 #pinv{position:absolute;left:50%;bottom:110px;transform:translateX(-50%);z-index:90;padding:12px 16px;text-align:center;font-size:14px}#pinv .btns{display:flex;gap:8px;justify-content:center;margin-top:8px}.pinvrow{display:flex;gap:6px;margin:8px 0}.pinvrow input{flex:1}.plist{display:flex;flex-direction:column;gap:4px}.prow{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:10px;background:rgba(255,255,255,.04)}.prow .l{flex:1}.prow small{display:block;opacity:.7;font-size:11px}.prow.off{opacity:.5}.pdot{width:8px;height:8px;border-radius:50%;background:#5ee08a}.prow.off .pdot{background:#777}.php{display:block;height:4px;border-radius:2px;background:#3a1420;margin-top:3px;overflow:hidden}.php i{display:block;height:100%;background:#ff4f64}#ptyhud{position:absolute;left:0;top:calc(100% + 40px);display:flex;flex-direction:column;gap:3px;min-width:130px}#ptyhud:empty{display:none}#ptyhud .pth{font-size:10px;color:#9ef08a;font-weight:700}#ptyhud .pm{font-size:11px;padding:3px 6px;border-radius:6px;background:rgba(10,14,30,.7)}#ptyhud .pm.off{opacity:.5}
 #pmenu{position:absolute;z-index:95;min-width:160px;padding:8px;display:flex;flex-direction:column;gap:3px}#pmenu b{font-size:13px;color:#ffe07a}#pmenu small{font-size:11px;opacity:.7;margin-bottom:4px}#pmenu button{text-align:left;padding:6px 8px;border-radius:8px;border:0;background:rgba(255,255,255,.06);color:inherit;font:inherit;font-size:13px;cursor:pointer}#pmenu button:hover{background:rgba(255,210,74,.2)}#treq{position:absolute;left:50%;bottom:170px;transform:translateX(-50%);z-index:90;padding:12px 16px;text-align:center}#treq .btns{display:flex;gap:8px;justify-content:center;margin-top:8px}#trade{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:85;width:min(560px,calc(100% - 24px));max-height:calc(100% - 40px);overflow:auto;padding:12px}#trade .th{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}#trade .tcols{display:grid;grid-template-columns:1fr 1fr;gap:8px}#trade .tcol{padding:8px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);min-height:120px;display:flex;flex-direction:column;gap:4px}#trade .tcol.lk{border-color:#ffd24a;background:rgba(255,210,74,.08)}#trade h4{margin:0 0 4px;font-size:13px}#trade .tit{display:flex;align-items:center;gap:6px;font:inherit;font-size:12px;color:inherit;background:rgba(0,0,0,.2);border:0;border-radius:6px;padding:2px 6px;text-align:left;cursor:pointer}#trade .tit .ic{width:26px;height:26px}#trade .tg{margin-top:auto;font-size:12px;display:flex;gap:6px;align-items:center}#trade .tg input{width:100px}#trade .tbtns{display:flex;gap:8px;justify-content:center;margin:10px 0}#trade .tinvg{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:4px;margin-top:6px}#trade .tinv{position:relative;border:0;background:rgba(255,255,255,.05);border-radius:6px;padding:2px;cursor:pointer}#trade .tinv em{position:absolute;right:2px;bottom:0;font-size:9px;font-style:normal}
+#updbar{position:absolute;left:50%;top:12px;transform:translateX(-50%);z-index:150;display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:14px;max-width:94%;flex-wrap:wrap;justify-content:center;border:1px solid #ffd24a!important}#updbar span{opacity:.8;font-size:12px}.ploot{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.ploot .btn{flex:1;min-width:140px}.ploot .btn[disabled]{opacity:.6;cursor:default}
 </style>
 
 <div id="game">
@@ -819,7 +820,7 @@ const IT={
  bt2:{n:'รองเท้าพราน',t:'shoes',def:3,spd:15,agi:1,lv:6,price:280,c:'#6f8a4a',g:'รองเท้า'},
  bt3:{n:'รองเท้าสายลม',t:'shoes',def:5,spd:25,agi:3,lv:11,price:1050,c:'#8fd0c8',g:'รองเท้า'},
  nk1:{n:'สร้อยพลังชีวิต',t:'acc',hp:60,vit:2,lv:1,price:250,c:'#e07a8a',g:'สร้อย'},
- ear1:{n:'ต่างหูนักล่า',t:'acc',cls:['archer'],dex:3,luk:3,lv:6,price:600,c:'#9fd0ff',g:'ต่างหู'},
+ ear1:{n:'ต่างหูนักล่า',t:'acc',dex:3,luk:3,lv:6,price:600,c:'#9fd0ff',g:'ต่างหู'},
  clover:{n:'เครื่องรางใบโคลเวอร์',t:'acc',luk:6,lv:1,price:500,c:'#7bd476',g:'โคลเวอร์'},
  ring1:{n:'แหวนนักเดินทาง',t:'ring',atk:6,def:4,luk:2,lv:1,price:300,c:'#e6c36a',g:'แหวน'},
  ring2:{n:'แหวนหัวใจโกเลม',t:'ring',atk:18,def:12,hp:150,str:3,vit:3,lv:1,price:2000,c:'#f09a4a',g:'แหวน'}
@@ -1175,7 +1176,7 @@ function removeItem(id,q){for(let i=P.inv.length-1;i>=0&&q>0;i--){const s=P.inv[
 function sellVal(x){const o=typeof x==='string'?{id:x}:x,it=IT[o.id];return it.t==='mat'?it.price:it.t==='card'?Math.floor(it.price*.5):Math.floor(it.price*.4*RAR[rarOf(o)].s)}
 const rarTag=o=>{const r=rarOf(o);return `<span class="rar" style="color:${RAR[r].c}">${RAR[r].n}</span>`};
 const clsList=it=>it.cls?[].concat(it.cls):null;
-const canUse=id=>{const l=clsList(IT[id]);return !l||!P||l.includes(P.cls)};
+const canUse=id=>{const l=IT[id]&&(IT[id].t==='acc'||IT[id].t==='ring')?null:clsList(IT[id]);return !l||!P||l.includes(P.cls)};
 const nameOf=o=>{const id=typeof o==='string'?o:o.id,rf=typeof o==='object'&&o.ref?`+${o.ref} `:'';return `<b style="color:${RAR[rarOf(o)].c}">${rf}${esc(IT[id].n)}</b>`};
 function itemStats(x){const o=typeof x==='string'?{id:x}:x,it=IT[o.id],a=[],eq=isEquip(o.id),v=k=>eq?instStat(o,k)-((o.bon&&o.bon[k])||0)-(o.cards||[]).reduce((s,c)=>s+(IT[c][k]||0),0)-((k==='atk'||k==='def')?refBonus(o)[k]:0):(it[k]||0);
  if(eq)a.push(it.t==='ring'?'แหวน':SLOTN[TSLOT[it.t]]||'เครื่องประดับ');if(it.t==='card')a.push('การ์ด · ใส่ได้ใน '+it.fit.map(f=>FITN[f]).join(', '));
@@ -1263,9 +1264,9 @@ function nearestMob(r){let best=null,bd=r;for(const m of M){const d=dist(m,P);if
 function dmgMob(m,mult,col,o={}){if(GHOST){if(m&&m.T)hitFx(m,o.kind||'phys',false);return 0}if(S.inv>gt){S.inv=0;toast('สถานะอมตะหายไป · เริ่มโจมตีแล้ว')}const d=D();if(R()*100>Math.max(50,d.hit-m.T.lv*2)){m.agg=true;m.ret=false;S.combat=gt;float(m.x,m.y-m.T.r*1.6,'พลาด','#9aa7a3');return 0}let dmg=d.atk*mult*(.9+R()*.2)-m.T.def*.5;if(UNDEAD.has(m.type))dmg*=1+PV('ward',1)/100;const crit=R()*100<d.crit+(o.crit||0);if(crit)dmg*=d.critDmg;dmg=Math.max(1,Math.round(dmg));
  m.hp-=dmg;mobHitSend(m,dmg,o);m.agg=true;m.ret=false;m.flash=.12;m.hitT=gt;S.combat=gt;hitFx(m,o.kind||'phys',crit);if(o.stun&&!m.T.boss)m.stun=gt+o.stun;if(o.slow)m.slow=gt+o.slow;if(!m.T.boss&&P){const a=Math.atan2(m.y-P.y,m.x-P.x),nx=m.x+Math.cos(a)*4,ny=m.y+Math.sin(a)*4;if(canStand(nx,ny)){m.x=nx;m.y=ny}}float(m.x,m.y-m.T.r*1.6,(crit?'คริ! ':'')+dmg,crit?'#ffd166':(col||'#ffffff'),crit);
  if(m.hp<=0)killMob(m);return dmg}
-function killMob(m){if(MOBON&&!m.__rw&&!mobKillOK(m))return;const T=m.T;removeMob(m);P.kills++;P.mk=P.mk||{};if(!P.mk[m.type]){P.mk[m.type]=0;toast('📖 บันทึก '+T.n+' ลงสมุดมอนสเตอร์แล้ว')}P.mk[m.type]++;
+function killMob(m){if(MOBON&&!m.__rw&&!mobKillOK(m))return;if(MOBON)DROPOWN=lootOwner(m);const T=m.T;removeMob(m);P.kills++;P.mk=P.mk||{};if(!P.mk[m.type]){P.mk[m.type]=0;toast('📖 บันทึก '+T.n+' ลงสมุดมอนสเตอร์แล้ว')}P.mk[m.type]++;
  const B=m.rb?1.5:1,PB=typeof partyBonus==='function'?partyBonus():1,ex=Math.round(T.exp*B*PB),g=Math.round((T.gold[0]+(R()*(T.gold[1]-T.gold[0]+1)|0))*B);if(m.rb){chat('sys','',P.name+' ปราบ'+mobName(m)+'! รางวัล ×1.5 · เกิดใหม่ใน 5 นาที','#ff9ad5');toast('ปราบ'+mobName(m)+'! รางวัล ×1.5')}
- P.gold+=g;sfx('coin');gainBoth(ex,mobName(m),P.x,P.y-92);TXT.push({x:P.x,y:P.y-124,s:'+'+g+' ทอง',c:'#ffd966',t:0});
+ P.gold+=g;sfx('coin');gainBoth(MOBON?pShareExp(ex,m):ex,mobName(m),P.x,P.y-92);TXT.push({x:P.x,y:P.y-124,s:'+'+g+' ทอง',c:'#ffd966',t:0});
  const dr=D().drop*B*PB;for(const [id,p] of T.loot)if(R()<Math.min(1,p*dr))dropAt(m,id,0);
  for(const [tier,p] of T.gear||[])if(R()<Math.min(1,p*dr)){const pool=GEAR_T[tier],id=pool[R()*pool.length|0];dropAt(m,id,0,makeInst(id,rollRarity(dr*(T.rboost||1))))}
  {const po=Math.min(.45,.004*T.lv*T.lv/4+.002)*(T.boss?12:1)*dr;if(R()<po)dropAt(m,'orew',0);if(R()<po)dropAt(m,'orea',0)}
@@ -3170,7 +3171,7 @@ function showInvite(v){let d=$('#pinv');if(!d){d=document.createElement('div');d
 function hideInvite(){const d=$('#pinv');if(d)d.hidden=true}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-pi],[data-pa]');if(!b)return;
  if(b.dataset.pi){const v=$('#pinv')._v;hideInvite();if(b.dataset.pi==='y')pAccept(v);else FDB.ref('pinvite/'+UID).remove();return}
- const a=b.dataset.pa;if(a==='inv'){const i=$('#pinvn');if(i&&i.value.trim())pInvite(i.value)}else if(a==='leave')pLeave();else if(a==='kick')pKick(b.dataset.u)});
+ const a=b.dataset.pa;if(a==='inv'){const i=$('#pinvn');if(i&&i.value.trim())pInvite(i.value)}else if(a==='leave')pLeave();else if(a==='kick')pKick(b.dataset.u);else if(a==='loot'&&PARTY&&PARTY.leader===UID)FDB.ref('parties/'+MYPID+'/loot').set(b.dataset.v)});
 function rParty(){if(!netOK())return '<div class="note">ต้องเข้าสู่ระบบออนไลน์ก่อน</div>';
  const ms=pMembers(),on=pOnline().length,pb=partyBonus();
  let h=`<div class="note">ปาร์ตี้ได้สูงสุด ${PMAX} คน · โบนัส EXP และอัตราดรอป +1% ต่อสมาชิกที่ออนไลน์ 1 คน · ตอนนี้ <b style="color:#9ef08a">+${Math.round((pb-1)*100)}%</b> (${on}/${ms.length||1} ออนไลน์)</div>`;
@@ -3178,7 +3179,7 @@ function rParty(){if(!netOK())return '<div class="note">ต้องเข้า
  if(!ms.length)h+='<div class="note">ยังไม่มีปาร์ตี้ · เชิญผู้เล่นเพื่อสร้างปาร์ตี้ หรือพิมพ์ /invite ชื่อ ในแชท</div>';
  else{h+='<div class="plist">';for(const u of ms){const me=u===UID,o=OTHERS[u],nm=PARTY.members[u].n,online=me||!!o,cls=me?P.cls:o&&o.c,lv=me?P.lv:o&&o.lv,hp=me?Math.round(P.hp/D().mhp*100):o?o.hp:0;
   h+=`<div class="prow${online?'':' off'}"><span class="pdot"></span><div class="l"><b>${PARTY.leader===u?'👑 ':''}${esc(nm)}${me?' (คุณ)':''}</b><small>${online?(cls&&CLS[cls]?CLS[cls].n:'')+(lv?' · Lv '+lv:''):'ออฟไลน์'}</small>${online?`<i class="php"><i style="width:${hp||0}%"></i></i>`:''}</div>${PARTY.leader===UID&&!me?`<button class="btn" data-pa="kick" data-u="${u}">เตะ</button>`:''}</div>`}
-  h+=`</div><button class="btn bad" data-pa="leave" style="margin-top:8px">ออกจากปาร์ตี้</button>`}
+  {const lm=PARTY.loot||'free',ld=PARTY.leader===UID;h+=`</div><div class="sec" style="margin-top:8px"><h3>การแบ่งของดรอป${ld?'':' (หัวหน้าเป็นคนตั้ง)'}</h3><div class="ploot"><button class="btn${lm==='free'?' pri':''}" data-pa="loot" data-v="free" ${ld?'':'disabled'}>🎁 ทุกคนในปาร์ตี้เก็บได้</button><button class="btn${lm==='dmg'?' pri':''}" data-pa="loot" data-v="dmg" ${ld?'':'disabled'}>⚔️ คนทำดาเมจสูงสุด</button></div><small style="opacity:.75">EXP แบ่งเท่ากันให้สมาชิกที่ออนไลน์และอยู่ใกล้ (ไม่เกิน 30 ช่อง) · ของที่ตกทุกคนมองเห็น · คนนอกเก็บได้หลัง 30 วินาที</small></div>`;h+=`<button class="btn bad" data-pa="leave" style="margin-top:8px">ออกจากปาร์ตี้</button>`}}
  return h+'<div class="note" style="margin-top:8px">คำสั่งแชท: /invite ชื่อ · /p ข้อความ (แชทปาร์ตี้) · /leave</div>'}
 function drawPartyHud(){let d=$('#ptyhud');if(!d){d=document.createElement('div');d.id='ptyhud';const pf=$('#pf');if(!pf)return;pf.appendChild(d)}
  const ms=pMembers().filter(u=>u!==UID);if(!ms.length){d.innerHTML='';return}
@@ -3250,12 +3251,12 @@ function worldInit(){if(MOBON)return;MOBON=true;M.length=0;S.target=null;
   MOBREF.on('child_changed',s=>{if(!ISHOST)mobMirror(+s.key.slice(1),s.val())});
   MOBREF.on('child_removed',s=>{if(!ISHOST)mobGone(+s.key.slice(1))})});
  FDB.ref('mobatk/'+UID).on('child_added',s=>{const v=s.val();s.ref.remove().catch(()=>{});if(!v||!P||S.dead||!MOBS[v.t]||snow()-v.ts>4000)return;const m=mobById(v.i)||{T:MOBS[v.t],x:P.x,y:P.y};hitPlayer(m,v.k||1)});
- FDB.ref('mobkill/'+UID).on('child_added',s=>{const v=s.val();s.ref.remove().catch(()=>{});if(!v||!P||!MOBS[v.t]||snow()-v.ts>15000)return;killMob({type:v.t,T:MOBS[v.t],rb:!!v.rb,x:v.x,y:v.y,id:-1,__rw:1})});
+ FDB.ref('mobkill/'+UID).on('child_added',s=>{const v=s.val();s.ref.remove().catch(()=>{});if(!v||!P||!MOBS[v.t]||snow()-v.ts>15000)return;killMob({type:v.t,T:MOBS[v.t],rb:!!v.rb,x:v.x,y:v.y,id:-1,top:v.top||null,__rw:1})});
  FDB.ref('fxev').orderByChild('ts').startAt(Date.now()-2000).on('child_added',s=>{const v=s.val();if(!v||v.u===UID||!P||snow()-v.ts>3000)return;if(Math.abs(v.x-P.x)>1100||Math.abs(v.y-P.y)>800)return;
   if(v.w){FX.push({k:'warn',x:v.x,y:v.y,r:3*TS,t:0,cb:()=>FX.push({k:'ring',x:v.x,y:v.y,r:3*TS,c:'#e0a05a',t:0})});if(Math.hypot(v.x-P.x,v.y-P.y)<6*TS)chat('sys','',(v.n||'บอส')+' กำลังกระแทกพื้น! ถอยออกมา');return}fxReplay(v)});
  const nset=s=>{const n=NODES[+s.key],v=s.val();if(!n||!v)return;const dur=(35+n.tier*15)*1000,age=snow()-(v.u||0);if(age>=dur){n.left=3;n.re=0}else{n.left=v.l;if(v.l<=0)n.re=gt+(dur-age)/1000;else if(S.gather&&S.gather.n===n&&n.left<=0)S.gather=null}};
  FDB.ref('nodes').on('child_added',nset);FDB.ref('nodes').on('child_changed',nset);
- const u0=update;update=function(dt){mobPlist();u0(dt);mobNet()};
+ lootInit();const u0=update;update=function(dt){mobPlist();u0(dt);mobNet()};
  const m0=updMob;updMob=function(m,dt){if(!MOBON)return m0(m,dt);if(!ISHOST)return mirStep(m,dt);return hostUpdMob(m,dt)}}
 function mobLoadAll(cb){MOBREF.once('value',s=>{const v=s.val()||{};const keep=new Set();for(const k in v){keep.add(+k.slice(1));mobMirror(+k.slice(1),v[k])}for(let i=M.length-1;i>=0;i--)if(!keep.has(M[i].id))M.splice(i,1);MOBREADY=true;if(cb)cb()})}
 function mobMirror(id,a){if(!Array.isArray(a))a=a&&Object.values(a);if(!a)return;const [t,x,y,hp,mhp,fl,ac,hx,hy]=a;if(!MOBS[t])return;let m=mobById(id);
@@ -3294,10 +3295,10 @@ function becomeHost(){mid=0;for(const m of M){m.nx=null;m.tgt=null;m.lastU=null;
 function becomeClient(){if(HITREF){HITREF.off();HITREF=null}RESP={};S.target=null;M.length=0;mobLoadAll()}
 function hostHit(v){if(snow()-(v.ts||0)>5000)return;const m=mobById(v.i);if(!m||m.hp<=0)return;
  if(v.p){m.poison={until:gt+6,dps:v.p,nt:gt+1};m.agg=true;m.ret=false;m.lastU=v.u;if(!m.tgt)m.tgt=v.u;return}
- m.hp-=v.d||0;m.agg=true;m.ret=false;m.flash=.12;m.hitT=gt;m.tgt=v.u;m.lastU=v.u;if(v.st&&!m.T.boss)m.stun=gt+v.st;if(v.sl)m.slow=gt+v.sl;if(m.hp<=0)killMob(m)}
-function mobHitSend(m,dmg,o){if(!MOBON||GHOST||!m||m.id==null||m.id<0)return;if(ISHOST){m.tgt=UID;m.lastU=UID;return}m.lhit=gt;if(netOK())FDB.ref('mobhit').push({i:m.id,d:dmg,u:UID,st:o.stun||0,sl:o.slow||0,ts:snow()})}
+ m.hp-=v.d||0;(m.dmgBy||(m.dmgBy={}))[v.u]=(m.dmgBy[v.u]||0)+(v.d||0);m.agg=true;m.ret=false;m.flash=.12;m.hitT=gt;m.tgt=v.u;m.lastU=v.u;if(v.st&&!m.T.boss)m.stun=gt+v.st;if(v.sl)m.slow=gt+v.sl;if(m.hp<=0)killMob(m)}
+function mobHitSend(m,dmg,o){if(!MOBON||GHOST||!m||m.id==null||m.id<0)return;if(ISHOST){m.tgt=UID;m.lastU=UID;(m.dmgBy||(m.dmgBy={}))[UID]=(m.dmgBy[UID]||0)+dmg;return}m.lhit=gt;if(netOK())FDB.ref('mobhit').push({i:m.id,d:dmg,u:UID,st:o.stun||0,sl:o.slow||0,ts:snow()})}
 function mobPois(m,pd){if(!MOBON)return;if(ISHOST){m.lastU=UID;return}if(netOK())FDB.ref('mobhit').push({i:m.id,p:pd,u:UID,ts:snow()})}
-function mobKillOK(m){if(!ISHOST){m.hp=0;return false}if(m.lastU&&m.lastU!==UID){removeMob(m);FDB.ref('mobkill/'+m.lastU).push({t:m.type,rb:m.rb?1:0,x:Math.round(m.x),y:Math.round(m.y),ts:snow()});return false}return true}
+function mobKillOK(m){if(!ISHOST){m.hp=0;return false}{let b=null,bd=-1;for(const u in m.dmgBy||{})if(m.dmgBy[u]>bd){bd=m.dmgBy[u];b=u}m.top=b}if(m.lastU&&m.lastU!==UID){removeMob(m);FDB.ref('mobkill/'+m.lastU).push({top:m.top||null,t:m.type,rb:m.rb?1:0,x:Math.round(m.x),y:Math.round(m.y),ts:snow()});return false}return true}
 function mobNet(){if(!MOBON||!netOK())return;const now=snow();
  if(now-HBT>1000){HBT=now;if(P&&MOBREADY){if(ISHOST)FDB.ref('mobhost').set({u:UID,t:now});else if(!HOSTV||now-HOSTV.t>4500)FDB.ref('mobhost').transaction(c=>{if(!c||c.u===UID||snow()-c.t>4500)return{u:UID,t:snow()};return})}}
  if(!ISHOST||!P)return;mobRespawn();if(now-MOBPUBT<200)return;MOBPUBT=now;
@@ -3321,6 +3322,35 @@ function fxReplay(v){if(!SK[v.c]||!SK[v.c][v.i])return;let s;try{s=skAt(v.c,v.i,
  const o=OTHERS[v.u];if(o)o.fx=v.fx;
  ghostRun(v,()=>{if(v.c==='mage'||v.c==='acolyte')FX.push({k:'castfx',x:v.x,y:v.y,life:.9,t:0});if(s.pose!=='atk')parts(v.x+(v.fx||1)*10,v.y-40,10,[s.col,'#ffffff'],{spd:40,life:.4,sh:'star'});SKFX[s.fx](s,t,at||{x:v.x,y:v.y},D());sfx(CASTSFX[s.fx]||'cast')})}
 function nodeSend(n){if(!MOBON||!netOK())return;FDB.ref('nodes/'+n.id).set({l:n.left,u:snow()})}
+
+/* ---- party exp share + shared loot ---- */
+let DROPOWN=null,LLOOT=undefined;
+function lootOwner(m){if(MYPID&&PARTY&&pOnline().length>=2){if((PARTY.loot||'free')==='free')return{op:MYPID};return{ou:m.top||UID}}return{ou:UID}}
+function pShareExp(ex,m){if(!MOBON||!MYPID||!PARTY||!netOK()||!P)return ex;const mates=pMembers().filter(u=>{if(u===UID)return false;const o=OTHERS[u];if(!o||o.d)return false;const x=o.tx??o.x,y=o.ty??o.y;return Math.hypot(x-m.x,y-m.y)<30*TS});if(!mates.length)return ex;
+ const sh=Math.max(1,Math.round(ex/(mates.length+1)));for(const u of mates)FDB.ref('pexp/'+u).push({e:sh,s:mobName(m),n:P.name,ts:snow()});return sh}
+const dropMine=d=>d.op?d.op===MYPID:d.ou?d.ou===UID:(!d.owner||!P||d.owner===P.name);
+function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.ref.remove().catch(()=>{});if(!v||!P||snow()-v.ts>30000)return;gainBoth(v.e,(v.s||'')+' · ปาร์ตี้ ('+v.n+')',P.x,P.y-92)});
+ const dr=FDB.ref('drops');
+ dr.on('child_added',s=>{const v=s.val();if(!v||!IT[v.i])return;const age=snow()-(v.ts||0);if(age>50000){s.ref.remove().catch(()=>{});return}if(DROPS.some(d=>d.k===s.key))return;
+  let inst;try{inst=v.n?JSON.parse(v.n):undefined}catch(e){}DROPS.push({k:s.key,id:v.i,gold:v.g||0,inst,x:v.x,y:v.y,sx:v.sx,sy:v.sy,t0:gt-Math.max(0,age)/1000,ou:v.ou||null,op:v.op||null})});
+ dr.on('child_removed',s=>{const i=DROPS.findIndex(d=>d.k===s.key);if(i>=0)DROPS.splice(i,1)});
+ const d0=dropAt;dropAt=function(m,id,gold,inst){if(!MOBON||!netOK())return d0(m,id,gold,inst);let x=m.x+(R()-.5)*46,y=m.y+(R()-.5)*30;if(!canStand(x,y,4)){x=m.x;y=m.y}const o=DROPOWN||{ou:UID};
+  const r=FDB.ref('drops').push({i:id,g:gold||0,n:inst?JSON.stringify(inst):null,x:Math.round(x),y:Math.round(y),sx:Math.round(m.x),sy:Math.round(m.y-8),ts:snow(),ou:o.ou||null,op:o.op||null});setTimeout(()=>r.remove().catch(()=>{}),51000)};
+ const p0=pickDrops;pickDrops=function(){if(!MOBON)return p0();if(S.dead||!P)return;
+  for(let i=DROPS.length-1;i>=0;i--){const d=DROPS[i];if(gt-d.t0>50){DROPS.splice(i,1);if(d.k)FDB.ref('drops/'+d.k).remove().catch(()=>{});continue}if(d.pk||gt-d.t0<.4||Math.hypot(d.x-P.x,d.y-P.y)>22)continue;
+   if(!dropMine(d)&&gt-d.t0<30){if(!d.warned){d.warned=1;toast((d.op?'ของชิ้นนี้เป็นของปาร์ตี้อื่น':'ของชิ้นนี้เป็นของผู้เล่นอื่น')+' · เก็บได้หลัง '+Math.ceil(30-(gt-d.t0))+' วินาที')}continue}
+   if(!d.gold&&!(P.inv.length<INV||(stack(d.id)&&P.inv.some(s=>s.id===d.id)))){if(!d.full){d.full=true;toast('กระเป๋าเต็ม เก็บของไม่ได้')}continue}
+   if(!d.k){DROPS.splice(i,1);dropGrant(d);continue}
+   d.pk=1;FDB.ref('drops/'+d.k).transaction(c=>c===null?undefined:null,(e,ok)=>{if(ok){const j=DROPS.indexOf(d);if(j>=0)DROPS.splice(j,1);dropGrant(d)}else d.pk=0})}};
+ setInterval(()=>{if(!PARTY){LLOOT=undefined;return}const l=PARTY.loot||'free';if(LLOOT!==undefined&&l!==LLOOT){chat('sys','','[ปาร์ตี้] การแบ่งของเปลี่ยนเป็น: '+(l==='free'?'ทุกคนในปาร์ตี้เก็บได้':'คนทำดาเมจสูงสุด'),'#9ef08a');if(curWin==='party')rWin()}LLOOT=l},1000)}
+function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
+ if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
+/* ---- update notice ---- */
+const BUILDV='20261005005551';
+function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
+ const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
+ $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
+setTimeout(verCheck,15000);setInterval(()=>{if(!$('#updbar'))verCheck()},90000);
 
 netBoot();
 document.addEventListener('click',e=>{if(e.target.id==='acctout'&&FB){if(UID)FDB.ref('presence/'+UID).remove();FB.auth().signOut().then(()=>location.reload())}});
