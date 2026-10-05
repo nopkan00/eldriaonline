@@ -798,7 +798,7 @@ PASV.frostg=[...PASV.warrior,{k:'grit',n:'หัวใจธารน้ำแ�
 [1,5,10,15].forEach((j,k)=>{const b=SK.frostg[SK.warrior.length+k];if(b)b.jl=j});
 PASV.frostg.push({k:'frostmind',n:'ปราณเหมันต์',lv:20,jl:20,max:4,lin:1,sym:'mana',col:'#4a8ad8',v:[3],d:'INT +{a} (เสริมพลังสกิลน้ำแข็ง)'});
 PASV.frostg.forEach(p=>{if(p.k==='grit')p.jl=5;if(p.k==='frostres')p.jl=12});
-PASV.archer.push({k:'longshot',n:'สายตาพรานไกล',lv:1,jl:12,max:10,lin:1,sym:'arrow',col:'#3a8a5a',v:[1],d:'ระยะโจมตีปกติและยิงทะลวง +{a} ช่อง'});{const a=PASV.archer;[a[0],a[2]]=[a[2],a[0]]}
+PASV.archer.push({k:'longshot',n:'สายตาพรานไกล',lv:1,max:10,lin:1,sym:'arrow',col:'#3a8a5a',v:[1],d:'ระยะโจมตีปกติและยิงทะลวง +{a} ช่อง'});{const a=PASV.archer;[a[0],a[2]]=[a[2],a[0]]}
 /* skill levels: actives 1-5 (0 = not learned), passives 1-3 once unlocked; one skill point per level-up */
 const SKMAX=10,PSMAX=6,skMax=(i,c)=>{const b=SK[c||P.cls][i];return b&&b.max||SKMAX};
 const jReq=b=>b.jl??b.lv??1;
@@ -1531,8 +1531,8 @@ const SKFX={
   for(let j=-1;j<=1;j++){const ang=base+j*.4,dx=Math.cos(ang)*dist,dy=Math.sin(ang)*dist,ex=sx+dx,ey=sy+dy;
    fxImg('gs0',sx,sy,.3,{sc:.26,s0:.7,s1:1,r0:ang,r1:ang,dx,dy,delay:Math.abs(j)*.03});fxImg('gs2',sx,sy,.34,{sc:.22,s0:.6,s1:1,r0:ang,r1:ang,dx:dx*.85,dy:dy*.85,delay:.05+Math.abs(j)*.03,a0:.8});
    timers.push({t:gt+.28+Math.abs(j)*.03,f:()=>{fxImg('gs3',ex,ey,.35,{sc:.22,s0:.6,s1:1.2,r0:ang,r1:ang});fxImg('gs5',ex,ey,.4,{sc:.18,s0:.4,s1:1.3,r0:ang,r1:ang,a0:.8});parts(ex,ey,12,['#d8ffc0','#8fe07a','#4fb040'],{ang,spread:1,spd:150,life:.4});
-    for(const m of M.slice()){const L2=Math.hypot(m.x-ex,m.y+8-ey);if(L2<s.rad*TS*.55+m.T.r&&!m._sp){m._sp=1;dmgMob(m,s.mult,s.col,{kind:'arrow'})}}}});}
-  timers.push({t:gt+.5,f:()=>{for(const m of M)m._sp=0}});shake(2);return}
+    }});}
+  timers.push({t:gt+.3,f:()=>{FX.push({k:'ring',x:c.x,y:c.y,r:s.rad*TS,c:'#8fe07a',life:.4});aoeHit(s,c,s.mult,'arrow')}});shake(2);return}
   for(let j=0;j<5;j++)FX.push({k:'shot',kind:'arrow',x:P.x,y:P.y-22,tx:c.x+(j-2)*16,ty:c.y+(R()-.5)*14,c:'#fff',life:.2+j*.02,t:0});timers.push({t:gt+.22,f:()=>{parts(c.x,c.y-6,16,HITC.arrow,{spd:80,life:.3,jit:30});aoeHit(s,c,s.mult,'arrow')}})},
  rain:(s,t,c)=>{const R2=s.rad*TS;FX.push({k:'rainzone',x:c.x,y:c.y,r:R2,life:1.95,t:0});sfx('arrow');
   for(let w=0;w<5;w++)timers.push({t:gt+.3+w*.27,f:()=>{const last=w===4;sfx(last?'slash':'arrow');
@@ -3365,6 +3365,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'3.8',d:'5 ต.ค. 2026',t:'แก้ยิงกระจาย',L:['แก้บัค นักธนู ยิงกระจาย: ดาเมจโดนมอนทุกตัวในวงรัศมี 3.3 ช่อง (ตรงกับวงเล็งที่เห็น) เดิมโดนแค่ตัวที่อยู่ปลายลูกธนู','นักธนู: สายตาพรานไกล ไม่มีเงื่อนไข Job Lv แล้ว อัปได้ตั้งแต่ Job Lv 1']},
  {v:'3.7',d:'5 ต.ค. 2026',t:'ตัวเลขดาเมจแบบเด้ง',L:['ตัวเลขดาเมจใหม่: โจมตีปกติ ตัวเลขขาวเด้งพุ่งออกด้านข้างแล้วตกกระเด้งพื้น','ดาเมจสกิล/เวทย์: ตัวเลขสีตามสกิล ขยายตัวแบบยืดหยุ่น มีแสงเรือง ลอยขึ้นช้าๆ','คริติคอล: ตัวเลขใหญ่สีทอง มีป้าย คริ! สั่นตอนออก แล้วกระเด้งแรงกว่าปกติ','ดาเมจที่ผู้เล่นโดน: ตัวเลขแดงเด้งออก · ข้อความอื่น (ทอง ไอเทม ฮีล) มีจังหวะเด้งเล็กน้อยตอนขึ้น','นักธนู: สลับตำแหน่งสกิลติดตัว สายตาพรานไกล ขึ้นเป็นช่องที่ 1 และ สายตาเฉียบคม ไปช่องที่ 3 (เลเวลสกิลที่อัปไว้ย้ายตามให้อัตโนมัติ)']},
  {v:'3.6',d:'5 ต.ค. 2026',t:'คำสั่ง GM เพิ่มเลเวลได้แต้มครบ',L:['GM: /lv เลข ตั้ง Base Lv แล้วได้แต้มสถานะตามเลเวลที่เพิ่ม (ลดเลเวลจะหักแต้มที่ยังไม่ได้ใช้)','GM: คำสั่งใหม่ /job เลข ตั้ง Job Lv แล้วได้แต้มสกิล 1 แต้มต่อเลเวล และปลดล็อกสกิลติดตัวตามเลเวล','พิมพ์ /gm เพื่อดูคำสั่งทั้งหมด']},
  {v:'3.5',d:'5 ต.ค. 2026',t:'พิษลดความแม่น และยิงกระจายวงกว้างขึ้น',L:['สถานะพิษ: มอนสเตอร์ที่ติดพิษ ความแม่นลดลง 10% (โจมตีพลาดบ่อยขึ้น ทั้งโจมตีปกติและสกิล)','นักธนู: ยิงกระจาย รัศมีวงกว้างเพิ่มจาก 2.2 เป็น 3.3 ช่อง']},
@@ -3729,7 +3730,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261005231858';
+const BUILDV='20261005232555';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
