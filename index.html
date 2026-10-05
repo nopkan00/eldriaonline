@@ -3353,6 +3353,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'3.6',d:'5 ต.ค. 2026',t:'คำสั่ง GM เพิ่มเลเวลได้แต้มครบ',L:['GM: /lv เลข ตั้ง Base Lv แล้วได้แต้มสถานะตามเลเวลที่เพิ่ม (ลดเลเวลจะหักแต้มที่ยังไม่ได้ใช้)','GM: คำสั่งใหม่ /job เลข ตั้ง Job Lv แล้วได้แต้มสกิล 1 แต้มต่อเลเวล และปลดล็อกสกิลติดตัวตามเลเวล','พิมพ์ /gm เพื่อดูคำสั่งทั้งหมด']},
  {v:'3.5',d:'5 ต.ค. 2026',t:'พิษลดความแม่น และยิงกระจายวงกว้างขึ้น',L:['สถานะพิษ: มอนสเตอร์ที่ติดพิษ ความแม่นลดลง 10% (โจมตีพลาดบ่อยขึ้น ทั้งโจมตีปกติและสกิล)','นักธนู: ยิงกระจาย รัศมีวงกว้างเพิ่มจาก 2.2 เป็น 3.3 ช่อง']},
  {v:'3.4',d:'5 ต.ค. 2026',t:'ปุ่มหมุนจอบนมือถือ',L:['มือถือ: ปุ่มใหม่ ⟳ มุมบนขวา กดสลับ อัตโนมัติ / แนวตั้ง / แนวนอน (เข้าโหมดเต็มจอแล้วล็อกการหมุนให้ จำค่าไว้ใช้ครั้งต่อไป)','ยาเร่งความเร็วขั้นสูง ลดราคาเหลือ 800 ทอง']},
  {v:'3.3',d:'5 ต.ค. 2026',t:'สกิลระยะไกลนักธนู และยาเร่งความเร็ว',L:['สกิลติดตัวใหม่ นักธนู: สายตาพรานไกล (Job 12) ระยะโจมตีปกติและยิงทะลวง +1 ช่องต่อเลเวล สูงสุด Lv 10 (+10 ช่อง)','ระยะล็อกเป้าและปุ่มโจมตีตัวใกล้สุด ขยายตามระยะโจมตี','ไอเทมใหม่ในร้านค้า (หมวดยา): ยาเร่งความเร็ว ความเร็วโจมตี +10% นาน 10 นาที ราคา 150 ทอง · ยาเร่งความเร็วขั้นสูง +20% นาน 20 นาที ราคา 800 ทอง','บัฟยาเร่งความเร็วแสดงไอคอนพร้อมเวลาที่เหลือ (นาที) ใช้ซ้ำจะรีเซ็ตเวลา และไม่ทับบัฟที่แรงกว่า']},
@@ -3492,7 +3493,7 @@ function showAnnounce(m){let d=$('#gmann');if(!d){d=document.createElement('div'
 const findP=n=>Object.values(OTHERS).find(o=>o.n===n)||Object.values(OTHERS).find(o=>o.n&&o.n.toLowerCase().startsWith(n.toLowerCase()));
 function gmCmd(c,arg){if(c==='w'||c==='whisper'){const sp=arg.indexOf(' ');if(sp<1){chat('sys','','ใช้ /w ชื่อ ข้อความ');return true}whisper(arg.slice(0,sp),arg.slice(sp+1));return true}if(c==='r'&&LASTW){if(arg)whisper(LASTW,arg);return true}if(c==='trade'){const o=findP(arg);if(o)tReq(o);else chat('sys','','ไม่พบผู้เล่น +arg+');return true}if(c==='invite'){pInvite(arg);return true}if(c==='leave'){pLeave();return true}if(c==='p'||c==='party'){if(arg)pChat(arg);return true}if(!ISGM){chat('sys','','คำสั่งนี้สำหรับแอดมินเท่านั้น');return true}
  const say=t=>chat('sys','','[GM] '+t,'#ffcf4a');
- if(c==='gm'){say('/online ดูผู้เล่นออนไลน์ · /announce ข้อความ · /kick ชื่อ · /mute ชื่อ นาที · /unmute ชื่อ · /clearchat · /goto ชื่อ · /item รหัส จำนวน · /lv เลข · /gold เลข · /who');return true}
+ if(c==='gm'){say('/online ดูผู้เล่นออนไลน์ · /announce ข้อความ · /kick ชื่อ · /mute ชื่อ นาที · /unmute ชื่อ · /clearchat · /goto ชื่อ · /item รหัส จำนวน · /lv เลข (ได้แต้มสถานะตามเลเวล) · /job เลข (ได้แต้มสกิลตามเลเวล) · /gold เลข · /who');return true}
  if(c==='announce'){if(!arg)return say('ใส่ข้อความด้วย'),true;FDB.ref('announce').push({m:arg.slice(0,140),t:Date.now()});return true}
  if(c==='online'){rGmw();return true}if(c==='who'){say('ออนไลน์ '+(Object.keys(OTHERS).length+1)+' คน: '+[P.name,...Object.values(OTHERS).map(o=>o.n)].join(', '));return true}
  if(['kick','mute','unmute','goto'].includes(c)){const parts=arg.split(' '),nm=c==='mute'&&parts.length>1?parts.slice(0,-1).join(' '):arg,o=findP(nm.trim());if(!o)return say('ไม่พบผู้เล่น "'+nm+'"'),true;
@@ -3502,7 +3503,8 @@ function gmCmd(c,arg){if(c==='w'||c==='whisper'){const sp=arg.indexOf(' ');if(sp
   if(c==='goto'){P.x=o.x+20;P.y=o.y;S.moveTo=null;S.path=null;say('วาปไปหา '+o.n)}return true}
  if(c==='clearchat'){FDB.ref('chat').remove();FDB.ref('chatclear').set(Date.now());$('#log').innerHTML='';say('ล้างแชทรวมแล้ว');return true}
  if(c==='item'){const [id,q]=arg.split(' ');if(!IT[id])return say('ไม่มีไอเทมรหัส "'+id+'"'),true;addItem(id,Math.max(1,Math.min(999,+q||1)));say('ได้รับ '+IT[id].n);refreshWin(['inv']);return true}
- if(c==='lv'){const n=Math.max(1,Math.min(99,+arg||1));P.lv=n;P.exp=0;clampHp();say('ตั้ง Base Lv เป็น '+n);return true}
+ if(c==='lv'){const n=Math.max(1,Math.min(99,+arg||1)),o=P.lv;let d=0;if(n>o)for(let L=o+1;L<=n;L++)d+=ptsAt(L);else for(let L=n+1;L<=o;L++)d-=ptsAt(L);P.lv=n;P.exp=0;P.pts=Math.max(0,(P.pts||0)+d);clampHp();say('ตั้ง Base Lv '+o+' → '+n+' · แต้มสถานะ '+(d>=0?'+':'')+d+' (คงเหลือ '+P.pts+')');refreshWin();return true}
+ if(c==='job'){const mx=jmax(),n=Math.max(1,Math.min(mx,+arg||1)),o=P.jlv||1;const nu=[];if(n>o){for(let L=o+1;L<=n;L++){P.jlv=L;PASV[P.cls].forEach((p,i)=>{if(p.lv>1&&jReq(p)===L&&jUnlock(p,i,true)&&!(CLS[P.cls].from&&i<PASV[CLS[P.cls].from].length))nu.push(p.n)})}}P.jlv=n;P.jexp=0;const d=n-o;P.spts=Math.max(0,(P.spts||0)+d);say('ตั้ง Job Lv '+o+' → '+n+(mx===n&&+arg>mx?' (สูงสุดของอาชีพนี้)':'')+' · แต้มสกิล '+(d>=0?'+':'')+d+' (คงเหลือ '+P.spts+')');if(nu.length)chat('sys','','ปลดล็อกสกิลติดตัว: '+nu.join(', '));refreshWin();return true}
  if(c==='gold'){P.gold+=Math.max(0,+arg||0);say('เพิ่มทอง '+(+arg||0));return true}
  return false}
 /* ---- party (max 10, +1% EXP & drop per online member) ---- */
@@ -3714,7 +3716,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261005205207';
+const BUILDV='20261005230456';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
