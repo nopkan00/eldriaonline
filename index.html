@@ -798,7 +798,7 @@ PASV.frostg=[...PASV.warrior,{k:'grit',n:'หัวใจธารน้ำแ�
 [1,5,10,15].forEach((j,k)=>{const b=SK.frostg[SK.warrior.length+k];if(b)b.jl=j});
 PASV.frostg.push({k:'frostmind',n:'ปราณเหมันต์',lv:20,jl:20,max:4,lin:1,sym:'mana',col:'#4a8ad8',v:[3],d:'INT +{a} (เสริมพลังสกิลน้ำแข็ง)'});
 PASV.frostg.forEach(p=>{if(p.k==='grit')p.jl=5;if(p.k==='frostres')p.jl=12});
-PASV.archer.push({k:'longshot',n:'สายตาพรานไกล',lv:1,jl:12,max:10,lin:1,sym:'arrow',col:'#3a8a5a',v:[1],d:'ระยะโจมตีปกติและยิงทะลวง +{a} ช่อง'});
+PASV.archer.push({k:'longshot',n:'สายตาพรานไกล',lv:1,jl:12,max:10,lin:1,sym:'arrow',col:'#3a8a5a',v:[1],d:'ระยะโจมตีปกติและยิงทะลวง +{a} ช่อง'});{const a=PASV.archer;[a[0],a[2]]=[a[2],a[0]]}
 /* skill levels: actives 1-5 (0 = not learned), passives 1-3 once unlocked; one skill point per level-up */
 const SKMAX=10,PSMAX=6,skMax=(i,c)=>{const b=SK[c||P.cls][i];return b&&b.max||SKMAX};
 const jReq=b=>b.jl??b.lv??1;
@@ -1330,7 +1330,19 @@ function musicTick(){if(!AC||!P||!P.opts.music){townMusic(false);fieldMusic(fals
   MUS.step++;MUS.next+=st}}
 function startMusic(){if(!audioInit())return;if(AC.state==='suspended')AC.resume();applyVol();if(!MUS.timer)MUS.timer=setInterval(musicTick,90)}
 
-function float(x,y,s,c,big){if(GHOST)return;if(P&&!P.opts.dmg&&!big)return;TXT.push({x:x+(R()-.5)*10,y,s,c,t:0,big})}
+function float(x,y,s,c,big,k){if(GHOST)return;if(P&&!P.opts.dmg&&!big)return;const t={x:x+(R()-.5)*10,y,s,c,t:0,big};if(k){const dir=R()<.5?-1:1;t.k=k;t.fl=y+(k==='hurt'?14:8);t.life=k==='skill'?1.25:k==='crit'?1.35:1.05;
+ if(k==='skill'){t.vx=dir*(10+R()*20);t.vy=-150;t.g=170;t.fl=null;t.s0=2.3}
+ else if(k==='crit'){t.vx=dir*(50+R()*40);t.vy=-380;t.g=1000;t.s0=2.8;t.lb='คริ!'}
+ else if(k==='hurt'){t.vx=dir*(30+R()*30);t.vy=-260;t.g=900;t.s0=1.9}
+ else{t.vx=dir*(35+R()*45);t.vy=-300;t.g=900;t.s0=1.8}}TXT.push(t)}
+function dmgTxt(t,X,Y){const k=t.k,a=Math.min(1,(t.life-t.t)*4),el=1+(t.s0-1)*Math.exp(-t.t*11)*Math.cos(t.t*22),sz=k==='crit'?22:k==='skill'?19:k==='hurt'?16:15;
+ let sx=0;if(k==='crit'&&t.t<.22)sx=(R()-.5)*5;ctx.save();ctx.globalAlpha=Math.max(0,a);ctx.translate(Math.round(X+sx),Math.round(Y));ctx.scale(el,el);if(k==='skill')ctx.rotate(Math.sin(t.t*9)*.04);
+ ctx.font=`italic 800 ${sz}px 'Chakra Petch', Kanit, sans-serif`;ctx.textAlign='center';ctx.lineJoin='round';const s=tr(String(t.s));
+ if(k==='crit'||k==='skill'){ctx.shadowColor=t.c;ctx.shadowBlur=k==='crit'?14:10}
+ ctx.lineWidth=k==='crit'?5:4;ctx.strokeStyle='#07090a';ctx.strokeText(s,0,0);ctx.shadowBlur=0;
+ const g=ctx.createLinearGradient(0,-sz*.8,0,sz*.15);g.addColorStop(0,'#ffffff');g.addColorStop(k==='hit'?.25:.45,k==='hit'?'#ffffff':t.c);g.addColorStop(1,k==='hit'?'#c9d2d6':t.c);ctx.fillStyle=g;ctx.fillText(s,0,0);
+ if(t.lb){ctx.font=`800 ${Math.round(sz*.55)}px 'Chakra Petch', Kanit, sans-serif`;ctx.lineWidth=3;const l=tr(t.lb),ly=-sz*.95;ctx.strokeText(l,0,ly);ctx.fillStyle='#ff7a3a';ctx.fillText(l,0,ly)}
+ ctx.restore()}
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const inTown=()=>P&&zoneOf(P.x,P.y)==='town';
 const inDSafe=(x,y)=>SAFES.some(z=>Math.abs(x-(z.x+.5)*TS)<5*TS&&Math.abs(y-(z.y+.5)*TS)<5*TS);const safeC=(x,y)=>{let b=SAFES[0],bd=1e9;for(const z of SAFES){const d=Math.hypot(x-(z.x+.5)*TS,y-(z.y+.5)*TS);if(d<bd){bd=d;b=z}}return b};
@@ -1434,7 +1446,7 @@ function removeMob(m){const i=M.indexOf(m);if(i<0)return;if(ANIM[m.type])FX.push
 /* ================= combat ================= */
 function nearestMob(r){let best=null,bd=r;for(const m of M){const d=dist(m,P);if(d<bd){bd=d;best=m}}return best}
 function dmgMob(m,mult,col,o={}){if(GHOST){if(m&&m.T)hitFx(m,o.kind||'phys',false);return 0}if(S.inv>gt){S.inv=0;toast('สถานะอมตะหายไป · เริ่มโจมตีแล้ว')}const d=D();if(R()*100>Math.max(50,d.hit-m.T.lv*2)){m.agg=true;m.ret=false;S.combat=gt;float(m.x,m.y-m.T.r*1.6,'พลาด','#9aa7a3');return 0}let dmg=(o.atk||d.atk)*mult*(.9+R()*.2)-m.T.def*.5;if(UNDEAD.has(m.type))dmg*=1+PV('ward',1)/100;const crit=R()*100<d.crit+(o.crit||0);if(crit)dmg*=d.critDmg;dmg=Math.max(1,Math.round(dmg));
- m.hp-=dmg;mobHitSend(m,dmg,o);m.agg=true;m.ret=false;m.flash=.12;m.hitT=gt;S.combat=gt;hitFx(m,o.kind||'phys',crit);if(o.stun&&!m.T.boss)m.stun=gt+o.stun;if(o.slow)m.slow=gt+o.slow;if(!m.T.boss&&P){const a=Math.atan2(m.y-P.y,m.x-P.x),nx=m.x+Math.cos(a)*4,ny=m.y+Math.sin(a)*4;if(canStand(nx,ny)){m.x=nx;m.y=ny}}float(m.x,m.y-m.T.r*1.6,(crit?'คริ! ':'')+dmg,crit?'#ffd166':(col||'#ffffff'),crit);
+ m.hp-=dmg;mobHitSend(m,dmg,o);m.agg=true;m.ret=false;m.flash=.12;m.hitT=gt;S.combat=gt;hitFx(m,o.kind||'phys',crit);if(o.stun&&!m.T.boss)m.stun=gt+o.stun;if(o.slow)m.slow=gt+o.slow;if(!m.T.boss&&P){const a=Math.atan2(m.y-P.y,m.x-P.x),nx=m.x+Math.cos(a)*4,ny=m.y+Math.sin(a)*4;if(canStand(nx,ny)){m.x=nx;m.y=ny}}float(m.x,m.y-m.T.r*1.6,dmg,crit?'#ffd166':(col||'#ffffff'),crit,crit?'crit':col?'skill':'hit');
  if(m.hp<=0)killMob(m);return dmg}
 function killMob(m){if(MOBON&&!m.__rw&&!mobKillOK(m))return;if(MOBON)DROPOWN=lootOwner(m);const T=m.T;removeMob(m);P.kills++;P.mk=P.mk||{};if(!P.mk[m.type]){P.mk[m.type]=0;toast('📖 บันทึก '+T.n+' ลงสมุดมอนสเตอร์แล้ว')}P.mk[m.type]++;
  const B=m.rb?1.5:1,PB=typeof partyBonus==='function'?partyBonus():1,ex=Math.round(T.exp*B*PB),g=Math.round((T.gold[0]+(R()*(T.gold[1]-T.gold[0]+1)|0))*B);if(m.rb){chat('sys','',P.name+' ปราบ'+mobName(m)+'! รางวัล ×1.5 · เกิดใหม่ใน 5 นาที','#ff9ad5');toast('ปราบ'+mobName(m)+'! รางวัล ×1.5')}
@@ -1461,7 +1473,7 @@ function gainExp(n){P.exp+=n;let up=false;while(P.exp>=need(P.lv)){P.exp-=need(P
  if(up){const d=D();P.hp=d.mhp;P.mp=d.mmp;FX.push({k:'lvl',x:P.x,y:P.y,t:0});toast('เลเวลอัป! Base Lv '+P.lv+' · แต้มสถานะ +'+ptsAt(P.lv));chat('sys','','คุณเลเวลอัปเป็น Lv '+P.lv);snd(660,.25,'triangle',.06);sfx('lvl');buildBar();save()}}
 const mobReach=m=>m.T.rng?m.T.rng*TS:m.T.r+16;
 function mobShot(m,tx,ty){FX.push({k:'shot',kind:m.T.shot||'magic',x:m.x+(m.fx||1)*6,y:m.y-m.T.r,tx,ty:ty-18,c:m.T.scol||'#9ad8ff',life:.22,t:0})}
-function hitPlayer(m,mult=1){if(S.dead)return;if(S.inv>gt){if(gt-(S.invF||0)>.6){S.invF=gt;float(P.x,P.y-40,'อมตะ','#ffe07a')}return}const d=D();const pz=m.poison&&gt<m.poison.until?10:0;if(R()*100<(mult===1?d.flee:0)+pz){sample('matk',.6);float(P.x,P.y-40,'หลบ','#cfe3ff');S.combat=gt;return}const el=(m.type&&MELEM[m.type])||m.T.el||'ไร้ธาตุ';let dmg=Math.max(1,Math.round((m.T.atk*mult*(.85+R()*.3)-d.def*.4)*(1-PV('ward',0)/100)*(1-resOf(el)/100)));P.hp-=dmg;S.lastHurt=gt;S.combat=gt;float(P.x,P.y-40,'-'+dmg,'#ff6b5b');sample('matk',1);if(P.hp<=0)die()}
+function hitPlayer(m,mult=1){if(S.dead)return;if(S.inv>gt){if(gt-(S.invF||0)>.6){S.invF=gt;float(P.x,P.y-40,'อมตะ','#ffe07a')}return}const d=D();const pz=m.poison&&gt<m.poison.until?10:0;if(R()*100<(mult===1?d.flee:0)+pz){sample('matk',.6);float(P.x,P.y-40,'หลบ','#cfe3ff');S.combat=gt;return}const el=(m.type&&MELEM[m.type])||m.T.el||'ไร้ธาตุ';let dmg=Math.max(1,Math.round((m.T.atk*mult*(.85+R()*.3)-d.def*.4)*(1-PV('ward',0)/100)*(1-resOf(el)/100)));P.hp-=dmg;S.lastHurt=gt;S.combat=gt;float(P.x,P.y-40,'-'+dmg,'#ff6b5b',false,'hurt');sample('matk',1);if(P.hp<=0)die()}
 function die(){P.hp=0;S.dead=true;S.target=null;S.moveTo=null;const lost=Math.floor(need(P.lv)*.1);P.exp=Math.max(0,P.exp-lost);for(const m of M)if(!MOBON||m.tgt===UID){m.agg=false;m.ret=true}
  $('#deadmsg').textContent='เสียค่าประสบการณ์ '+lost+' EXP · ของในกระเป๋ายังอยู่ครบ';$('#dead').hidden=false;sfx('die');chat('sys','','คุณถูกสังหาร');save()}
 $('#respawn').addEventListener('click',()=>{if(P&&S.dead)respawn()});
@@ -1717,7 +1729,7 @@ function update(dt){gt+=dt;
  updFx(dt);
  for(const m of M.slice())updMob(m,dt);
  for(let i=FX.length-1;i>=0;i--){const f=FX[i];f.t=(f.t||0)+dt;const life=f.life||(f.k==='proj'?.22:f.k==='warn'?1.1:f.k==='lvl'?1.2:f.k==='click'?.5:.45);if(f.t>=life){if(f.cb)f.cb();FX.splice(i,1)}}
- for(let i=TXT.length-1;i>=0;i--){const t=TXT[i];t.t+=dt;t.y-=28*dt;if(t.t>1.1)TXT.splice(i,1)}
+ for(let i=TXT.length-1;i>=0;i--){const t=TXT[i];t.t+=dt;if(t.k){t.vy+=t.g*dt;t.x+=t.vx*dt;t.y+=t.vy*dt;if(t.fl!=null&&t.vy>0&&t.y>t.fl){t.y=t.fl;t.vy*=-.38;t.vx*=.55;if(Math.abs(t.vy)<40){t.vy=0;t.g=0;t.vx=0}}}else t.y-=28*dt;if(t.t>(t.life||1.1))TXT.splice(i,1)}
  const fx=P?P.x:TWN.x+Math.cos(gt*.08)*700,fy=P?P.y:TWN.y+Math.sin(gt*.08)*500;
  cam.x+=((fx-VW/2)-cam.x)*Math.min(1,dt*(P?10:2));cam.y+=((fy-VH/2)-cam.y)*Math.min(1,dt*(P?10:2));
  {const RG=P?REG[regAt(P.x,P.y)]:REG.ow,x0=RG.x0*TS,x1=RG.x1*TS,y0=RG.y0*TS,y1=RG.y1*TS;cam.x=x1-x0<VW?(x0+x1-VW)/2:Math.max(x0,Math.min(x1-VW,cam.x));cam.y=y1-y0<VH?(y0+y1-VH)/2:Math.max(y0,Math.min(y1-VH,cam.y))}}
@@ -2613,7 +2625,7 @@ function render(){const sk=S.shake||0;CX=Math.round(cam.x/2+(R()-.5)*sk);CY=Math
  for(const [s,x,y,c,z] of LBL)txt(s,x*AS/2,y*AS/2,c,z);
  if(P&&S.say&&S.sayT>gt&&!S.dead){const x=Math.round(ax(P.x)*AS),y=Math.round((ay(P.y)-38)*AS)-8;ctx.font="500 12px 'Chakra Petch', IBM Plex Sans Thai, sans-serif";const w=Math.min(220,Math.ceil(ctx.measureText(S.say).width)+16);
   ctx.fillStyle='#07090a';ctx.fillRect(x-w/2-2,y-16,w+4,24);ctx.fillStyle='#ece5d3';ctx.fillRect(x-w/2,y-14,w,20);ctx.fillRect(x-2,y+6,4,4);ctx.fillStyle='#1a1410';ctx.textAlign='center';ctx.fillText(S.say,x,y+1,w-8)}
- for(const t of TXT){ctx.globalAlpha=Math.min(1,(1.1-t.t)*3);txt(t.s,(t.x/2-CX)*AS,(t.y/2-CY)*AS,t.c,t.big?16:13,true);ctx.globalAlpha=1}}
+ for(const t of TXT){if(t.k){dmgTxt(t,(t.x/2-CX)*AS,(t.y/2-CY)*AS);continue}const pp=1+.35*Math.exp(-t.t*14);ctx.globalAlpha=Math.min(1,(1.1-t.t)*3);ctx.save();const X=(t.x/2-CX)*AS,Y=(t.y/2-CY)*AS;ctx.translate(X,Y);ctx.scale(pp,pp);txt(t.s,0,0,t.c,t.big?16:13,true);ctx.restore();ctx.globalAlpha=1}}
 
 /* ================= combat visual effects ================= */
 let PARTS=[];
@@ -3341,7 +3353,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
  {const old=P.equip||{},spill=[];for(const k of ['acc1','acc2'])if(old[k]){const o=old[k],id=typeof o==='string'?o:o.id;if(IT[id]&&IT[id].t==='ring'){if(!old.rg1)old.rg1=o;else if(!old.rg2)old.rg2=o;else spill.push(o)}else if(!old.acc)old.acc=o;else spill.push(o);delete old[k]}P.inv=(P.inv||[]).concat(spill)}
  P.equip=Object.assign(emptyEquip(null),P.equip||{});for(const k in P.equip)if(P.equip[k])P.equip[k]=normInst(P.equip[k]);for(const k of STATS)if(P[k]==null)P[k]=CLS[P.cls].base[k];
  P.inv=(P.inv||[]).map(normInst).filter(Boolean);
- if(!Array.isArray(P.skl)){P.skl=SK[P.cls].map(x=>P.lv>=x.lv?1:0);P.spts=Math.max(0,(P.lv-1)-(P.skl.reduce((a,b)=>a+b,0)-1))}if(P.cls==='novice'&&Array.isArray(P.psl)&&P.psl[0]>1){P.spts=(P.spts||0)+P.psl[0]-1;P.psl=[0,0]}if(!Array.isArray(P.psl))P.psl=[1,1];if(P.spts==null)P.spts=0;if(!P.ptsv){P.ptsv=1;let add=0;for(let L=31;L<=P.lv;L++)add+=ptsAt(L)-5;if(add>0){P.pts=(P.pts||0)+add;setTimeout(()=>chat('sys','','ได้รับแต้มสถานะย้อนหลัง +'+add+' แต้ม จากระบบแต้มใหม่ (Lv 31+ ได้แต้มเพิ่ม)','#ffd24a'),2500)}}if(P.jlv==null){P.jlv=1;P.jexp=0}if(P.mapv!==2){P.mapv=2;P.x=TWN.x;P.y=TWN.y+80}if(!canStand(P.x,P.y)){P.x=TWN.x;P.y=TWN.y+80}{let rf=0;const n=SK[P.cls].length;for(let i=0;i<P.skl.length;i++){const cap=i<n?skMax(i):0,v=P.skl[i]||0,min=i===0?1:0;if(v>Math.max(cap,min)){rf+=v-Math.max(cap,min);P.skl[i]=Math.max(cap,min)}}if(P.skl.length>n)P.skl.length=n;if(rf)P.spts=(P.spts||0)+rf;if(Array.isArray(P.hot))P.hot=P.hot.map(h=>h&&h.t==='s'&&h.i>=n?null:h)}P.opts=Object.assign({sound:true,music:true,sfxv:.8,musv:.45,dmg:true,names:true},P.opts||{});delete P.friends;delete P.party;P.quests=P.quests||{};dqRefresh(true);
+ if(!Array.isArray(P.skl)){P.skl=SK[P.cls].map(x=>P.lv>=x.lv?1:0);P.spts=Math.max(0,(P.lv-1)-(P.skl.reduce((a,b)=>a+b,0)-1))}if(P.cls==='novice'&&Array.isArray(P.psl)&&P.psl[0]>1){P.spts=(P.spts||0)+P.psl[0]-1;P.psl=[0,0]}if(!Array.isArray(P.psl))P.psl=[1,1];if(!P.aps){P.aps=1;if(P.cls==='archer'){const q=P.psl;P.psl=[q[2]||1,q[1]||1,q[0]||1]}}if(P.spts==null)P.spts=0;if(!P.ptsv){P.ptsv=1;let add=0;for(let L=31;L<=P.lv;L++)add+=ptsAt(L)-5;if(add>0){P.pts=(P.pts||0)+add;setTimeout(()=>chat('sys','','ได้รับแต้มสถานะย้อนหลัง +'+add+' แต้ม จากระบบแต้มใหม่ (Lv 31+ ได้แต้มเพิ่ม)','#ffd24a'),2500)}}if(P.jlv==null){P.jlv=1;P.jexp=0}if(P.mapv!==2){P.mapv=2;P.x=TWN.x;P.y=TWN.y+80}if(!canStand(P.x,P.y)){P.x=TWN.x;P.y=TWN.y+80}{let rf=0;const n=SK[P.cls].length;for(let i=0;i<P.skl.length;i++){const cap=i<n?skMax(i):0,v=P.skl[i]||0,min=i===0?1:0;if(v>Math.max(cap,min)){rf+=v-Math.max(cap,min);P.skl[i]=Math.max(cap,min)}}if(P.skl.length>n)P.skl.length=n;if(rf)P.spts=(P.spts||0)+rf;if(Array.isArray(P.hot))P.hot=P.hot.map(h=>h&&h.t==='s'&&h.i>=n?null:h)}P.opts=Object.assign({sound:true,music:true,sfxv:.8,musv:.45,dmg:true,names:true},P.opts||{});delete P.friends;delete P.party;P.quests=P.quests||{};dqRefresh(true);
  if(!canStand(P.x,P.y)){P.x=TWN.x;P.y=TWN.y+80}
  const d=D();if(fresh){P.hp=d.mhp;P.mp=d.mmp}P.hp=Math.max(1,Math.min(P.hp,d.mhp));P.mp=Math.min(P.mp,d.mmp);
  cam.x=P.x-VW/2;cam.y=P.y-VH/2;
@@ -3353,6 +3365,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'3.7',d:'5 ต.ค. 2026',t:'ตัวเลขดาเมจแบบเด้ง',L:['ตัวเลขดาเมจใหม่: โจมตีปกติ ตัวเลขขาวเด้งพุ่งออกด้านข้างแล้วตกกระเด้งพื้น','ดาเมจสกิล/เวทย์: ตัวเลขสีตามสกิล ขยายตัวแบบยืดหยุ่น มีแสงเรือง ลอยขึ้นช้าๆ','คริติคอล: ตัวเลขใหญ่สีทอง มีป้าย คริ! สั่นตอนออก แล้วกระเด้งแรงกว่าปกติ','ดาเมจที่ผู้เล่นโดน: ตัวเลขแดงเด้งออก · ข้อความอื่น (ทอง ไอเทม ฮีล) มีจังหวะเด้งเล็กน้อยตอนขึ้น','นักธนู: สลับตำแหน่งสกิลติดตัว สายตาพรานไกล ขึ้นเป็นช่องที่ 1 และ สายตาเฉียบคม ไปช่องที่ 3 (เลเวลสกิลที่อัปไว้ย้ายตามให้อัตโนมัติ)']},
  {v:'3.6',d:'5 ต.ค. 2026',t:'คำสั่ง GM เพิ่มเลเวลได้แต้มครบ',L:['GM: /lv เลข ตั้ง Base Lv แล้วได้แต้มสถานะตามเลเวลที่เพิ่ม (ลดเลเวลจะหักแต้มที่ยังไม่ได้ใช้)','GM: คำสั่งใหม่ /job เลข ตั้ง Job Lv แล้วได้แต้มสกิล 1 แต้มต่อเลเวล และปลดล็อกสกิลติดตัวตามเลเวล','พิมพ์ /gm เพื่อดูคำสั่งทั้งหมด']},
  {v:'3.5',d:'5 ต.ค. 2026',t:'พิษลดความแม่น และยิงกระจายวงกว้างขึ้น',L:['สถานะพิษ: มอนสเตอร์ที่ติดพิษ ความแม่นลดลง 10% (โจมตีพลาดบ่อยขึ้น ทั้งโจมตีปกติและสกิล)','นักธนู: ยิงกระจาย รัศมีวงกว้างเพิ่มจาก 2.2 เป็น 3.3 ช่อง']},
  {v:'3.4',d:'5 ต.ค. 2026',t:'ปุ่มหมุนจอบนมือถือ',L:['มือถือ: ปุ่มใหม่ ⟳ มุมบนขวา กดสลับ อัตโนมัติ / แนวตั้ง / แนวนอน (เข้าโหมดเต็มจอแล้วล็อกการหมุนให้ จำค่าไว้ใช้ครั้งต่อไป)','ยาเร่งความเร็วขั้นสูง ลดราคาเหลือ 800 ทอง']},
@@ -3716,7 +3729,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261005230456';
+const BUILDV='20261005231858';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
