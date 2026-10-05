@@ -798,7 +798,7 @@ PASV.frostg=[...PASV.warrior,{k:'grit',n:'หัวใจธารน้ำแ�
 [1,5,10,15].forEach((j,k)=>{const b=SK.frostg[SK.warrior.length+k];if(b)b.jl=j});
 PASV.frostg.push({k:'frostmind',n:'ปราณเหมันต์',lv:20,jl:20,max:4,lin:1,sym:'mana',col:'#4a8ad8',v:[3],d:'INT +{a} (เสริมพลังสกิลน้ำแข็ง)'});
 PASV.frostg.forEach(p=>{if(p.k==='grit')p.jl=5;if(p.k==='frostres')p.jl=12});
-SK.acolyte.push({n:'ชุบชีวิต',type:'res',fx:'res',pose:'cast',jl:15,max:3,mp:30,cd:20,col:'#ffe9a8',castL:[3,1.5,0],resP:[.2,.35,.5],d:'ชุบชีวิตผู้เล่นที่หมดสติในระยะ 4 ช่อง ฟื้นด้วย HP {res} · {ct}'});
+SK.acolyte.push({n:'ชุบชีวิต',type:'res',fx:'res',pose:'cast',jl:15,max:3,mp:30,cd:20,col:'#ffe9a8',castL:[3,1.5,0],resP:[.2,.35,.5],d:'ใช้ชุบผู้เล่นที่หมดสติ 1 คน · ฟื้น HP {res} · {ct}'});
 PASV.archer.push({k:'longshot',n:'สายตาพรานไกล',lv:1,max:10,lin:1,sym:'arrow',col:'#3a8a5a',v:[1],d:'ระยะโจมตีปกติและยิงทะลวง +{a} ช่อง'});{const a=PASV.archer;[a[0],a[2]]=[a[2],a[0]]}
 /* skill levels: actives 1-5 (0 = not learned), passives 1-3 once unlocked; one skill point per level-up */
 const SKMAX=10,PSMAX=6,skMax=(i,c)=>{const b=SK[c||P.cls][i];return b&&b.max||SKMAX};
@@ -824,7 +824,7 @@ const IT={
  mp1:{n:'ยามานา',t:'use',mp:60,price:20,c:'#5b93e8',g:'MP'},
  aspd1:{n:'ยาเร่งความเร็ว',t:'use',aspd:1.1,adur:600,price:150,c:'#f0d040',g:'เร่ง'},
  aspd2:{n:'ยาเร่งความเร็วขั้นสูง',t:'use',aspd:1.2,adur:1200,price:800,c:'#ff9a30',g:'เร่ง+'},
- phx:{n:'ขนนกฟีนิกซ์',t:'use',rev:1,price:5000,sell:10,c:'#ff8a3a',g:'ฟีนิกซ์',d:'ชุบชีวิตผู้เล่นที่หมดสติในระยะ 4 ช่อง ฟื้นด้วย HP 30% · ใช้กับตัวเองไม่ได้'},
+ phx:{n:'ขนนกฟีนิกซ์',t:'use',rev:1,price:5000,sell:10,c:'#ff8a3a',g:'ฟีนิกซ์',d:'ใช้ชุบผู้เล่นที่หมดสติ 1 คน · ฟื้น HP 30%'},
  gel:{n:'เจลสไลม์',t:'mat',price:4,c:'#7bd476',g:'เจล'},
  fang:{n:'เขี้ยวหมาป่า',t:'mat',price:12,c:'#c9ccd2',g:'เขี้ยว'},
  bone:{n:'กระดูกเก่า',t:'mat',price:25,c:'#e6dfc8',g:'กระดูก'},
@@ -1363,7 +1363,7 @@ const nameOf=o=>{const id=typeof o==='string'?o:o.id,rf=typeof o==='object'&&o.r
 function itemStats(x){const o=typeof x==='string'?{id:x}:x,it=IT[o.id],a=[],eq=isEquip(o.id),v=k=>eq?instStat(o,k)-((o.bon&&o.bon[k])||0)-(o.cards||[]).reduce((s,c)=>s+(IT[c][k]||0),0)-((k==='atk'||k==='def')?refBonus(o)[k]:0):(it[k]||0);
  if(eq)a.push(it.t==='ring'?'แหวน':SLOTN[TSLOT[it.t]]||'เครื่องประดับ');if(it.t==='card')a.push('การ์ด · ใส่ได้ใน '+it.fit.map(f=>FITN[f]).join(', '));
  if(it.t!=='use'){if(v('atk'))a.push('พลังโจมตี +'+v('atk'));if(v('def'))a.push('ป้องกัน +'+v('def'));if(v('hp'))a.push('HP สูงสุด +'+v('hp'));if(v('mmp'))a.push('MP สูงสุด +'+v('mmp'));for(const k of STATS)if(it[k])a.push(STATN[k][1]+' +'+it[k]);if(it.spd)a.push('ความเร็วเดิน +'+it.spd);for(const [el,k] of RESL)if(it[k])a.push('กันธาตุ'+el+' +'+it[k]+'%')}
- if(it.rev)a.push('ชุบชีวิตผู้เล่นที่หมดสติ (สถานะตาย) ให้ฟื้นด้วย HP 30%','วิธีใช้: กดใช้ แล้วคลิก/แตะผู้เล่นที่ล้มอยู่ในระยะ 4 ช่อง','Esc หรือคลิกที่อื่นเพื่อยกเลิก','ใช้กับตัวเองไม่ได้ · ใช้ได้เฉพาะตอนเล่นออนไลน์');if(it.perm)a.push('เพิ่ม '+STATN[it.perm][1]+' +1 ถาวร');if(it.bind)a.push('ไอเทมผูกมัด · แลกเปลี่ยน ฝากคลัง และขายไม่ได้');if(it.t==='use'&&it.hp)a.push('ฟื้น HP '+it.hp);if(it.t==='use'&&it.mp)a.push('ฟื้น MP '+it.mp);if(it.aspd)a.push('ความเร็วโจมตี +'+Math.round((it.aspd-1)*100)+'% นาน '+Math.round(it.adur/60)+' นาที (ใช้ซ้ำจะแทนที่ของเดิม)');if(it.batk)a.push('พลังโจมตี +'+Math.round((it.batk-1)*100)+'% '+it.bdur+' วิ');if(it.bdef)a.push('ป้องกัน +'+Math.round((it.bdef-1)*100)+'% '+it.bdur+' วิ');if(it.t==='mat')a.push('วัตถุดิบ ขายได้');if(it.cls)a.push('อาชีพ: '+clsList(it).map(k=>CLS[k].n).join(', '));if(it.lv>1)a.push('ต้องการ Lv '+it.lv);
+ if(it.rev)a.push('ใช้ชุบผู้เล่นที่หมดสติ 1 คน · ฟื้น HP 30%');if(it.perm)a.push('เพิ่ม '+STATN[it.perm][1]+' +1 ถาวร');if(it.bind)a.push('ไอเทมผูกมัด · แลกเปลี่ยน ฝากคลัง และขายไม่ได้');if(it.t==='use'&&it.hp)a.push('ฟื้น HP '+it.hp);if(it.t==='use'&&it.mp)a.push('ฟื้น MP '+it.mp);if(it.aspd)a.push('ความเร็วโจมตี +'+Math.round((it.aspd-1)*100)+'% นาน '+Math.round(it.adur/60)+' นาที (ใช้ซ้ำจะแทนที่ของเดิม)');if(it.batk)a.push('พลังโจมตี +'+Math.round((it.batk-1)*100)+'% '+it.bdur+' วิ');if(it.bdef)a.push('ป้องกัน +'+Math.round((it.bdef-1)*100)+'% '+it.bdur+' วิ');if(it.t==='mat')a.push('วัตถุดิบ ขายได้');if(it.cls)a.push('อาชีพ: '+clsList(it).map(k=>CLS[k].n).join(', '));if(it.lv>1)a.push('ต้องการ Lv '+it.lv);
  let h=esc(a.join(' · '));
  if(eq&&o.ref){const rb=refBonus(o);h+=`<span class="refl">ตีบวก +${o.ref}: ${rb.atk?'พลังโจมตี +'+rb.atk:'ป้องกัน +'+rb.def}</span>`}
  if(eq){const bl=Object.entries(o.bon||{});if(bl.length)h+='<span class="bon">'+bl.map(([k,n])=>'+'+n+' '+(STATN[k]?STATN[k][1]:{atk:'ATK',def:'DEF',hp:'HP'}[k])).join(' · ')+'</span>';
@@ -1485,7 +1485,7 @@ function respawn(){const d=D();P.x=TWN.x;P.y=TWN.y+80;P.hp=d.mhp;P.mp=d.mmp;S.de
 function useSkill(i,pt,go){if(S.dead)return;if(S.cast&&!go)return toast('กำลังร่ายเวท '+S.cast.n+'…');const b0=SK[P.cls][i];if(!b0)return;if((b0.type==='dmg'||b0.type==='aoe')&&inSafe())return toast(inTown()?'เขตปลอดภัย · ใช้สกิลโจมตีในเมืองไม่ได้':'เขตปลอดภัย · ห้ามต่อสู้');const L=skL(i);
  if(!L)return toast(!jUnlock(b0,i)?'ปลดล็อกที่ Job Lv '+jReq(b0):'ยังไม่ได้เรียน '+b0.n+' · ใช้แต้มสกิลในหน้าสกิล (K)');const s=skAt(P.cls,i,L);if((S.cds[i]||0)>gt)return;if(P.mp<s.mp)return toast('มานาไม่พอ');
  const d=D();let t=null,at=null;
- if(s.type==='res'&&!(typeof reviveFind==='function'&&reviveFind()))return toast('ไม่มีผู้เล่นที่หมดสติอยู่ใกล้ๆ (ระยะ 4 ช่อง)');
+ if(s.type==='res'){if(typeof resAim!=='function')return toast(s.n+' ใช้ได้เฉพาะตอนเล่นออนไลน์');if(!go&&!resOk())return resAim(i)}
  if(s.type==='dmg'){t=S.target;if(!t||!M.includes(t)){S.target=null;if(P.mp<s.mp)return toast('มานาไม่พอ');S.aim=i;S.pend=null;updCursor();return toast('คลิกมอนสเตอร์เพื่อใช้ '+s.n+' · Esc หรือคลิกขวาเพื่อยกเลิก')}
   if(!go&&dist(P,t)>s.range*TS+t.T.r){S.pend=i;S.chase=true;return}P.fx=t.x>=P.x?1:-1}
  else if(s.type==='aoe'){if(s.at==='target'){if(!pt){if(P.mp<s.mp)return toast('มานาไม่พอ');S.aim=i;S.pend=null;updCursor();return toast('คลิกพื้นหรือมอนสเตอร์เพื่อใช้ '+s.n+' · Esc หรือคลิกขวาเพื่อยกเลิก')}
@@ -1552,7 +1552,7 @@ const SKFX={
   if(swOk()){fxImg('h3',t.x,t.y+8,.7,{sc:.3,s0:.6,s1:1.1,foot:1,r0:-.2,r1:.1});fxImg('h1',t.x,t.y+6,.6,{sc:.28,s0:.5,s1:1,foot:1,delay:.08})}else FX.push({k:'pillar',x:t.x,y:t.y,c:'#ffe07a',w:4,life:.5});parts(t.x,t.y-8,20,HITC.holy,{spd:90,life:.5,up:-30,sh:'star'});dmgMob(t,s.mult*holyMul(t),s.col,{kind:'holy'})},
  heal:(s,t,c,d)=>{if(P.cls==='acolyte'&&typeof allyHeal==='function'&&!(typeof GHOST!=='undefined'&&GHOST)&&allyHeal(s))return;if(P.cls==='novice'){if(swOk()){fxImg('h3',P.x,P.y+8,.8,{sc:.3,s0:.6,s1:1.05,foot:1});fxImg('h0',P.x,P.y+8,.7,{sc:.24,s0:.5,s1:1,foot:1,delay:.1,a0:.8})}else fxAnim('slash','flash',P.x,P.y-30,.4,.6)}if(P.cls==='acolyte'&&swOk()){fxImg('h0',P.x,P.y+8,.9,{sc:.34,s0:.7,s1:1.05,foot:1});fxImg('h1',P.x,P.y+6,.8,{sc:.32,s0:.5,s1:1,foot:1,delay:.12})}const h=Math.round((d.mhp*s.pct+st('int')*(s.flat||0))*healMul());P.hp=Math.min(d.mhp,P.hp+h);float(P.x,P.y-40,'+'+h,'#8be07a',true);for(let j=0;j<6;j++)timers.push({t:gt+j*.08,f:()=>FX.push({k:'cross',x:P.x+(R()-.5)*30,y:P.y-10-R()*20,life:.7})});FX.push({k:'nova',x:P.x,y:P.y,r:48,c:'#6fd46a',life:.4});parts(P.x,P.y-10,16,['#d8ffd0','#6fd46a','#ffffff'],{ang:-1.57,spread:1.2,spd:60,life:.7,sh:'plus'})},
  bless:(s)=>{if(P.cls==='acolyte'&&swOk()){fxImg('h4',P.x,P.y+8,1.1,{sc:.36,s0:.5,s1:1.05,foot:1});fxImg('h2',P.x,P.y-36,.9,{sc:.24,s0:.3,s1:1,r0:-.6,r1:0,delay:.15});fxImg('h5',P.x,P.y+8,1,{sc:.3,s0:.8,s1:1.2,foot:1,delay:.3,a0:.8})}FX.push({k:'pillar',x:P.x,y:P.y,c:'#fff3c0',w:3,life:.6});FX.push({k:'aura',x:P.x,y:P.y,cols:['#ffe07a','#ffffff'],life:1.4});parts(P.x,P.y-20,18,HITC.holy,{spd:50,life:.9,up:-40,sh:'star'});buff(s)},
- res:(s)=>{const o=typeof reviveFind==='function'?reviveFind():null;if(!o){toast('เพื่อนที่หมดสติหายไปแล้ว');return}reviveSend(o.u,s.res);FX.push({k:'pillar',x:o.x,y:o.y,c:'#ffe9a8',w:7,life:1.2});FX.push({k:'nova',x:o.x,y:o.y,r:60,c:'#ffe07a',life:.6});parts(o.x,o.y-10,30,['#ffffff','#ffe9a8','#ffd24a'],{ang:-1.57,spread:1,spd:90,life:.8,sh:'star'});if(swOk())fxImg('h0',o.x,o.y+8,1,{sc:.36,s0:.6,s1:1.1,foot:1});chat('sys','','ชุบชีวิต '+o.n+' แล้ว','#ffe07a')},
+ res:(s)=>{const o=typeof resOk==='function'?resOk():null;S.resT=null;if(!o){toast('เป้าหมายฟื้นแล้วหรืออยู่ไกลเกินไป');return}reviveSend(o.u,s.res);FX.push({k:'pillar',x:o.x,y:o.y,c:'#ffe9a8',w:7,life:1.2});FX.push({k:'nova',x:o.x,y:o.y,r:60,c:'#ffe07a',life:.6});parts(o.x,o.y-10,30,['#ffffff','#ffe9a8','#ffd24a'],{ang:-1.57,spread:1,spd:90,life:.8,sh:'star'});if(swOk())fxImg('h0',o.x,o.y+8,1,{sc:.36,s0:.6,s1:1.1,foot:1});chat('sys','','ชุบชีวิต '+o.n+' แล้ว','#ffe07a')},
  magnus:(s,t,c)=>{if(swOk()){fxImg('h5',c.x,c.y+10,1.1,{sc:s.rad*TS/260,s0:.5,s1:1.2,foot:1});for(let j=0;j<5;j++){const a=j/5*6.283,r=s.rad*TS*.55;fxImg(j%2?'h3':'h1',c.x+Math.cos(a)*r,c.y+Math.sin(a)*r*.6+8,.8,{sc:.22,s0:.5,s1:1,foot:1,flip:j%2,delay:.08+j*.07})}}FX.push({k:'nova',x:c.x,y:c.y,r:s.rad*TS,c:'#ffe07a',life:.8});for(let j=0;j<6;j++)timers.push({t:gt+j*.07,f:()=>{const a=R()*6.283,r=R()*s.rad*TS*.8;FX.push({k:'pillar',x:c.x+Math.cos(a)*r,y:c.y+Math.sin(a)*r*.6,c:'#ffe07a',w:3,life:.45})}});
   for(let w=0;w<3;w++)timers.push({t:gt+.25+w*.32,f:()=>{parts(c.x,c.y-8,w===2?40:24,HITC.holy,{spd:120,life:.6,up:-30,sh:'star'});shake(w===2?4:2);if(w)FX.push({k:'nova',x:c.x,y:c.y,r:s.rad*TS*(.7+w*.15),c:'#ffe07a',life:.4});for(let j=0;j<3;j++){const a=R()*6.283,r=R()*s.rad*TS*.8;FX.push({k:'pillar',x:c.x+Math.cos(a)*r,y:c.y+Math.sin(a)*r*.6,c:'#ffe07a',w:3,life:.4})}aoeHit(s,c,s.mult,'holy');if(w===2){const dd=D(),h=Math.round(dd.mhp*(s.heal||0)*healMul());if(h&&!S.dead){P.hp=Math.min(dd.mhp,P.hp+h);float(P.x,P.y-40,'+'+h,'#8be07a',true)}}}})}
 };
@@ -2863,7 +2863,7 @@ const EN={
 'สกิลแรงขึ้น':'Skill damage +','และคูลดาวน์สกิลลดลง':'and skill cooldown −','และฟื้น MP เร็วขึ้น':'and MP regen +','และป้องกัน':'and defense','และคริติคอล':'and critical','และหลบหลีก':'and evasion',
 'ฟันกากบาทใส่เป้าหมาย':'Cross-slash the target','หมุนดาบฟันศัตรูรอบตัว':'Spin to slash all nearby foes','ทุบพื้นแตก':'Shatter the ground','รอบตัว และทำให้มึน':'around you and stun for','และทำให้มึน':'and stun for','ยิงลูกไฟระเบิดใส่เป้าหมาย':'Hurl an exploding fireball at the target',
 'ระเบิดน้ำแข็งรอบตัว รัศมี':'Ice burst around you, radius','ช่อง โดนมอนทุกตัว':'tiles, hitting every monster','ระเบิดน้ำแข็งรอบตัว':'Ice burst around you','และทำให้ช้าลงครึ่งหนึ่ง':'and slow by half for','เรียกสายฟ้าฟาดเป้าหมาย':'Call lightning on the target','กระแสไฟฟ้ากระจายรอบ':', chaining to foes within','ช่อง ยิ่งห่างจากจุดฟาดยิ่งเบา':'tiles (weaker farther from the strike)','(Lv 5 และ Lv 10 ระยะ +1 ช่อง)':'(+1 tile at Lv 5 and Lv 10)','อุกกาบาตถล่มพื้นที่':'Meteor strike on an area','ลูกธนูเรืองแสง':'Glowing arrow',
-'ยิงธนู 5 ดอกใส่พื้นที่':'Fire 5 arrows at an area','ห่าธนู 3 ระลอก ระลอกละ':'3 volleys of arrows, each','เสาแสงลงใส่เป้าหมาย':'Pillar of light on the target','· ธาตุศักดิ์สิทธิ์ (แรงขึ้น 50% กับอันเดด/วิญญาณ และ 25% กับธาตุมืด)':'· Holy element (+50% vs Undead/Ghost, +25% vs Dark)','ชุบชีวิตผู้เล่นที่หมดสติในระยะ':'Revive a downed player within','ช่อง ฟื้นด้วย HP':'tiles with HP','ไม่ต้องร่าย':'instant cast','เสาแสงถล่มพื้นที่ 3 ครั้ง ครั้งละ':'Pillars of light strike an area 3 times, each','เสาแสงถล่มพื้นที่':'Pillars of light over an area','และฟื้น HP ตัวเอง':'and heal self',
+'ยิงธนู 5 ดอกใส่พื้นที่':'Fire 5 arrows at an area','ห่าธนู 3 ระลอก ระลอกละ':'3 volleys of arrows, each','เสาแสงลงใส่เป้าหมาย':'Pillar of light on the target','· ธาตุศักดิ์สิทธิ์ (แรงขึ้น 50% กับอันเดด/วิญญาณ และ 25% กับธาตุมืด)':'· Holy element (+50% vs Undead/Ghost, +25% vs Dark)','ใช้ชุบผู้เล่นที่หมดสติ 1 คน':'Revive 1 downed player','ไม่ต้องร่าย':'instant cast','เสาแสงถล่มพื้นที่ 3 ครั้ง ครั้งละ':'Pillars of light strike an area 3 times, each','เสาแสงถล่มพื้นที่':'Pillars of light over an area','และฟื้น HP ตัวเอง':'and heal self',
 'ฟาดเต็มแรงใส่เป้าหมาย':'Full-power strike on the target','ปฐมพยาบาลตัวเอง ฟื้น HP':'First aid, restore HP','ฟื้น HP':'Restore HP','ฟื้น MP':'Restore MP','นาน':'for','วินาที':'s','วิ':'s','คูลดาวน์':'Cooldown',
 'เหล็กดีต้องผ่านไฟ':'Good steel must pass through fire','ตีบวกอาวุธด้วยแร่โอริเดียม ตีบวกเกราะ หมวก กางเกง ผ้าคลุม รองเท้า และมือซ้ายด้วยแร่เอลูเนียม':'Refine weapons with Oridium; refine armor, helms, pants, capes, shoes and off-hands with Elunium','+1 ถึง +4 สำเร็จเสมอ':'+1 to +4 always succeed','ตั้งแต่ +5 ถ้าล้มเหลวระดับจะลดลง 1':'from +5, failure drops the level by 1',
 'ไม่มีอุปกรณ์ที่ตีบวกได้':'No refinable gear','ตีบวกถึง':'is refined to','สูงสุดแล้ว':'max','พลังโจมตีจากตีบวก':'Refine attack','ป้องกันจากตีบวก':'Refine defense','โอกาสสำเร็จ':'Success rate','ล้มเหลวระดับลด 1':'failure: -1 level','แร่หรือทองไม่พอ':'Not enough ore or gold','ตีบวกสำเร็จ!':'Refine success!','ตีบวกสำเร็จ':'Refine success','ตีบวกล้มเหลว…':'Refine failed…','ตีบวกล้มเหลว':'Refine failed','ลดเหลือ':'dropped to','ตีบวก':'Refine','สวมอยู่':'Equipped',
@@ -3375,6 +3375,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'4.5',d:'6 ต.ค. 2026',t:'ชุบชีวิตเลือกเป้าหมาย',L:['อาโคไลท์ ชุบชีวิต: กดสกิลแล้วคลิก/แตะผู้เล่นที่หมดสติ 1 คนเพื่อชุบ (ระยะ 4 ช่อง) จากนั้นค่อยเริ่มร่าย · Esc/คลิกที่อื่นยกเลิก','ขนนกฟีนิกซ์และชุบชีวิต: ใช้กับผู้เล่นที่เลือก 1 คน · คำอธิบายสั้นลง']},
  {v:'4.4.1',d:'6 ต.ค. 2026',t:'แก้หน้าสกิลอาโคไลท์',L:['แก้บัค หน้าสกิลของอาโคไลท์ว่างเปล่า (ไอคอนสกิลชุบชีวิตหายทำให้หน้าต่างโหลดไม่ขึ้น)']},
  {v:'4.4',d:'6 ต.ค. 2026',t:'ขนนกฟีนิกซ์เลือกเป้าหมาย',L:['ขนนกฟีนิกซ์: กดใช้แล้วเข้าโหมดเลือกเป้าหมาย ผู้เล่นที่หมดสติจะมีวงสีส้มกระพริบ คลิก/แตะคนที่ต้องการชุบชีวิต (ระยะ 4 ช่อง) · Esc หรือคลิกที่อื่นเพื่อยกเลิก','ขนนกจะถูกใช้เฉพาะตอนชุบชีวิตสำเร็จ · ใช้ได้กับผู้เล่นที่มีสถานะตายเท่านั้น','เพิ่มคำอธิบายคุณสมบัติและวิธีใช้ในหน้าไอเทม']},
  {v:'4.3',d:'6 ต.ค. 2026',t:'แต้มสถานะรอยืนยัน · อาโคไลท์ชุบชีวิต',L:['หน้าสถานะ: กดเพิ่มแต้มแล้ว ค่าพลังจริงยังไม่เปลี่ยนจนกว่าจะกดยืนยัน (กดยกเลิกได้เหมือนเดิม)','อาโคไลท์ แสงศักดิ์สิทธิ์: ไม่มีหลอดร่ายแล้ว · เป็นธาตุศักดิ์สิทธิ์ แรงขึ้น 50% กับอันเดด/วิญญาณ และ 25% กับธาตุมืด','อาโคไลท์ สกิลใหม่ ชุบชีวิต (Job Lv 15, สูงสุด Lv 3): ชุบชีวิตผู้เล่นที่หมดสติในระยะ 4 ช่อง · Lv1 ร่าย 3 วิ ฟื้น HP 20% · Lv2 ร่าย 1.5 วิ ฟื้น 35% · Lv3 ไม่ต้องร่าย ฟื้น 50% · MP 30 คูลดาวน์ 20 วิ']},
@@ -3510,7 +3511,7 @@ let PLEAVING=0;function netTick(){if(!netOK())return;if(P&&PARTY&&PARTY.members&
  const k=JSON.stringify({...v,t:0});if(k===LASTPUB)return;LASTPUB=k;me.set(v);me.onDisconnect().remove()}
 function netChat(m){if(!netOK()||!P)return;if(MUTEU>Date.now()){chat('sys','','คุณถูกห้ามแชทอีก '+Math.ceil((MUTEU-Date.now())/60000)+' นาที');return}CHATREF.push({u:UID,n:P.name,m:m.slice(0,120),t:Date.now(),gm:ISGM?1:0})}
 function drawOther(o){if(o.tx!=null){const k=.25;o.x+=(o.tx-o.x)*k;o.y+=(o.ty-o.y)*k}if(Math.abs(o.tx-o.x)+Math.abs(o.ty-o.y)>1)o.mv=gt;
- if(S.revItem&&o.d){const nr=Math.hypot(o.x-P.x,o.y-P.y)<=4*TS+8;lc.globalAlpha=.6+.4*Math.sin(gt*8);pxRing(ax(o.x),ay(o.y)+1,16,7,nr?'#ffb347':'#8a7a6a',true,Math.floor(gt*12));lc.globalAlpha=1}
+ if((S.revItem||S.resSk!=null)&&o.d){const nr=Math.hypot(o.x-P.x,o.y-P.y)<=4*TS+8;lc.globalAlpha=.6+.4*Math.sin(gt*8);pxRing(ax(o.x),ay(o.y)+1,16,7,nr?'#ffb347':'#8a7a6a',true,Math.floor(gt*12));lc.globalAlpha=1}
  if(S.ally===o.id&&!o.d){lc.globalAlpha=.9;pxRing(ax(o.x),ay(o.y)+1,13,6,'#8be07a',true,Math.floor(gt*12));lc.globalAlpha=1}
  const look=Object.assign({},classLook(o.c||'novice',{sex:o.sx,hs:o.hs,hc:o.hc,ec:o.ec}),{gmlook:0});o.pbar=inParty(o.id);const y=heroAt(o,look,(o.gm?'[GM] ':'')+(inParty(o.id)?'♦ ':'')+o.n+(o.lv?' Lv'+o.lv:''),o.gm?'#ffcf4a':inParty(o.id)?'#9ef08a':'#9fe0ff',false);
  if(o.sayT>gt){const x=ax(o.x);LBL.push(['💬 '+o.say,x*2,(y-(o._hh||40)-6)*2,'#ffffff',12])}}
@@ -3596,13 +3597,13 @@ function pmenu(o,cx,cy){let m=$('#pmenu');if(!m){m=document.createElement('div')
 const hidePm=()=>{const m=$('#pmenu');if(m)m.hidden=true};
 function pmInit(){cv.addEventListener('contextmenu',e=>{if(!netOK()||!P)return;const r=cv.getBoundingClientRect(),wx=(e.clientX-r.left)*2/AS+cam.x,wy=(e.clientY-r.top)*2/AS+cam.y,o=otherAt(wx,wy);if(!o)return;e.preventDefault();e.stopImmediatePropagation();pmenu(o,e.clientX,e.clientY)},true);
  document.addEventListener('pointerdown',e=>{if(!e.target.closest('#pmenu'))hidePm()});
- cv.addEventListener('pointerdown',e=>{if(!S.revItem)return;const id=S.revItem;if(!P||S.dead||!netOK()){S.revItem=null;return}const r=cv.getBoundingClientRect(),o=deadAt((e.clientX-r.left)*2/AS+cam.x,(e.clientY-r.top)*2/AS+cam.y);
-  if(!o){S.revItem=null;toast('ยกเลิกการใช้'+IT[id].n);return}e.preventDefault();e.stopImmediatePropagation();
+ cv.addEventListener('pointerdown',e=>{if(!S.revItem&&S.resSk==null)return;const id=S.revItem,sk=S.resSk;if(!P||S.dead||!netOK()){S.revItem=null;S.resSk=null;return}const r=cv.getBoundingClientRect(),o=deadAt((e.clientX-r.left)*2/AS+cam.x,(e.clientY-r.top)*2/AS+cam.y);
+  if(!o){S.revItem=null;S.resSk=null;toast('ยกเลิกการใช้'+(id?IT[id].n:'ชุบชีวิต'));return}e.preventDefault();e.stopImmediatePropagation();
   const x=o.tx??o.x,y=o.ty??o.y;if(Math.hypot(x-P.x,y-P.y)>4*TS+8){toast(o.n+' อยู่ไกลเกินไป · เข้าใกล้ให้อยู่ในระยะ 4 ช่อง');return}
-  S.revItem=null;featherDo(id,{u:o.id,n:o.n||'ผู้เล่น',x,y})},true);
- cv.addEventListener('contextmenu',e=>{if(S.revItem){S.revItem=null;e.preventDefault();e.stopImmediatePropagation();toast('ยกเลิกการใช้ขนนกฟีนิกซ์')}},true);
+  S.revItem=null;S.resSk=null;if(id)featherDo(id,{u:o.id,n:o.n||'ผู้เล่น',x,y});else{S.resT={u:o.id};useSkill(sk)}},true);
+ cv.addEventListener('contextmenu',e=>{if(S.revItem||S.resSk!=null){S.revItem=null;S.resSk=null;e.preventDefault();e.stopImmediatePropagation();toast('ยกเลิกการชุบชีวิต')}},true);
  cv.addEventListener('pointerdown',e=>{if(!netOK()||!P||P.cls!=='acolyte'||S.dead)return;const r=cv.getBoundingClientRect(),o=otherAt((e.clientX-r.left)*2/AS+cam.x,(e.clientY-r.top)*2/AS+cam.y);if(o&&S.ally!==o.id){S.ally=o.id;toast('เลือก '+o.n+' เป็นเป้าหมายฟื้นฟู · กดสกิลฟื้นฟูเพื่อฮีล · Esc ยกเลิก')}},true);
- addEventListener('keydown',e=>{if(e.key==='Escape'&&S.revItem){S.revItem=null;toast('ยกเลิกการใช้ขนนกฟีนิกซ์');return}if(e.key==='Escape'&&S.ally){S.ally=null;toast('ยกเลิกการเลือกเป้าหมายฟื้นฟู')}});
+ addEventListener('keydown',e=>{if(e.key==='Escape'&&(S.revItem||S.resSk!=null)){S.revItem=null;S.resSk=null;toast('ยกเลิกการชุบชีวิต');return}if(e.key==='Escape'&&S.ally){S.ally=null;toast('ยกเลิกการเลือกเป้าหมายฟื้นฟู')}});
  document.addEventListener('click',e=>{const b=e.target.closest('[data-pm]');if(!b)return;const o=$('#pmenu')._o;hidePm();if(!o)return;
   if(b.dataset.pm==='heal'){S.ally=o.id;useSkill(1);return}if(b.dataset.pm==='party')pInvite(o.n);else if(b.dataset.pm==='chat'){const c=$('#chat');c.classList.remove('off');c.classList.add('show');$('#ci').value='/w '+o.n+' ';$('#ci').focus()}else tReq(o)});
  FDB.ref('whisper/'+UID).orderByChild('t').startAt(Date.now()).on('child_added',s=>{const v=s.val();if(v){LASTW=v.fn;chat('w',v.fn+' → คุณ',v.m,'#e8a0ff')}});
@@ -3756,7 +3757,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261006010313';
+const BUILDV='20261006011103';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
@@ -3820,9 +3821,12 @@ function allyHeal(s){if(!S.ally)return false;const o=OTHERS[S.ally];if(!o||!netO
  parts(o.x,o.y-10,16,['#d8ffd0','#6fd46a','#ffffff'],{ang:-1.57,spread:1.2,spd:60,life:.7,sh:'plus'});float(o.x,o.y-40,'+'+h,'#8be07a',true);chat('sys','','ฟื้นฟู '+o.n+' +'+h+' HP','#8be07a');return true}
 /* ---- phoenix feather: revive a downed player nearby ---- */
 function deadAt(wx,wy){let b=null,bd=1e9;for(const id in OTHERS){const o=OTHERS[id];if(!o||!o.d)continue;const d=Math.hypot(o.x-wx,o.y-8-wy);if(d<34&&d<bd){b=o;bd=d}}return b}
+function resOk(){const t=S.resT;if(!t)return null;const o=OTHERS[t.u];if(!o||!o.d)return null;const x=o.tx??o.x,y=o.ty??o.y;if(Math.hypot(x-P.x,y-P.y)>4*TS+20)return null;return {u:t.u,n:o.n||'ผู้เล่น',x,y}}
+function resAim(i){S.resT=null;if(!netOK()){toast('ใช้ได้เฉพาะตอนเล่นออนไลน์');return}if(!Object.values(OTHERS).some(o=>o&&o.d)){toast('ไม่มีผู้เล่นที่หมดสติอยู่ในแผนที่นี้');return}
+ S.resSk=i;S.revItem=null;S.aim=null;updCursor();toast('คลิก/แตะผู้เล่นที่หมดสติ 1 คนเพื่อชุบชีวิต (ระยะ 4 ช่อง) · Esc ยกเลิก')}
 function revAim(id){if(!countItem(id))return;if(!netOK()){toast(IT[id].n+' ใช้ได้เฉพาะตอนเล่นออนไลน์');return}if(S.dead)return;
  if(!Object.values(OTHERS).some(o=>o&&o.d)){toast('ไม่มีผู้เล่นที่หมดสติอยู่ในแผนที่นี้');return}
- S.revItem=id;S.aim=null;updCursor();toast('คลิก/แตะผู้เล่นที่หมดสติเพื่อชุบชีวิต (ระยะ 4 ช่อง) · Esc หรือคลิกที่อื่นเพื่อยกเลิก')}
+ S.revItem=id;S.resSk=null;S.aim=null;updCursor();toast('คลิก/แตะผู้เล่นที่หมดสติเพื่อชุบชีวิต (ระยะ 4 ช่อง) · Esc หรือคลิกที่อื่นเพื่อยกเลิก')}
 function reviveFind(){if(!netOK()||!P||S.dead)return null;let b=null,bd=4*TS+8;for(const u in OTHERS){const o=OTHERS[u];if(!o||!o.d)continue;const x=o.tx??o.x,y=o.ty??o.y,d=Math.hypot(x-P.x,y-P.y);if(d<=bd){bd=d;b={u,n:o.n||'ผู้เล่น',x,y}}}return b}
 function reviveSend(u,pct){if(!netOK())return;FDB.ref('pexp/'+u).push(Object.assign({rv:1,e:0,n:P.name,ts:snow()},pct?{rp:pct}:{}))}
 
