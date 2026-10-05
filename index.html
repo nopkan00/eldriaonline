@@ -775,7 +775,7 @@ const SK={
    {n:'ย่างเงา',type:'buff',fx:'shadow',pose:'cast',atk:1.15,aspd:1.4,dur:15,mp:18,cd:30,lv:6,col:'#9a7ad8',d:'พลังโจมตี {atk} ความเร็วโจมตี {aspd} นาน {dur} วินาที'},
    {n:'พายุมีดเงา',type:'aoe',at:'target',range:5,fx:'blades',pose:'cast',rad:2.6,mult:1,mp:34,cd:14,lv:9,col:'#c08aff',d:'ใบมีดเงาถล่มพื้นที่ 3 ระลอก ระลอกละ {m}'}],
  acolyte:[
-  {n:'แสงศักดิ์สิทธิ์',type:'dmg',fx:'holy',pose:'cast',mult:2.3,range:5,mp:9,cd:3.5,lv:1,col:'#ffe07a',d:'เสาแสงลงใส่เป้าหมาย {m}'},
+  {n:'แสงศักดิ์สิทธิ์',type:'dmg',fx:'holy',el:'ศักดิ์สิทธิ์',pose:'cast',mult:2.3,range:5,mp:9,cd:3.5,lv:1,col:'#ffe07a',d:'เสาแสงลงใส่เป้าหมาย {m} · ธาตุศักดิ์สิทธิ์ (แรงขึ้น 50% กับอันเดด/วิญญาณ และ 25% กับธาตุมืด)'},
   {n:'ฟื้นฟู',type:'heal',fx:'heal',pose:'cast',pct:.22,flat:5,mp:14,cd:6,lv:3,col:'#6fd46a',d:'ฟื้น HP {pct} + INT×{flat} ให้ตัวเอง หรือเพื่อนที่เลือกไว้ (คลิก/แตะผู้เล่นเพื่อเลือก · Esc ยกเลิก)'},
   {n:'พรแห่งเทพ',type:'buff',fx:'bless',pose:'cast',atk:1.15,def:1.35,aspd:1.1,dur:30,mp:24,cd:40,lv:6,col:'#fff3c0',d:'พลังโจมตี {atk} ป้องกัน {def} ความเร็วโจมตี {aspd} นาน {dur} วินาที'},
   {n:'ประกาศิตศักดิ์สิทธิ์',type:'aoe',at:'target',range:6,fx:'magnus',pose:'cast',rad:3,mult:.95,heal:.1,mp:40,cd:14,lv:9,col:'#ffe07a',d:'เสาแสงถล่มพื้นที่ 3 ครั้ง ครั้งละ {m} และฟื้น HP ตัวเอง {heal}'}]
@@ -798,6 +798,7 @@ PASV.frostg=[...PASV.warrior,{k:'grit',n:'หัวใจธารน้ำแ�
 [1,5,10,15].forEach((j,k)=>{const b=SK.frostg[SK.warrior.length+k];if(b)b.jl=j});
 PASV.frostg.push({k:'frostmind',n:'ปราณเหมันต์',lv:20,jl:20,max:4,lin:1,sym:'mana',col:'#4a8ad8',v:[3],d:'INT +{a} (เสริมพลังสกิลน้ำแข็ง)'});
 PASV.frostg.forEach(p=>{if(p.k==='grit')p.jl=5;if(p.k==='frostres')p.jl=12});
+SK.acolyte.push({n:'ชุบชีวิต',type:'res',fx:'res',pose:'cast',jl:15,max:3,mp:30,cd:20,col:'#ffe9a8',castL:[3,1.5,0],resP:[.2,.35,.5],d:'ชุบชีวิตผู้เล่นที่หมดสติในระยะ 4 ช่อง ฟื้นด้วย HP {res} · {ct}'});
 PASV.archer.push({k:'longshot',n:'สายตาพรานไกล',lv:1,max:10,lin:1,sym:'arrow',col:'#3a8a5a',v:[1],d:'ระยะโจมตีปกติและยิงทะลวง +{a} ช่อง'});{const a=PASV.archer;[a[0],a[2]]=[a[2],a[0]]}
 /* skill levels: actives 1-5 (0 = not learned), passives 1-3 once unlocked; one skill point per level-up */
 const SKMAX=10,PSMAX=6,skMax=(i,c)=>{const b=SK[c||P.cls][i];return b&&b.max||SKMAX};
@@ -812,9 +813,9 @@ function skAt(cls,i,L){const b=SK[cls][i],s={...b},k=Math.max(0,L-1);
  if(s.mult)s.mult=+(b.mult*(1+.1*k)).toFixed(3);s.mp=Math.round(b.mp*(1+.07*k));s.cd=+(b.cd*(1-.03*k)).toFixed(1);
  for(const f of ['atk','def','aspd'])if(b[f])s[f]=+(1+(b[f]-1)*(1+.12*k)).toFixed(3);if(b.dur)s.dur=+(b.dur+1.5*k).toFixed(1);
  if(b.pois)s.pois=+Math.min(.8,b.pois+.04*k).toFixed(2);if(b.pct)s.pct=+(b.pct+.02*k).toFixed(3);if(b.flat)s.flat=b.flat+k;if(b.heal)s.heal=+(b.heal+.02*k).toFixed(3);
- if(b.fx==='pierce'&&P&&cls===P.cls)s.range=b.range+PV('longshot',0);if(b.cone){s.rad=b.rad+(L>=5?1:0)+(L>=10?1:0);s.range=s.rad}if(b.stun)s.stun=+(b.stun+.1*k).toFixed(1);if(b.slow)s.slow=+(b.slow+.3*k).toFixed(1);if(b.crit)s.crit=b.crit+3*k;s.L=L;return s}
+ if(b.fx==='pierce'&&P&&cls===P.cls)s.range=b.range+PV('longshot',0);if(b.resP){s.res=b.resP[Math.min(k,b.resP.length-1)];s.ct=b.castL[Math.min(k,b.castL.length-1)]}if(b.cone){s.rad=b.rad+(L>=5?1:0)+(L>=10?1:0);s.range=s.rad}if(b.stun)s.stun=+(b.stun+.1*k).toFixed(1);if(b.slow)s.slow=+(b.slow+.3*k).toFixed(1);if(b.crit)s.crit=b.crit+3*k;s.L=L;return s}
 const pc=v=>Math.round(v*100)+'%',pb=v=>'+'+Math.round((v-1)*100)+'%';
-function skDesc(s){return s.d.replace('{m}',pc(s.mult||0)).replace('{atk}',pb(s.atk||1)).replace('{def}',pb(s.def||1)).replace('{aspd}',pb(s.aspd||1)).replace('{dur}',s.dur).replace('{stun}',s.stun).replace('{slow}',s.slow).replace('{crit}',s.crit).replace('{pct}',pc(s.pct||0)).replace('{pois}',Math.round((s.pois||0)*100)+'%').replace('{flat}',s.flat).replace('{heal}',pc(s.heal||0)).replace('{rad}',s.rad)}
+function skDesc(s){return s.d.replace('{m}',pc(s.mult||0)).replace('{atk}',pb(s.atk||1)).replace('{def}',pb(s.def||1)).replace('{aspd}',pb(s.aspd||1)).replace('{dur}',s.dur).replace('{stun}',s.stun).replace('{slow}',s.slow).replace('{crit}',s.crit).replace('{pct}',pc(s.pct||0)).replace('{pois}',Math.round((s.pois||0)*100)+'%').replace('{flat}',s.flat).replace('{heal}',pc(s.heal||0)).replace('{rad}',s.rad).replace('{res}',pc(s.res||0)).replace('{ct}',s.ct?'ร่าย '+s.ct+' วินาที':'ไม่ต้องร่าย')}
 const pDesc=(p,L)=>p.d.replace('{a}',pVal(p,Math.max(1,L),0)).replace('{b}',p.v[1]!=null?pVal(p,Math.max(1,L),1):'');
 const skL=i=>(P.skl&&P.skl[i])||0;
 const IT={
@@ -1234,7 +1235,8 @@ const RESL=[['ไฟ','rf'],['น้ำ','rw'],['ดิน','re'],['ลม','rwi
 const resOf=el=>Math.min(60,eqs(RESK[el]||'rn')+(P.rall||0)+(el==='น้ำ'?PV('frostres',0):0));
 function eqs(k){let s=0;for(const sl in P.equip){const o=P.equip[sl];if(o&&IT[o.id])s+=instStat(o,k)}return s}
 const INV=50;
-const st=k=>(P[k]||0)+eqs(k)+(k==='int'?PV('frostmind',0):0);
+let _pstOK=false;const _pst=()=>{if(_pstOK)return PSTAT;try{const v=PSTAT;_pstOK=true;return v}catch(e){return null}};
+const st=k=>{const ps=_pst();return (ps&&ps.st&&ps.st[k]!=null?ps.st[k]:(P[k]||0))+eqs(k)+(k==='int'?PV('frostmind',0):0)};
 function regen(){const v=st('vit'),n=st('int'),f=1+PV('focus',1)/100;return {hr:1+v*.2,hc:.1+v*.02,mr:(.5+n*.1)*f,mc:(.1+n*.02)*f}}
 function D(){const c=CLS[P.cls],bOn=S.buffUntil>gt,str=st('str'),agi=st('agi'),vit=st('vit'),int=st('int'),dex=st('dex'),luk=st('luk'),main=st(c.main);
  const mhp=Math.round((c.hp+vit*10+P.lv*14+eqs('hp'))*(1+(PV('iron',0)+PV('grit',0))/100)),rage=hasP('rage')&&P.hp<mhp*.4,b=(bOn?S.bAtk:1)*(rage?1+PV('rage',0)/100:1)*(S.ib&&S.ib.until>gt?S.ib.atk:1),ibd=S.ib&&S.ib.until>gt?S.ib.def:1;
@@ -1478,11 +1480,12 @@ function hitPlayer(m,mult=1){if(S.dead)return;if(S.inv>gt){if(gt-(S.invF||0)>.6)
 function die(){P.hp=0;S.dead=true;S.target=null;S.moveTo=null;const lost=P.lv<=30?0:Math.floor(need(P.lv)*.1);P.exp=Math.max(0,P.exp-lost);for(const m of M)if(!MOBON||m.tgt===UID){m.agg=false;m.ret=true}
  $('#deadmsg').textContent=(lost?'เสียค่าประสบการณ์ '+lost+' EXP':'Base Lv ไม่เกิน 30 ไม่เสีย EXP')+' · ของในกระเป๋ายังอยู่ครบ';$('#dead').hidden=false;sfx('die');chat('sys','','คุณถูกสังหาร');save()}
 $('#respawn').addEventListener('click',()=>{if(P&&S.dead)respawn()});
-function reviveBy(n){if(!P||!S.dead)return;const d=D();P.hp=Math.max(1,Math.round(d.mhp*.3));P.mp=Math.round(d.mmp*.2);S.dead=false;S.inv=gt+3;$('#dead').hidden=true;FX.push({k:'pillar',x:P.x,y:P.y,c:'#ffb347',w:6,life:1.2});elSph('el_fires',P.x,P.y-20,80,{life:1});parts(P.x,P.y-20,50,['#ffe07a','#ff8a3a','#ffffff'],{ang:-1.57,spread:1.4,spd:120,life:1.1,sh:'star'});sfx('holy');toast('ได้รับการชุบชีวิตจาก '+n+'!');chat('sys','',n+' ชุบชีวิตคุณด้วยขนนกฟีนิกซ์ · HP 30% · อมตะ 3 วินาที','#ffb347');save()}
+function reviveBy(n,pct){if(!P||!S.dead)return;const d=D();P.hp=Math.max(1,Math.round(d.mhp*(pct||.3)));P.mp=Math.round(d.mmp*.2);S.dead=false;S.inv=gt+3;$('#dead').hidden=true;FX.push({k:'pillar',x:P.x,y:P.y,c:'#ffb347',w:6,life:1.2});elSph('el_fires',P.x,P.y-20,80,{life:1});parts(P.x,P.y-20,50,['#ffe07a','#ff8a3a','#ffffff'],{ang:-1.57,spread:1.4,spd:120,life:1.1,sh:'star'});sfx('holy');toast('ได้รับการชุบชีวิตจาก '+n+'!');chat('sys','',n+' ชุบชีวิตคุณด้วยขนนกฟีนิกซ์ · HP 30% · อมตะ 3 วินาที','#ffb347');save()}
 function respawn(){const d=D();P.x=TWN.x;P.y=TWN.y+80;P.hp=d.mhp;P.mp=d.mmp;S.dead=false;S.target=null;S.aim=null;S.pend=null;for(const m of M)if(!MOBON||m.tgt===UID){m.agg=false}$('#dead').hidden=true;save();toast('ฟื้นคืนชีพที่เมืองอิลวาเรีย')}
 function useSkill(i,pt,go){if(S.dead)return;if(S.cast&&!go)return toast('กำลังร่ายเวท '+S.cast.n+'…');const b0=SK[P.cls][i];if(!b0)return;if((b0.type==='dmg'||b0.type==='aoe')&&inSafe())return toast(inTown()?'เขตปลอดภัย · ใช้สกิลโจมตีในเมืองไม่ได้':'เขตปลอดภัย · ห้ามต่อสู้');const L=skL(i);
  if(!L)return toast(!jUnlock(b0,i)?'ปลดล็อกที่ Job Lv '+jReq(b0):'ยังไม่ได้เรียน '+b0.n+' · ใช้แต้มสกิลในหน้าสกิล (K)');const s=skAt(P.cls,i,L);if((S.cds[i]||0)>gt)return;if(P.mp<s.mp)return toast('มานาไม่พอ');
  const d=D();let t=null,at=null;
+ if(s.type==='res'&&!(typeof reviveFind==='function'&&reviveFind()))return toast('ไม่มีผู้เล่นที่หมดสติอยู่ใกล้ๆ (ระยะ 4 ช่อง)');
  if(s.type==='dmg'){t=S.target;if(!t||!M.includes(t)){S.target=null;if(P.mp<s.mp)return toast('มานาไม่พอ');S.aim=i;S.pend=null;updCursor();return toast('คลิกมอนสเตอร์เพื่อใช้ '+s.n+' · Esc หรือคลิกขวาเพื่อยกเลิก')}
   if(!go&&dist(P,t)>s.range*TS+t.T.r){S.pend=i;S.chase=true;return}P.fx=t.x>=P.x?1:-1}
  else if(s.type==='aoe'){if(s.at==='target'){if(!pt){if(P.mp<s.mp)return toast('มานาไม่พอ');S.aim=i;S.pend=null;updCursor();return toast('คลิกพื้นหรือมอนสเตอร์เพื่อใช้ '+s.n+' · Esc หรือคลิกขวาเพื่อยกเลิก')}
@@ -1494,7 +1497,7 @@ function useSkill(i,pt,go){if(S.dead)return;if(S.cast&&!go)return toast('กำ�
 /* elemental impact spheres / projectiles per class & skill: fire=mage fireball+meteor, water=ice skills, earth=warrior quake, wind=archer/thief */
 function elSph(key,x,y,diam,o){const im=SWIMG[key];if(!im||!im.complete||!im.naturalWidth)return;fxImg(key,x,y,(o&&o.life)||.6,Object.assign({sc:diam/im.naturalWidth,s0:.25,s1:1.05,fo:.45,a0:.95},o||{}))}
 function elShot(key,sx,sy,tx,ty,life,sc){const im=SWIMG[key];if(!im||!im.complete||!im.naturalWidth)return;const a=Math.atan2(ty-sy,tx-sx);fxImg(key,sx,sy,life,{sc:sc||.3,s0:1,s1:1,dx:tx-sx,dy:ty-sy,r0:a,r1:a,fo:.92})}
-const CASTSFX={xslash:'slash',spin:'slash',shout:'roar',quake:'quake',fire:'cast',ice:'ice',bolt:'bolt',meteor:'cast',thunder:'bolt',dstab:'slash',venom:'cast',shadow:'buff',blades:'slash',pierce:'arrow',spread:'arrow',rain:'arrow',hawk:'buff',holy:'holy',heal:'heal',bless:'buff',magnus:'holy',fblade:'ice',fwall:'buff',fspike:'ice',fstorm:'ice'};
+const CASTSFX={res:'cast',xslash:'slash',spin:'slash',shout:'roar',quake:'quake',fire:'cast',ice:'ice',bolt:'bolt',meteor:'cast',thunder:'bolt',dstab:'slash',venom:'cast',shadow:'buff',blades:'slash',pierce:'arrow',spread:'arrow',rain:'arrow',hawk:'buff',holy:'holy',heal:'heal',bless:'buff',magnus:'holy',fblade:'ice',fwall:'buff',fspike:'ice',fstorm:'ice'};
 function buff(s){if(GHOST)return;S.bAtk=s.atk||1;S.bDef=s.def||1;S.bAspd=s.aspd||1;S.buffUntil=gt+s.dur;S.buffIdx=SK[P.cls].findIndex(x=>x.n===s.n);toast(s.n+' ทำงาน '+s.dur+' วินาที')}
 function coneHit(s,c,mult,kind){const a0=Math.atan2(c.y-P.y,c.x-P.x),R2=s.rad*TS,h=(s.cone||45)/2*Math.PI/180;for(const m of M.slice()){const dx=m.x-P.x,dy=m.y-P.y,dd=Math.hypot(dx,dy);if(dd>R2+m.T.r)continue;let da=Math.abs(Math.atan2(dy,dx)-a0);if(da>Math.PI)da=2*Math.PI-da;if(dd<m.T.r+8||da<=h+Math.atan2(m.T.r,Math.max(1,dd)))dmgMob(m,mult,s.col,{kind})}}
 function aoeHit(s,c,mult,kind){for(const m of M.slice())if(Math.hypot(m.x-c.x,m.y-c.y)<s.rad*TS+m.T.r)dmgMob(m,mult,s.col,{kind,stun:s.stun,slow:s.slow})}
@@ -1545,10 +1548,11 @@ const SKFX={
  hawk:(s)=>{FX.push({k:'aura',x:P.x,y:P.y,cols:['#6fd46a','#ffd166'],life:1.2});FX.push({k:'shout',x:P.x,y:P.y,c:'#9be38a',life:.5});buff(s)},
  holy:(s,t)=>{if(swOk()&&SWIMG.hb0){const sx=P.x+(P.fx||1)*10,sy=P.y-20,ty=t.y-t.T.r*.8,ang=Math.atan2(ty-sy,t.x-sx),L=Math.hypot(t.x-sx,ty-sy),half=200*.3,k=Math.max(0,L-half*1.6)/L,dx=(t.x-sx)*k,dy=(ty-sy)*k,cx=sx+Math.cos(ang)*half,cy=sy+Math.sin(ang)*half;
   fxImg('hb0',cx,cy,.28,{sc:.3,s0:.6,s1:1,r0:ang,r1:ang,dx,dy,fo:.85,frames:['hb0','hb1','hb2','hb3','hb4','hb5'],fdur:.04});
-  timers.push({t:gt+.26,f:()=>{if(!M.includes(t))return;fxImg('h3',t.x,t.y+8,.5,{sc:.24,s0:.5,s1:1.1,foot:1});FX.push({k:'nova',x:t.x,y:ty,r:40,c:'#9aa8ff',life:.3});parts(t.x,ty,22,['#ffffff','#c8d0ff','#7a80ff'],{ang,spread:1.2,spd:140,life:.4,sh:'star'});shake(2);dmgMob(t,s.mult,s.col,{kind:'holy'})}});return}
-  if(swOk()){fxImg('h3',t.x,t.y+8,.7,{sc:.3,s0:.6,s1:1.1,foot:1,r0:-.2,r1:.1});fxImg('h1',t.x,t.y+6,.6,{sc:.28,s0:.5,s1:1,foot:1,delay:.08})}else FX.push({k:'pillar',x:t.x,y:t.y,c:'#ffe07a',w:4,life:.5});parts(t.x,t.y-8,20,HITC.holy,{spd:90,life:.5,up:-30,sh:'star'});dmgMob(t,s.mult,s.col,{kind:'holy'})},
+  timers.push({t:gt+.26,f:()=>{if(!M.includes(t))return;fxImg('h3',t.x,t.y+8,.5,{sc:.24,s0:.5,s1:1.1,foot:1});FX.push({k:'nova',x:t.x,y:ty,r:40,c:'#9aa8ff',life:.3});parts(t.x,ty,22,['#ffffff','#c8d0ff','#7a80ff'],{ang,spread:1.2,spd:140,life:.4,sh:'star'});shake(2);dmgMob(t,s.mult*holyMul(t),s.col,{kind:'holy'})}});return}
+  if(swOk()){fxImg('h3',t.x,t.y+8,.7,{sc:.3,s0:.6,s1:1.1,foot:1,r0:-.2,r1:.1});fxImg('h1',t.x,t.y+6,.6,{sc:.28,s0:.5,s1:1,foot:1,delay:.08})}else FX.push({k:'pillar',x:t.x,y:t.y,c:'#ffe07a',w:4,life:.5});parts(t.x,t.y-8,20,HITC.holy,{spd:90,life:.5,up:-30,sh:'star'});dmgMob(t,s.mult*holyMul(t),s.col,{kind:'holy'})},
  heal:(s,t,c,d)=>{if(P.cls==='acolyte'&&typeof allyHeal==='function'&&!(typeof GHOST!=='undefined'&&GHOST)&&allyHeal(s))return;if(P.cls==='novice'){if(swOk()){fxImg('h3',P.x,P.y+8,.8,{sc:.3,s0:.6,s1:1.05,foot:1});fxImg('h0',P.x,P.y+8,.7,{sc:.24,s0:.5,s1:1,foot:1,delay:.1,a0:.8})}else fxAnim('slash','flash',P.x,P.y-30,.4,.6)}if(P.cls==='acolyte'&&swOk()){fxImg('h0',P.x,P.y+8,.9,{sc:.34,s0:.7,s1:1.05,foot:1});fxImg('h1',P.x,P.y+6,.8,{sc:.32,s0:.5,s1:1,foot:1,delay:.12})}const h=Math.round((d.mhp*s.pct+st('int')*(s.flat||0))*healMul());P.hp=Math.min(d.mhp,P.hp+h);float(P.x,P.y-40,'+'+h,'#8be07a',true);for(let j=0;j<6;j++)timers.push({t:gt+j*.08,f:()=>FX.push({k:'cross',x:P.x+(R()-.5)*30,y:P.y-10-R()*20,life:.7})});FX.push({k:'nova',x:P.x,y:P.y,r:48,c:'#6fd46a',life:.4});parts(P.x,P.y-10,16,['#d8ffd0','#6fd46a','#ffffff'],{ang:-1.57,spread:1.2,spd:60,life:.7,sh:'plus'})},
  bless:(s)=>{if(P.cls==='acolyte'&&swOk()){fxImg('h4',P.x,P.y+8,1.1,{sc:.36,s0:.5,s1:1.05,foot:1});fxImg('h2',P.x,P.y-36,.9,{sc:.24,s0:.3,s1:1,r0:-.6,r1:0,delay:.15});fxImg('h5',P.x,P.y+8,1,{sc:.3,s0:.8,s1:1.2,foot:1,delay:.3,a0:.8})}FX.push({k:'pillar',x:P.x,y:P.y,c:'#fff3c0',w:3,life:.6});FX.push({k:'aura',x:P.x,y:P.y,cols:['#ffe07a','#ffffff'],life:1.4});parts(P.x,P.y-20,18,HITC.holy,{spd:50,life:.9,up:-40,sh:'star'});buff(s)},
+ res:(s)=>{const o=typeof reviveFind==='function'?reviveFind():null;if(!o){toast('เพื่อนที่หมดสติหายไปแล้ว');return}reviveSend(o.u,s.res);FX.push({k:'pillar',x:o.x,y:o.y,c:'#ffe9a8',w:7,life:1.2});FX.push({k:'nova',x:o.x,y:o.y,r:60,c:'#ffe07a',life:.6});parts(o.x,o.y-10,30,['#ffffff','#ffe9a8','#ffd24a'],{ang:-1.57,spread:1,spd:90,life:.8,sh:'star'});if(swOk())fxImg('h0',o.x,o.y+8,1,{sc:.36,s0:.6,s1:1.1,foot:1});chat('sys','','ชุบชีวิต '+o.n+' แล้ว','#ffe07a')},
  magnus:(s,t,c)=>{if(swOk()){fxImg('h5',c.x,c.y+10,1.1,{sc:s.rad*TS/260,s0:.5,s1:1.2,foot:1});for(let j=0;j<5;j++){const a=j/5*6.283,r=s.rad*TS*.55;fxImg(j%2?'h3':'h1',c.x+Math.cos(a)*r,c.y+Math.sin(a)*r*.6+8,.8,{sc:.22,s0:.5,s1:1,foot:1,flip:j%2,delay:.08+j*.07})}}FX.push({k:'nova',x:c.x,y:c.y,r:s.rad*TS,c:'#ffe07a',life:.8});for(let j=0;j<6;j++)timers.push({t:gt+j*.07,f:()=>{const a=R()*6.283,r=R()*s.rad*TS*.8;FX.push({k:'pillar',x:c.x+Math.cos(a)*r,y:c.y+Math.sin(a)*r*.6,c:'#ffe07a',w:3,life:.45})}});
   for(let w=0;w<3;w++)timers.push({t:gt+.25+w*.32,f:()=>{parts(c.x,c.y-8,w===2?40:24,HITC.holy,{spd:120,life:.6,up:-30,sh:'star'});shake(w===2?4:2);if(w)FX.push({k:'nova',x:c.x,y:c.y,r:s.rad*TS*(.7+w*.15),c:'#ffe07a',life:.4});for(let j=0;j<3;j++){const a=R()*6.283,r=R()*s.rad*TS*.8;FX.push({k:'pillar',x:c.x+Math.cos(a)*r,y:c.y+Math.sin(a)*r*.6,c:'#ffe07a',w:3,life:.4})}aoeHit(s,c,s.mult,'holy');if(w===2){const dd=D(),h=Math.round(dd.mhp*(s.heal||0)*healMul());if(h&&!S.dead){P.hp=Math.min(dd.mhp,P.hp+h);float(P.x,P.y-40,'+'+h,'#8be07a',true)}}}})}
 };
@@ -1567,8 +1571,8 @@ const SKFX={
 }
 
 /* cast times for attack magic (seconds, before DEX/INT reduction) */
-const CASTT={holy:.6,fspike:.8,fstorm:1};
-function castTime(s){const b=CASTT[s.fx];if(!b)return 0;const d=D();return +(b*Math.max(.45,1-d.dex*.005-d.int*.002)).toFixed(2)}
+const CASTT={fspike:.8,fstorm:1};
+function castTime(s){const b=s.ct!=null?s.ct:CASTT[s.fx];if(!b)return 0;const d=D();return +(b*Math.max(.45,1-d.dex*.005-d.int*.002)).toFixed(2)}
 function castCancel(msg){if(!S.cast)return;S.cast=null;if(S.pose&&S.pose.k==='cast')S.pose=null;for(let i=FX.length-1;i>=0;i--)if(FX[i].k==='castfx'&&FX[i].fol)FX.splice(i,1);if(msg)toast(msg);snd(220,.1,'triangle',.03)}
 function castFire(c){const s0=SK[P.cls][c.i];if(!s0)return;if(s0.type==='dmg'){if(!c.t||!M.includes(c.t))return toast('เป้าหมายหายไป · ยกเลิกการร่าย');S.target=c.t}S.nextAtk=Math.max(S.nextAtk||0,gt+.25);useSkill(c.i,c.pt,true)}
 function updCast(){const c=S.cast;if(!c)return false;if(S.dead){S.cast=null;return false}
@@ -2366,7 +2370,7 @@ const XMOB={
  ghost:{pal:{w:'#e8f0ff',B:'#a8c0e8',k:'#1a2440',b:'#6f8ac8'},fr:[[
 "....wwwwww....","..wwwwwwwwww..",".wwwwwwwwwwww.",".wwkkwwwwkkww.",".wwkkwwwwkkww.","wwwwwwwwwwwwww","wwwwwkkkkwwwww","wwwwwwkkwwwwww","wwwwwwwwwwwwww","wwwwwwwwwwwwwB","BwwwwwwwwwwwwB","BBwwwwwwwwwwBB",".BwwBwwwBwwwB.","..wB.BwB.BwB..","...B..B...B..."],[
 "....wwwwww....","..wwwwwwwwww..",".wwwwwwwwwwww.",".wwkkwwwwkkww.",".wwkkwwwwkkww.","wwwwwwwwwwwwww","wwwwwkkkkwwwww","wwwwwwkkwwwwww","wwwwwwwwwwwwww","Bwwwwwwwwwwwww","BwwwwwwwwwwwwB","BBwwwwwwwwwwBB",".BwwwBwwwBwwB.","..BwB.BwB.Bw..","..B...B..B...."]]}};
-const UNDEAD=new Set(['skel','zombie','ghost']);
+const UNDEAD=new Set(['skel','zombie','ghost']);const holyMul=m=>{const e=MELEM[m.type];return e==='อันเดด'||e==='วิญญาณ'||UNDEAD.has(m.type)?1.5:e==='มืด'?1.25:1};
 /* ---------- dungeon monsters ---------- */
 Object.assign(XMOB,{
  bat:{pal:{k:'#2a1a3a',K:'#4a2a6a',w:'#6a4a9a',e:'#ff3a3a',f:'#f4f0e0'},fr:[[
@@ -2858,7 +2862,7 @@ const EN={
 'สกิลแรงขึ้น':'Skill damage +','และคูลดาวน์สกิลลดลง':'and skill cooldown −','และฟื้น MP เร็วขึ้น':'and MP regen +','และป้องกัน':'and defense','และคริติคอล':'and critical','และหลบหลีก':'and evasion',
 'ฟันกากบาทใส่เป้าหมาย':'Cross-slash the target','หมุนดาบฟันศัตรูรอบตัว':'Spin to slash all nearby foes','ทุบพื้นแตก':'Shatter the ground','รอบตัว และทำให้มึน':'around you and stun for','และทำให้มึน':'and stun for','ยิงลูกไฟระเบิดใส่เป้าหมาย':'Hurl an exploding fireball at the target',
 'ระเบิดน้ำแข็งรอบตัว รัศมี':'Ice burst around you, radius','ช่อง โดนมอนทุกตัว':'tiles, hitting every monster','ระเบิดน้ำแข็งรอบตัว':'Ice burst around you','และทำให้ช้าลงครึ่งหนึ่ง':'and slow by half for','เรียกสายฟ้าฟาดเป้าหมาย':'Call lightning on the target','กระแสไฟฟ้ากระจายรอบ':', chaining to foes within','ช่อง ยิ่งห่างจากจุดฟาดยิ่งเบา':'tiles (weaker farther from the strike)','(Lv 5 และ Lv 10 ระยะ +1 ช่อง)':'(+1 tile at Lv 5 and Lv 10)','อุกกาบาตถล่มพื้นที่':'Meteor strike on an area','ลูกธนูเรืองแสง':'Glowing arrow',
-'ยิงธนู 5 ดอกใส่พื้นที่':'Fire 5 arrows at an area','ห่าธนู 3 ระลอก ระลอกละ':'3 volleys of arrows, each','เสาแสงลงใส่เป้าหมาย':'Pillar of light on the target','เสาแสงถล่มพื้นที่ 3 ครั้ง ครั้งละ':'Pillars of light strike an area 3 times, each','เสาแสงถล่มพื้นที่':'Pillars of light over an area','และฟื้น HP ตัวเอง':'and heal self',
+'ยิงธนู 5 ดอกใส่พื้นที่':'Fire 5 arrows at an area','ห่าธนู 3 ระลอก ระลอกละ':'3 volleys of arrows, each','เสาแสงลงใส่เป้าหมาย':'Pillar of light on the target','· ธาตุศักดิ์สิทธิ์ (แรงขึ้น 50% กับอันเดด/วิญญาณ และ 25% กับธาตุมืด)':'· Holy element (+50% vs Undead/Ghost, +25% vs Dark)','ชุบชีวิตผู้เล่นที่หมดสติในระยะ':'Revive a downed player within','ช่อง ฟื้นด้วย HP':'tiles with HP','ไม่ต้องร่าย':'instant cast','เสาแสงถล่มพื้นที่ 3 ครั้ง ครั้งละ':'Pillars of light strike an area 3 times, each','เสาแสงถล่มพื้นที่':'Pillars of light over an area','และฟื้น HP ตัวเอง':'and heal self',
 'ฟาดเต็มแรงใส่เป้าหมาย':'Full-power strike on the target','ปฐมพยาบาลตัวเอง ฟื้น HP':'First aid, restore HP','ฟื้น HP':'Restore HP','ฟื้น MP':'Restore MP','นาน':'for','วินาที':'s','วิ':'s','คูลดาวน์':'Cooldown',
 'เหล็กดีต้องผ่านไฟ':'Good steel must pass through fire','ตีบวกอาวุธด้วยแร่โอริเดียม ตีบวกเกราะ หมวก กางเกง ผ้าคลุม รองเท้า และมือซ้ายด้วยแร่เอลูเนียม':'Refine weapons with Oridium; refine armor, helms, pants, capes, shoes and off-hands with Elunium','+1 ถึง +4 สำเร็จเสมอ':'+1 to +4 always succeed','ตั้งแต่ +5 ถ้าล้มเหลวระดับจะลดลง 1':'from +5, failure drops the level by 1',
 'ไม่มีอุปกรณ์ที่ตีบวกได้':'No refinable gear','ตีบวกถึง':'is refined to','สูงสุดแล้ว':'max','พลังโจมตีจากตีบวก':'Refine attack','ป้องกันจากตีบวก':'Refine defense','โอกาสสำเร็จ':'Success rate','ล้มเหลวระดับลด 1':'failure: -1 level','แร่หรือทองไม่พอ':'Not enough ore or gold','ตีบวกสำเร็จ!':'Refine success!','ตีบวกสำเร็จ':'Refine success','ตีบวกล้มเหลว…':'Refine failed…','ตีบวกล้มเหลว':'Refine failed','ลดเหลือ':'dropped to','ตีบวก':'Refine','สวมอยู่':'Equipped',
@@ -3370,6 +3374,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'4.3',d:'6 ต.ค. 2026',t:'แต้มสถานะรอยืนยัน · อาโคไลท์ชุบชีวิต',L:['หน้าสถานะ: กดเพิ่มแต้มแล้ว ค่าพลังจริงยังไม่เปลี่ยนจนกว่าจะกดยืนยัน (กดยกเลิกได้เหมือนเดิม)','อาโคไลท์ แสงศักดิ์สิทธิ์: ไม่มีหลอดร่ายแล้ว · เป็นธาตุศักดิ์สิทธิ์ แรงขึ้น 50% กับอันเดด/วิญญาณ และ 25% กับธาตุมืด','อาโคไลท์ สกิลใหม่ ชุบชีวิต (Job Lv 15, สูงสุด Lv 3): ชุบชีวิตผู้เล่นที่หมดสติในระยะ 4 ช่อง · Lv1 ร่าย 3 วิ ฟื้น HP 20% · Lv2 ร่าย 1.5 วิ ฟื้น 35% · Lv3 ไม่ต้องร่าย ฟื้น 50% · MP 30 คูลดาวน์ 20 วิ']},
  {v:'4.2',d:'6 ต.ค. 2026',t:'ปรับจอมเวทและอาโคไลท์',L:['จอมเวท วงแหวนน้ำแข็ง: กลับมาเป็นกดแล้วระเบิดรอบตัวทันที ไม่ต้องเลือกเป้าหมาย รัศมี 3 ช่อง โดนมอนทุกตัว','อาโคไลท์ ฟื้นฟู: คลิก/แตะผู้เล่นอื่นเพื่อเลือกเป็นเป้าหมาย (มีวงสีเขียวใต้เท้า) แล้วกดสกิลฟื้นฟูเพื่อฮีลเพื่อน ระยะ 7 ช่อง · ไม่ได้เลือกใครจะฮีลตัวเอง · Esc ยกเลิกการเลือก · เมนูคลิกขวา/กดค้างที่ผู้เล่นมีปุ่ม ฟื้นฟู ด้วย','อาโคไลท์ ประกาศิตศักดิ์สิทธิ์: ไม่มีหลอดร่ายแล้ว ใช้ได้ทันที · ดาเมจเปลี่ยนเป็น 3 ครั้ง ครั้งละ 95% (รวม 285%) · MP 40 · ครั้งสุดท้ายฟื้น HP ตัวเอง 10%']},
  {v:'4.1',d:'6 ต.ค. 2026',t:'ปรับสกิลนักธนูและจอมเวท',L:['นักธนู ยิงกระจาย: สกิล Lv 5 ระยะพัด +1 ช่อง (6 ช่อง) และ Lv 10 +1 ช่อง (7 ช่อง)','จอมเวท วงแหวนน้ำแข็ง: เปลี่ยนเป็นใช้ใส่มอนเป้าหมาย ระเบิดรอบตัวมอน รัศมี 3 ช่อง มอนทุกตัวในวงโดน + ช้าลง','จอมเวท สายฟ้าฟาด: เพิ่มไฟฟ้ากระจายรอบเป้าหมาย 2 ช่อง ตัวที่อยู่ใกล้จุดฟาดโดนแรงเกือบเต็ม ยิ่งห่างยิ่งเบา (ต่ำสุด 30%)']},
  {v:'4.0',d:'6 ต.ค. 2026',t:'ฟื้นในเขตปลอดภัย · จอมเวทไม่ต้องร่าย · ยิงกระจายแบบพัด',L:['เขตปลอดภัย/ในเมือง ฟื้น HP และ MP ได้แล้ว (ใช้อัตราตอนพัก)','จอมเวท: เอาหลอดร่ายออก ใช้สกิลได้ทันทีไม่มีดีเลย์ (อาโคไลท์และผู้พิทักษ์น้ำแข็งยังร่ายเหมือนเดิม)','นักธนู ยิงกระจาย: เปลี่ยนเป็นยิงรูปพัด 45° จากตัวผู้เล่นไปทางที่เล็ง ไกลสุด 5 ช่อง มอนทุกตัวในพัดโดนดาเมจ · ตอนเล็งจะเห็นพัดตามเมาส์ และเล็งทิศไหนก็ได้ไม่ต้องอยู่ในระยะ']},
@@ -3725,7 +3730,7 @@ function lootOwner(m){if(MYPID&&PARTY&&pOnline().length>=2){if((PARTY.loot||'fre
 function pShareExp(ex,m){if(!MOBON||!MYPID||!PARTY||!netOK()||!P)return ex;const mates=pMembers().filter(u=>{if(u===UID)return false;const o=OTHERS[u];if(!o||o.d)return false;const x=o.tx??o.x,y=o.ty??o.y;return regAt(x,y)===regAt(m.x,m.y)&&!pSafe(x,y)});if(!mates.length)return ex;
  const sh=Math.max(1,Math.round(ex/(mates.length+1)));for(const u of mates)FDB.ref('pexp/'+u).push({e:sh,s:mobName(m),n:P.name,ts:snow()});return sh}
 const dropMine=d=>d.op?d.op===MYPID:d.ou?d.ou===UID:(!d.owner||!P||d.owner===P.name);
-function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.ref.remove().catch(()=>{});if(!v||!P||snow()-v.ts>30000)return;if(v.rv){reviveBy(v.n||'เพื่อน');return}if(v.hl){if(S.dead)return;const d=D(),h=Math.max(0,Math.min(+v.hl||0,d.mhp));P.hp=Math.min(d.mhp,P.hp+h);float(P.x,P.y-40,'+'+h,'#8be07a',true);FX.push({k:'nova',x:P.x,y:P.y,r:48,c:'#6fd46a',life:.4});for(let j=0;j<5;j++)timers.push({t:gt+j*.08,f:()=>FX.push({k:'cross',x:P.x+(R()-.5)*30,y:P.y-10-R()*20,life:.7})});chat('sys','',(v.n||'เพื่อน')+' ฟื้นฟูให้คุณ +'+h+' HP','#8be07a');return}gainBoth(v.e,(v.s||'')+' · ปาร์ตี้ ('+v.n+')',P.x,P.y-92)});
+function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.ref.remove().catch(()=>{});if(!v||!P||snow()-v.ts>30000)return;if(v.rv){reviveBy(v.n||'เพื่อน',Math.min(1,Math.max(0,+v.rp||0))||undefined);return}if(v.hl){if(S.dead)return;const d=D(),h=Math.max(0,Math.min(+v.hl||0,d.mhp));P.hp=Math.min(d.mhp,P.hp+h);float(P.x,P.y-40,'+'+h,'#8be07a',true);FX.push({k:'nova',x:P.x,y:P.y,r:48,c:'#6fd46a',life:.4});for(let j=0;j<5;j++)timers.push({t:gt+j*.08,f:()=>FX.push({k:'cross',x:P.x+(R()-.5)*30,y:P.y-10-R()*20,life:.7})});chat('sys','',(v.n||'เพื่อน')+' ฟื้นฟูให้คุณ +'+h+' HP','#8be07a');return}gainBoth(v.e,(v.s||'')+' · ปาร์ตี้ ('+v.n+')',P.x,P.y-92)});
  const dr=FDB.ref('drops');
  dr.on('child_added',s=>{const v=s.val();if(!v||!IT[v.i])return;const age=snow()-(v.ts||0);if(age>50000){s.ref.remove().catch(()=>{});return}if(DROPS.some(d=>d.k===s.key))return;
   let inst;try{inst=v.n?JSON.parse(v.n):undefined}catch(e){}DROPS.push({k:s.key,id:v.i,gold:v.g||0,inst,x:v.x,y:v.y,sx:v.sx,sy:v.sy,t0:gt-Math.max(0,age)/1000,ou:v.ou||null,op:v.op||null})});
@@ -3742,7 +3747,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261006004210';
+const BUILDV='20261006005035';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
@@ -3806,7 +3811,7 @@ function allyHeal(s){if(!S.ally)return false;const o=OTHERS[S.ally];if(!o||!netO
  parts(o.x,o.y-10,16,['#d8ffd0','#6fd46a','#ffffff'],{ang:-1.57,spread:1.2,spd:60,life:.7,sh:'plus'});float(o.x,o.y-40,'+'+h,'#8be07a',true);chat('sys','','ฟื้นฟู '+o.n+' +'+h+' HP','#8be07a');return true}
 /* ---- phoenix feather: revive a downed player nearby ---- */
 function reviveFind(){if(!netOK()||!P||S.dead)return null;let b=null,bd=4*TS+8;for(const u in OTHERS){const o=OTHERS[u];if(!o||!o.d)continue;const x=o.tx??o.x,y=o.ty??o.y,d=Math.hypot(x-P.x,y-P.y);if(d<=bd){bd=d;b={u,n:o.n||'ผู้เล่น',x,y}}}return b}
-function reviveSend(u){if(!netOK())return;FDB.ref('pexp/'+u).push({rv:1,e:0,n:P.name,ts:snow()})}
+function reviveSend(u,pct){if(!netOK())return;FDB.ref('pexp/'+u).push(Object.assign({rv:1,e:0,n:P.name,ts:snow()},pct?{rp:pct}:{}))}
 
 netBoot();
 document.addEventListener('click',e=>{if(e.target.id==='acctout'&&FB){if(UID)FDB.ref('presence/'+UID).remove();FB.auth().signOut().then(()=>location.reload())}});
