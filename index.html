@@ -798,7 +798,7 @@ PASV.frostg=[...PASV.warrior,{k:'grit',n:'หัวใจธารน้ำแ�
 [1,5,10,15].forEach((j,k)=>{const b=SK.frostg[SK.warrior.length+k];if(b)b.jl=j});
 PASV.frostg.push({k:'frostmind',n:'ปราณเหมันต์',lv:20,jl:20,max:4,lin:1,sym:'mana',col:'#4a8ad8',v:[3],d:'INT +{a} (เสริมพลังสกิลน้ำแข็ง)'});
 PASV.frostg.forEach(p=>{if(p.k==='grit')p.jl=5;if(p.k==='frostres')p.jl=12});
-SK.acolyte.push({n:'ชุบชีวิต',type:'res',fx:'res',pose:'cast',jl:15,max:3,mp:30,cd:20,col:'#ffe9a8',castL:[3,1.5,0],resP:[.2,.35,.5],d:'ใช้ชุบผู้เล่นที่หมดสติ 1 คน · ฟื้น HP {res} · {ct}'});
+SK.acolyte.push({n:'ชุบชีวิต',type:'res',fx:'res',pose:'cast',jl:15,max:3,mp:30,cd:20,col:'#ffe9a8',castL:[0,0,0],resP:[.2,.35,.5],d:'ใช้ชุบผู้เล่นที่หมดสติ 1 คน · ฟื้น HP {res}'});
 PASV.archer.push({k:'longshot',n:'สายตาพรานไกล',lv:1,max:10,lin:1,sym:'arrow',col:'#3a8a5a',v:[1],d:'ระยะโจมตีปกติและยิงทะลวง +{a} ช่อง'});{const a=PASV.archer;[a[0],a[2]]=[a[2],a[0]]}
 /* skill levels: actives 1-5 (0 = not learned), passives 1-3 once unlocked; one skill point per level-up */
 const SKMAX=10,PSMAX=6,skMax=(i,c)=>{const b=SK[c||P.cls][i];return b&&b.max||SKMAX};
@@ -1571,7 +1571,7 @@ const SKFX={
 }
 
 /* cast times for attack magic (seconds, before DEX/INT reduction) */
-const CASTT={fspike:.8,fstorm:1};
+const CASTT={};
 function castTime(s){const b=s.ct!=null?s.ct:CASTT[s.fx];if(!b)return 0;const d=D();return +(b*Math.max(.45,1-d.dex*.005-d.int*.002)).toFixed(2)}
 function castCancel(msg){if(!S.cast)return;S.cast=null;if(S.pose&&S.pose.k==='cast')S.pose=null;for(let i=FX.length-1;i>=0;i--)if(FX[i].k==='castfx'&&FX[i].fol)FX.splice(i,1);if(msg)toast(msg);snd(220,.1,'triangle',.03)}
 function castFire(c){const s0=SK[P.cls][c.i];if(!s0)return;if(s0.type==='dmg'){if(!c.t||!M.includes(c.t))return toast('เป้าหมายหายไป · ยกเลิกการร่าย');S.target=c.t}S.nextAtk=Math.max(S.nextAtk||0,gt+.25);useSkill(c.i,c.pt,true)}
@@ -3375,6 +3375,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'4.9',d:'6 ต.ค. 2026',t:'เอาหลอดร่ายออกทั้งหมด',L:['ทุกสกิลไม่มีหลอดร่ายแล้ว ใช้ได้ทันที (ผู้พิทักษ์น้ำแข็ง หนามน้ำแข็งผงาด/พายุหิมะนิรันดร์ และอาโคไลท์ ชุบชีวิตทุกเลเวล)','ชุบชีวิต: Lv1 ฟื้น HP 20% · Lv2 35% · Lv3 50%']},
  {v:'4.8',d:'6 ต.ค. 2026',t:'ผิวเหล็กเพิ่มผลยา',L:['นักรบ (และผู้พิทักษ์น้ำแข็ง) สกิลติดตัว ผิวเหล็ก: ยาฟื้น HP ได้ผลเพิ่ม Lv1 +20% · Lv2 +26% · Lv3 +32% · Lv4 +38% · Lv5 +44% · Lv6 (สูงสุด) +50%']},
  {v:'4.7',d:'6 ต.ค. 2026',t:'เห็นร่างผู้เล่นที่หมดสติ',L:['แก้บัค: ผู้เล่นที่หมดสติหายไปจากจอของคนอื่น ทำให้เลือกเป้าหมายชุบชีวิตไม่ได้ · ตอนนี้จะเห็นร่างนอนอยู่ พร้อมชื่อสีเทามีเครื่องหมาย ✝','ชุบชีวิต (อาโคไลท์) และขนนกฟีนิกซ์: กดสกิล/ใช้ไอเทมก่อน แล้วคลิก/แตะร่างผู้เล่นที่หมดสติเพื่อเลือกเป้าหมาย']},
  {v:'4.6',d:'6 ต.ค. 2026',t:'GM: หน้าผู้เล่นออนไลน์',L:['แก้หน้าผู้เล่นออนไลน์ (GM) ที่ขึ้น 0 คน: ดึงรายชื่อจากผู้เล่นที่อยู่ในเกมจริงด้วย ไม่ต้องพึ่งข้อมูลอีเมลอย่างเดียว','คลิกชื่อผู้เล่นในรายการเพื่อวาปไปหาได้ทันที (อมตะ 3 วินาทีหลังวาป)','ถ้าอ่านอีเมลไม่ได้ จะมีข้อความเตือนให้อัปเดต Firebase Rules']},
@@ -3760,7 +3761,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261006013203';
+const BUILDV='20261006013352';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
