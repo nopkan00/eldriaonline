@@ -157,6 +157,12 @@
     ".read": "auth != null && auth.uid === $uid",
     ".write": "auth != null"
    }
+  },
+  "online": {
+   ".read": "auth != null && auth.token.email === 'nopkan00@gmail.com' && auth.token.email_verified === true",
+   "$uid": {
+    ".write": "auth != null && auth.uid === $uid"
+   }
   }
  }
 }
