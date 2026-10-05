@@ -1459,14 +1459,15 @@ function die(){P.hp=0;S.dead=true;S.target=null;S.moveTo=null;const lost=Math.fl
 $('#respawn').addEventListener('click',()=>{if(P&&S.dead)respawn()});
 function reviveBy(n){if(!P||!S.dead)return;const d=D();P.hp=Math.max(1,Math.round(d.mhp*.3));P.mp=Math.round(d.mmp*.2);S.dead=false;S.inv=gt+3;$('#dead').hidden=true;FX.push({k:'pillar',x:P.x,y:P.y,c:'#ffb347',w:6,life:1.2});elSph('el_fires',P.x,P.y-20,80,{life:1});parts(P.x,P.y-20,50,['#ffe07a','#ff8a3a','#ffffff'],{ang:-1.57,spread:1.4,spd:120,life:1.1,sh:'star'});sfx('holy');toast('ได้รับการชุบชีวิตจาก '+n+'!');chat('sys','',n+' ชุบชีวิตคุณด้วยขนนกฟีนิกซ์ · HP 30% · อมตะ 3 วินาที','#ffb347');save()}
 function respawn(){const d=D();P.x=TWN.x;P.y=TWN.y+80;P.hp=d.mhp;P.mp=d.mmp;S.dead=false;S.target=null;S.aim=null;S.pend=null;for(const m of M)if(!MOBON||m.tgt===UID){m.agg=false}$('#dead').hidden=true;save();toast('ฟื้นคืนชีพที่เมืองอิลวาเรีย')}
-function useSkill(i,pt){if(S.dead)return;const b0=SK[P.cls][i];if(!b0)return;if((b0.type==='dmg'||b0.type==='aoe')&&inSafe())return toast(inTown()?'เขตปลอดภัย · ใช้สกิลโจมตีในเมืองไม่ได้':'เขตปลอดภัย · ห้ามต่อสู้');const L=skL(i);
+function useSkill(i,pt,go){if(S.dead)return;if(S.cast&&!go)return toast('กำลังร่ายเวท '+S.cast.n+'…');const b0=SK[P.cls][i];if(!b0)return;if((b0.type==='dmg'||b0.type==='aoe')&&inSafe())return toast(inTown()?'เขตปลอดภัย · ใช้สกิลโจมตีในเมืองไม่ได้':'เขตปลอดภัย · ห้ามต่อสู้');const L=skL(i);
  if(!L)return toast(!jUnlock(b0,i)?'ปลดล็อกที่ Job Lv '+jReq(b0):'ยังไม่ได้เรียน '+b0.n+' · ใช้แต้มสกิลในหน้าสกิล (K)');const s=skAt(P.cls,i,L);if((S.cds[i]||0)>gt)return;if(P.mp<s.mp)return toast('มานาไม่พอ');
  const d=D();let t=null,at=null;
  if(s.type==='dmg'){t=S.target;if(!t||!M.includes(t)){S.target=null;if(P.mp<s.mp)return toast('มานาไม่พอ');S.aim=i;S.pend=null;updCursor();return toast('คลิกมอนสเตอร์เพื่อใช้ '+s.n+' · Esc หรือคลิกขวาเพื่อยกเลิก')}
-  if(dist(P,t)>s.range*TS+t.T.r){S.pend=i;S.chase=true;return}P.fx=t.x>=P.x?1:-1}
+  if(!go&&dist(P,t)>s.range*TS+t.T.r){S.pend=i;S.chase=true;return}P.fx=t.x>=P.x?1:-1}
  else if(s.type==='aoe'){if(s.at==='target'){if(!pt){if(P.mp<s.mp)return toast('มานาไม่พอ');S.aim=i;S.pend=null;updCursor();return toast('คลิกพื้นหรือมอนสเตอร์เพื่อใช้ '+s.n+' · Esc หรือคลิกขวาเพื่อยกเลิก')}
-  if(Math.hypot(pt.x-P.x,pt.y-P.y)>(s.range||6)*TS){S.aim=i;updCursor();return toast('เป้าหมายอยู่ไกลเกินไป')}at=pt;P.fx=pt.x>=P.x?1:-1}else at={x:P.x,y:P.y}}
- S.aim=null;S.pend=null;updCursor();if(P.cls==='mage'||P.cls==='acolyte')FX.push({k:'castfx',x:P.x,y:P.y,fol:1,life:.9,t:0});P.mp-=s.mp;S.cds[i]=gt+s.cd*(1-PV('amp',1)/100);S.combat=gt;setPose(s.pose||'cast',s.pose==='atk'?.3:.45);
+  if(!go&&Math.hypot(pt.x-P.x,pt.y-P.y)>(s.range||6)*TS){S.aim=i;updCursor();return toast('เป้าหมายอยู่ไกลเกินไป')}at=pt;P.fx=pt.x>=P.x?1:-1}else at={x:P.x,y:P.y}}
+ if(!go){const ct=castTime(s);if(ct>0){S.aim=null;S.pend=null;updCursor();S.moveTo=null;S.path=null;S.npcGoal=null;S.objGoal=null;S.cast={i,t:t,pt:at,t0:gt,dur:ct,n:s.n,col:s.col||'#9fd8ff'};setPose('cast',ct);FX.push({k:'castfx',x:P.x,y:P.y,fol:1,life:Math.max(.9,ct),t:0});snd(520,.12,'sine',.03);return}}
+ S.aim=null;S.pend=null;updCursor();if(!go&&(P.cls==='mage'||P.cls==='acolyte'))FX.push({k:'castfx',x:P.x,y:P.y,fol:1,life:.9,t:0});P.mp-=s.mp;S.cds[i]=gt+s.cd*(1-PV('amp',1)/100);S.combat=gt;setPose(s.pose||'cast',s.pose==='atk'?.3:.45);
  if(s.pose!=='atk')parts(P.x+(P.fx||1)*10,P.y-40,10,[s.col,'#ffffff'],{spd:40,life:.4,sh:'star'});
  SKFX[s.fx](hasP('amp')&&s.mult?{...s,mult:s.mult*(1+PV('amp',0)/100)}:s,t,at,d);fxSend(i,L,t,at);sfx(CASTSFX[s.fx]||'cast')}
 /* elemental impact spheres / projectiles per class & skill: fire=mage fireball+meteor, water=ice skills, earth=warrior quake, wind=archer/thief */
@@ -1543,6 +1544,15 @@ const SKFX={
  W('blades',(s,t,c)=>elSph('el_winds',c.x,c.y-8,s.rad*TS*.9,{life:1.1,delay:.1,r0:0,r1:-3,a0:.7}));
 }
 
+/* cast times for attack magic (seconds, before DEX/INT reduction) */
+const CASTT={fire:.7,bolt:1,ice:.6,meteor:1.6,thunder:1.4,holy:.6,magnus:1.2,fspike:.8,fstorm:1};
+function castTime(s){const b=CASTT[s.fx];if(!b)return 0;const d=D();return +(b*Math.max(.45,1-d.dex*.005-d.int*.002)).toFixed(2)}
+function castCancel(msg){if(!S.cast)return;S.cast=null;if(S.pose&&S.pose.k==='cast')S.pose=null;for(let i=FX.length-1;i>=0;i--)if(FX[i].k==='castfx'&&FX[i].fol)FX.splice(i,1);if(msg)toast(msg);snd(220,.1,'triangle',.03)}
+function castFire(c){const s0=SK[P.cls][c.i];if(!s0)return;if(s0.type==='dmg'){if(!c.t||!M.includes(c.t))return toast('เป้าหมายหายไป · ยกเลิกการร่าย');S.target=c.t}S.nextAtk=Math.max(S.nextAtk||0,gt+.25);useSkill(c.i,c.pt,true)}
+function updCast(){const c=S.cast;if(!c)return false;if(S.dead){S.cast=null;return false}
+ if(keys.w||keys.s||keys.a||keys.d||keys.arrowup||keys.arrowdown||keys.arrowleft||keys.arrowright||S.moveTo||S.npcGoal||S.objGoal){castCancel('เคลื่อนที่ · ยกเลิกการร่ายเวท');return false}
+ if(c.t&&SK[P.cls][c.i].type==='dmg'&&!M.includes(c.t)){castCancel('เป้าหมายหายไป · ยกเลิกการร่าย');return false}
+ if(gt>=c.t0+c.dur){S.cast=null;castFire(c);return false}return true}
 function autoAttack(t){P.fx=t.x>=P.x?1:-1;S.patkT=gt;const c=P.cls,un=!P.equip.right;if(c==='novice'&&playerLook().gmlook){sfx('bowshot');setPose('atk',.3);FX.push({k:'shot',kind:'arrow',gma:1,x:P.x+P.fx*12,y:P.y-24,tx:t.x,ty:t.y-t.T.r*.8,life:.16,t:0});timers.push({t:gt+.16,f:()=>{if(!M.includes(t))return;sfx('arrowhit');parts(t.x,t.y-t.T.r*.8,10,['#b8ffb0','#5ee06a','#ffffff'],{spd:90,life:.35});dmgMob(t,1,null,{kind:'arrow'})}});return}if(un||c==='warrior'||c==='novice'||c==='thief'||c==='acolyte')sample('patk',.4);else sfx(c==='archer'?'bowshot':'zap');
  if(un){setPose('atk',.2);if(!fxAnim('slash','cut',t.x-P.fx*4,t.y-12,.2,.32,{flip:(P.fx||1)<0}))FX.push({k:'arc',x:t.x-P.fx*6,y:t.y-12,r:8,c:'#ffe9c8',fx:P.fx,life:.14,thick:2});dmgMob(t,1,null,{kind:'phys'});return}
  if(c==='warrior'||c==='novice'||c==='thief'){setPose('atk',c==='thief'?.18:.22);if(!fxAnim('slash','cut',t.x-P.fx*4,t.y-12,.22,.44,{flip:(P.fx||1)<0}))FX.push({k:'arc',x:t.x-P.fx*6,y:t.y-12,r:12,c:'#dfe6ea',fx:P.fx,life:.18,thick:2});dmgMob(t,1,null,{kind:'phys'})}
@@ -1667,7 +1677,7 @@ function doCraft(i){const r=RECIPES[i];if(!r||LSV(r.k).lv<r.lv||!r.in.every(([id
  for(const [id,n] of r.in)removeItem(id,n);addItem(r.out[0],r.out[1]);gainLife(r.k,8+r.lv);sfx('holy');toast('สร้าง '+IT[r.out[0]].n+' ×'+r.out[1]+' สำเร็จ');chat('sys','','สร้าง '+IT[r.out[0]].n+' ×'+r.out[1]+' สำเร็จ','#b8f0a0');save()}
 /* ================= update ================= */
 const keys={};
-function updPlayer(dt){if(S.dead)return;const d=D();let mx=0,my=0;
+function updPlayer(dt){if(S.dead)return;if(updCast())return;const d=D();let mx=0,my=0;
  if(keys.w||keys.arrowup)my--;if(keys.s||keys.arrowdown)my++;if(keys.a||keys.arrowleft)mx--;if(keys.d||keys.arrowright)mx++;
  const spd=d.spd,t=S.target;
  if(mx||my){S.moveTo=null;S.npcGoal=null;S.chase=false;S.pend=null;S.gather=null;S.objGoal=null;const l=Math.hypot(mx,my);moveEnt(P,P.x+mx/l*50,P.y+my/l*50,spd,dt)}
@@ -1675,7 +1685,7 @@ function updPlayer(dt){if(S.dead)return;const d=D();let mx=0,my=0;
  else if(S.moveTo){const ox=P.x,oy=P.y;const r=goToward(S.moveTo.x,S.moveTo.y,spd,dt);if(r<4||(!S.path&&Math.abs(P.x-ox)+Math.abs(P.y-oy)<.05))S.moveTo=null}
  if(S.pend!=null){const ps=skAt(P.cls,S.pend,Math.max(1,skL(S.pend)));if(!t||!M.includes(t))S.pend=null;else if(dist(P,t)<=ps.range*TS+t.T.r){const k=S.pend;S.pend=null;useSkill(k)}}
  if(t&&M.includes(t)&&dist(P,t)>11*TS){S.target=null;S.chase=false;S.pend=null;toast('ยกเลิกการล็อคเป้าหมาย · อยู่ไกลเกินไป')}
- else if(t){if(t!==S.lastTgt){S.lastTgt=t;S.atkT=0}if(!M.includes(t))S.target=null;else if(dist(P,t)<=d.range+t.T.r){S.atkT-=dt;if(S.atkT<=0){S.atkT=d.aspd;if(inSafe()){if(gt-(S.safeT||0)>2){S.safeT=gt;toast(inTown()?'เขตปลอดภัย · ต่อสู้ไม่ได้ในเมือง':'เขตปลอดภัย · ห้ามต่อสู้')}}else autoAttack(t)}}}
+ else if(t){if(t!==S.lastTgt)S.lastTgt=t;if(!M.includes(t))S.target=null;else if(dist(P,t)<=d.range+t.T.r){if(gt>=(S.nextAtk||0)){S.nextAtk=gt+d.aspd;if(inSafe()){if(gt-(S.safeT||0)>2){S.safeT=gt;toast(inTown()?'เขตปลอดภัย · ต่อสู้ไม่ได้ในเมือง':'เขตปลอดภัย · ห้ามต่อสู้')}}else autoAttack(t)}}}
  if(S.npcGoal&&dist(P,S.npcGoal)<52){const n=S.npcGoal;S.npcGoal=null;S.moveTo=null;npcAct(n)}
  if(S.objGoal&&dist(P,S.objGoal)<46){const o=S.objGoal;S.objGoal=null;S.moveTo=null;S.path=null;objAct(o)}
  updNodes();updVillagers(dt);updCritters(dt);updCat(dt);if(S.gather)updGather(dt);
@@ -2415,6 +2425,7 @@ function heroAt(e,look,name,nameCol,me){const pose=me?poseOf():(e.gest&&e.gest.u
  drawS(ox,1);lc.restore();if(aura)drawAura(x,y,true);const bob=oy,headY=Math.round(y+oy+(s.ax!=null?(sprTop(s)-s.ay)*(s.k||1)/2:(sprTop(s)-HDY)/2)*sy);
  if(me&&P){const d=D(),w=22,bx=x-11,by=headY-6;lc.fillStyle='#0a0d1a';lc.fillRect(bx-1,by-1,w+2,6);
   lc.fillStyle='#3a1420';lc.fillRect(bx,by,w,2);lc.fillStyle=P.hp/d.mhp<.3&&Math.floor(gt*4)%2?'#ff9aa8':'#ff4f64';lc.fillRect(bx,by,Math.max(0,Math.round(w*P.hp/d.mhp)),2);
+  if(S.cast){const c=S.cast,k=Math.min(1,(gt-c.t0)/c.dur),cw=34,cx0=Math.round(x-cw/2),cy0=Math.round(y+5);lc.fillStyle='#05070f';lc.fillRect(cx0-1,cy0-1,cw+2,5);lc.fillStyle='#1c2440';lc.fillRect(cx0,cy0,cw,3);lc.fillStyle=c.col;lc.fillRect(cx0,cy0,Math.round(cw*k),3);lc.fillStyle='#ffffff';lc.fillRect(cx0+Math.round(cw*k)-1,cy0,1,3);LBL.push([c.n+' '+Math.max(0,c.dur-(gt-c.t0)).toFixed(1)+'s',x*2,(cy0+14)*2,'#cfe6ff',10])}
   lc.fillStyle='#14213a';lc.fillRect(bx,by+3,w,1);lc.fillStyle='#4f8dff';lc.fillRect(bx,by+3,Math.max(0,Math.round(w*P.mp/d.mmp)),1)}else if(e.pbar&&!e.d){const w=22,bx=x-11,by=headY-6,hq=Math.max(0,Math.min(100,e.hp||0))/100,mq=Math.max(0,Math.min(100,e.mpp??0))/100;lc.fillStyle='#0a0d1a';lc.fillRect(bx-1,by-1,w+2,6);lc.fillStyle='#3a1420';lc.fillRect(bx,by,w,2);lc.fillStyle=hq<.3&&Math.floor(gt*4)%2?'#ff9aa8':'#ff4f64';lc.fillRect(bx,by,Math.round(w*hq),2);lc.fillStyle='#14213a';lc.fillRect(bx,by+3,w,1);lc.fillStyle='#4f8dff';lc.fillRect(bx,by+3,Math.round(w*mq),1)}
  if(name&&(!P||P.opts.names||me))LBL.push([me&&typeof ISGM!=='undefined'&&ISGM?'[GM] '+name:name,x*2,(me||e.pbar?headY-8:headY-3)*2,me&&typeof ISGM!=='undefined'&&ISGM?'#ffcf4a':nameCol,11]);e._hh=y-headY+16;return y}
 function drawNpc(n){if(P&&!n.wander||P&&n.wander&&gt<n.wt){const dp=Math.hypot(P.x-n.x,P.y-n.y);if(dp<120)n.fx=P.x>=n.x?1:-1;if(!n.gnext)n.gnext=gt+2+R()*6;if(gt>n.gnext){n.gnext=gt+5+R()*8;const k=dp<120?'wave':(R()<.5?'hop':'wave');n.gest={k,t0:gt,dur:k==='hop'?.45:.9,until:gt+(k==='hop'?.45:.9)}}}
@@ -3333,6 +3344,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'3.0',d:'5 ต.ค. 2026',t:'ระบบโจมตีและร่ายเวท',L:['แก้บั๊ก: เปลี่ยนเป้าหมายแล้วตีทันทีโดยไม่ติดดีเลย์ ตอนนี้ดีเลย์โจมตีนับต่อเนื่องแม้เปลี่ยนตัว','สกิลเวทโจมตีมีเวลาร่ายและหลอดร่ายเวทใต้ตัวละคร: ลูกไฟ 0.7s · สายฟ้าฟาด 1.0s · วงแหวนน้ำแข็ง 0.6s · อุกกาบาต 1.6s · พายุสายฟ้า 1.4s · แสงศักดิ์สิทธิ์ 0.6s · ประกาศิตศักดิ์สิทธิ์ 1.2s · หนามน้ำแข็งผงาด 0.8s · พายุหิมะนิรันดร์ 1.0s','เวลาร่ายลดลงตาม DEX (0.5% ต่อแต้ม) และ INT (0.2% ต่อแต้ม) ลดได้สูงสุด 55%','ระหว่างร่ายเวทเดินไม่ได้ ถ้าเดินหรือคลิกเดินจะยกเลิกการร่าย (ไม่เสีย MP และไม่ติดคูลดาวน์) และหยุดโจมตีปกติระหว่างร่าย','สกิลกายภาพ (ฟัน ยิงธนู แทง) และบัฟยังใช้ได้ทันทีเหมือนเดิม']},
  {v:'2.9',d:'5 ต.ค. 2026',t:'ระบบสกิลใหม่',L:['ยกเลิกเงื่อนไข Base Lv ในการอัปสกิล อัปได้ทันทีที่มีแต้มสกิล','สกิลปลดล็อกตาม Job Lv แทน Base Lv (สกิลกดใช้ Job 1/3/6/9/12 · สกิลติดตัว Job 1/7)','จัดแต้มสกิลให้ใช้ได้ครบ: Job Lv 1→50 ได้ 49 แต้ม ทุกอาชีพ Class 1 มีสกิลให้อัปรับได้ครบ 49 แต้มพอดี (จอมเวทมีสกิลมากกว่า เลือกเลเวลได้)','ผู้พิทักษ์น้ำแข็ง: สกิลน้ำแข็งปลดล็อกที่ Job 1/5/10/15 · หัวใจธารน้ำแข็ง Job 5 · กายาเหมันต์ Job 12','สกิลติดตัวใหม่ ผู้พิทักษ์น้ำแข็ง: ปราณเหมันต์ (Job 20) INT +3 ต่อเลเวล สูงสุด Lv 4 — Class 2 มีที่ลงแต้มครบ 49 แต้มพอดี','NPC นักสะสมจิปาถะโมโม่ แสดงเครื่องหมายเหมือนผู้เฒ่า: ! สีเหลือง = มีเควสที่ยังทำได้ · ? สีเขียว = มีของครบ 99 ชิ้นพร้อมแลก']},
  {v:'2.8',d:'5 ต.ค. 2026',t:'ปุ่มควบคุมมือถือใหม่',L:['มือถือ: เอาจอยทิศทางออก แตะที่พื้นเพื่อเดิน','มือถือ: ปุ่มยา Q และ E ย้ายไปกลางล่างของจอ ขนาดใหญ่ขึ้น','มือถือ: ปุ่มลัด 1-0 ย้ายมาเรียงโค้งรอบปุ่มโจมตี แสดงทีละ 5 ช่อง กดปุ่ม ⇄ เพื่อสลับชุด 1-5 / 6-0']},
  {v:'2.7',d:'5 ต.ค. 2026',t:'ตีบวกขั้นสูง และการ์ดโฉมใหม่',L:['ผู้พิทักษ์น้ำแข็งเพศชายมีภาพตัวละครของตัวเอง พร้อมแอนิเมชันครบ','อาวุธตีบวกได้ถึง +15: +5 90% · +6 75% · +7 60% · +8 45% · +9 35% · +10 27% · +11 20% · +12 15% · +13 10% · +14 7% · +15 5%','เครื่องป้องกันตีบวกได้ถึง +10: +5 85% · +6 65% · +7 45% · +8 30% · +9 18% · +10 10% (+1 ถึง +4 สำเร็จเสมอ ล้มเหลวลด 1 ระดับ)','การ์ดที่ดรอปบนพื้นแสดงเป็นหลังการ์ด Card Monster','กดการ์ดในกระเป๋าแสดงการ์ดใบใหญ่: ชื่อการ์ด รูปมอนสเตอร์ และค่าพลัง HP MP ATK และอื่น ๆ','มอนสเตอร์สีรุ้งเกิดในทุกแผนที่อัตโนมัติ (มอนทุกชนิดที่ไม่ใช่บอสมีตัวสีรุ้ง 1 ตัว) รวมแผนที่ใหม่ในอนาคต']},
@@ -3682,7 +3694,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261005173401';
+const BUILDV='20261005191422';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
