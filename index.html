@@ -740,10 +740,10 @@ const SK={
 };
 /* Class 2-1 Frost Guardian: keeps every swordsman skill and adds four ice skills (water element: +25% vs fire, -15% vs water mobs) */
 SK.frostg=[...SK.warrior,
-  {n:'ดาบเยือกแข็ง',type:'dmg',fx:'fblade',pose:'atk',mult:3.4,range:2,slow:2,mp:16,cd:4,lv:30,col:'#9fe4ff',d:'ฟันคลื่นดาบน้ำแข็ง {m} ธาตุน้ำ และทำให้ช้าลง {slow} วินาที'},
+  {n:'ดาบเยือกแข็ง',type:'dmg',fx:'fblade',pose:'atk',mult:3.6,range:2,slow:2,mp:16,cd:4,lv:30,col:'#9fe4ff',fg:1,d:'ฟันคลื่นดาบน้ำแข็ง {m} ธาตุน้ำ และทำให้ช้าลง {slow} วินาที · แรงตาม STR+INT'},
   {n:'ปราการธารน้ำแข็ง',type:'buff',fx:'fwall',pose:'cast',def:1.5,atk:1.1,dur:20,mp:28,cd:40,lv:34,col:'#bfe8ff',d:'เกราะน้ำแข็งห่อหุ้มตัว ป้องกัน {def} พลังโจมตี {atk} นาน {dur} วินาที'},
-  {n:'หนามน้ำแข็งผงาด',type:'aoe',at:'target',range:5,fx:'fspike',pose:'cast',rad:2.4,mult:2.6,stun:1.2,mp:32,cd:11,lv:38,col:'#7fd0ff',d:'หนามน้ำแข็งพุ่งขึ้นจากพื้น {m} ธาตุน้ำ และแช่แข็ง {stun} วินาที'},
-  {n:'พายุหิมะนิรันดร์',type:'aoe',at:'self',fx:'fstorm',pose:'cast',rad:3.4,mult:.95,slow:3,mp:52,cd:18,lv:44,col:'#d8f4ff',d:'พายุหิมะหมุนรอบตัว 4 ระลอก ระลอกละ {m} ธาตุน้ำ และทำให้ช้าลง {slow} วินาที'}];
+  {n:'หนามน้ำแข็งผงาด',type:'aoe',at:'target',range:5,fx:'fspike',pose:'cast',rad:2.4,mult:2.8,stun:1.2,mp:32,cd:11,lv:38,col:'#7fd0ff',fg:1,d:'หนามน้ำแข็งพุ่งขึ้นจากพื้น {m} ธาตุน้ำ และแช่แข็ง {stun} วินาที · แรงตาม STR+INT'},
+  {n:'พายุหิมะนิรันดร์',type:'aoe',at:'self',fx:'fstorm',pose:'cast',rad:3.4,mult:1,slow:3,mp:52,cd:18,lv:44,col:'#d8f4ff',fg:1,d:'พายุหิมะหมุนรอบตัว 4 ระลอก ระลอกละ {m} ธาตุน้ำ และทำให้ช้าลง {slow} วินาที · แรงตาม STR+INT'}];
 /* passive skills: always on once the level is reached */
 const PASV={
  novice:[],
@@ -752,11 +752,11 @@ const PASV={
  archer:[{k:'keen',n:'สายตาเฉียบคม',lv:1,sym:'target',col:'#9a7d0a',v:[10,5],d:'ความแม่นยำ +{a} และคริติคอล +{b}%'},{k:'fleet',n:'ฝีเท้าพราน',lv:7,sym:'boot',col:'#1e8449',v:[15,5],d:'ความเร็วเดิน +{a} และหลบหลีก +{b}%'}],
  thief:[{k:'keen',n:'สัญชาตญาณนักฉวย',lv:1,sym:'target',col:'#7a5a9a',v:[8,6],d:'ความแม่นยำ +{a} และคริติคอล +{b}%'},{k:'fleet',n:'ฝีเท้าเงา',lv:7,sym:'boot',col:'#4a3a6a',v:[20,8],d:'ความเร็วเดิน +{a} และหลบหลีก +{b}%'}],
  acolyte:[{k:'faith',n:'ศรัทธา',lv:1,sym:'faith',col:'#b8901e',v:[20],d:'การฟื้น HP จากสกิลและยาแรงขึ้น {a}%'},{k:'ward',n:'ปราการแสง',lv:7,sym:'ward',col:'#2e86c1',v:[10,30],d:'ดาเมจที่ได้รับลดลง {a}% และโจมตีอันเดด (ทหารไพ่ หน้ากากขนนก วิญญาณ) แรงขึ้น {b}%'}]};
-PASV.frostg=[...PASV.warrior,{k:'grit',n:'หัวใจธารน้ำแข็ง',lv:30,sym:'snow',col:'#3a9ad9',v:[8,10],d:'HP สูงสุด +{a}% และป้องกัน +{b}'}];
+PASV.frostg=[...PASV.warrior,{k:'grit',n:'หัวใจธารน้ำแข็ง',lv:30,sym:'snow',col:'#3a9ad9',v:[8,10],d:'HP สูงสุด +{a}% และป้องกัน +{b}'},{k:'frostres',n:'กายาเหมันต์',lv:32,max:3,lin:1,sym:'shieldg',col:'#5dade2',v:[10],d:'ต้านทานธาตุน้ำแข็ง (ธาตุน้ำ) +{a}%'}];
 /* skill levels: actives 1-5 (0 = not learned), passives 1-3 once unlocked; one skill point per level-up */
 const SKMAX=10,PSMAX=6,skMax=(i,c)=>{const b=SK[c||P.cls][i];return b&&b.max||SKMAX};
 const pLv=(p,i)=>P&&P.lv>=p.lv?Math.max(1,(P.psl&&P.psl[i])||1):0;
-const pVal=(p,L,j)=>Math.round(p.v[j]*(1+.3*(L-1)));
+const pVal=(p,L,j)=>p.lin?p.v[j]*L:Math.round(p.v[j]*(1+.3*(L-1)));const psMax=p=>p.max||PSMAX;
 function PV(k,j){if(!P)return 0;const ps=PASV[P.cls],i=ps.findIndex(p=>p.k===k);if(i<0)return 0;const L=pLv(ps[i],i);return L?pVal(ps[i],L,j):0}
 const hasP=k=>PV(k,0)>0;
 const healMul=()=>1+PV('faith',0)/100;
@@ -1178,7 +1178,7 @@ const REFW=new Set(['weapon']),REFA=new Set(['armor','head','pants','cape','shoe
 const refBonus=o=>{if(!o||!o.ref)return {atk:0,def:0};const it=IT[o.id],t=gtier(it);return REFW.has(it.t)?{atk:o.ref*(2+t*2),def:0}:REFA.has(it.t)?{atk:0,def:o.ref*(1+t)}:{atk:0,def:0}};
 function instStat(o,k){const it=IT[o.id];let v=(k==='atk'||k==='def')?refBonus(o)[k]:0;v+=['atk','def','hp','mmp'].includes(k)?Math.round((it[k]||0)*RAR[o.r||0].m):(it[k]||0);v+=(o.bon&&o.bon[k])||0;for(const c of o.cards||[])v+=IT[c][k]||0;return v}
 const RESL=[['ไฟ','rf'],['น้ำ','rw'],['ดิน','re'],['ลม','rwi'],['มืด','rd'],['พิษ','rp'],['อันเดด','ru'],['วิญญาณ','rg'],['ไร้ธาตุ','rn']],RESK=Object.fromEntries(RESL);
-const resOf=el=>Math.min(60,eqs(RESK[el]||'rn')+(P.rall||0));
+const resOf=el=>Math.min(60,eqs(RESK[el]||'rn')+(P.rall||0)+(el==='น้ำ'?PV('frostres',0):0));
 function eqs(k){let s=0;for(const sl in P.equip){const o=P.equip[sl];if(o&&IT[o.id])s+=instStat(o,k)}return s}
 const INV=50;
 const st=k=>(P[k]||0)+eqs(k);
@@ -1376,7 +1376,7 @@ const mobName=m=>m.rb?m.T.n+'สีรุ้ง':m.T.n;
 function removeMob(m){const i=M.indexOf(m);if(i<0)return;if(ANIM[m.type])FX.push({k:'mobdie',type:m.type,x:m.x,y:m.y,fx:m.fx||1,life:ANIM[m.type].die.length>1?1.1:.8,t:0});M.splice(i,1);if(S.target===m)S.target=null;if(m.rb)timers.push({t:gt+300,f:()=>{spawn(m.type,true);if(P)chat('sys','',m.T.n+'สีรุ้งปรากฏตัวอีกครั้งที่'+ZONES[m.T.zone].n+'!','#ff9ad5')}});else timers.push({t:gt+(m.T.boss?90:7+R()*5),f:()=>spawn(m.type)})}
 /* ================= combat ================= */
 function nearestMob(r){let best=null,bd=r;for(const m of M){const d=dist(m,P);if(d<bd){bd=d;best=m}}return best}
-function dmgMob(m,mult,col,o={}){if(GHOST){if(m&&m.T)hitFx(m,o.kind||'phys',false);return 0}if(S.inv>gt){S.inv=0;toast('สถานะอมตะหายไป · เริ่มโจมตีแล้ว')}const d=D();if(R()*100>Math.max(50,d.hit-m.T.lv*2)){m.agg=true;m.ret=false;S.combat=gt;float(m.x,m.y-m.T.r*1.6,'พลาด','#9aa7a3');return 0}let dmg=d.atk*mult*(.9+R()*.2)-m.T.def*.5;if(UNDEAD.has(m.type))dmg*=1+PV('ward',1)/100;const crit=R()*100<d.crit+(o.crit||0);if(crit)dmg*=d.critDmg;dmg=Math.max(1,Math.round(dmg));
+function dmgMob(m,mult,col,o={}){if(GHOST){if(m&&m.T)hitFx(m,o.kind||'phys',false);return 0}if(S.inv>gt){S.inv=0;toast('สถานะอมตะหายไป · เริ่มโจมตีแล้ว')}const d=D();if(R()*100>Math.max(50,d.hit-m.T.lv*2)){m.agg=true;m.ret=false;S.combat=gt;float(m.x,m.y-m.T.r*1.6,'พลาด','#9aa7a3');return 0}let dmg=(o.atk||d.atk)*mult*(.9+R()*.2)-m.T.def*.5;if(UNDEAD.has(m.type))dmg*=1+PV('ward',1)/100;const crit=R()*100<d.crit+(o.crit||0);if(crit)dmg*=d.critDmg;dmg=Math.max(1,Math.round(dmg));
  m.hp-=dmg;mobHitSend(m,dmg,o);m.agg=true;m.ret=false;m.flash=.12;m.hitT=gt;S.combat=gt;hitFx(m,o.kind||'phys',crit);if(o.stun&&!m.T.boss)m.stun=gt+o.stun;if(o.slow)m.slow=gt+o.slow;if(!m.T.boss&&P){const a=Math.atan2(m.y-P.y,m.x-P.x),nx=m.x+Math.cos(a)*4,ny=m.y+Math.sin(a)*4;if(canStand(nx,ny)){m.x=nx;m.y=ny}}float(m.x,m.y-m.T.r*1.6,(crit?'คริ! ':'')+dmg,crit?'#ffd166':(col||'#ffffff'),crit);
  if(m.hp<=0)killMob(m);return dmg}
 function killMob(m){if(MOBON&&!m.__rw&&!mobKillOK(m))return;if(MOBON)DROPOWN=lootOwner(m);const T=m.T;removeMob(m);P.kills++;P.mk=P.mk||{};if(!P.mk[m.type]){P.mk[m.type]=0;toast('📖 บันทึก '+T.n+' ลงสมุดมอนสเตอร์แล้ว')}P.mk[m.type]++;
@@ -1421,7 +1421,8 @@ const CASTSFX={xslash:'slash',spin:'slash',shout:'roar',quake:'quake',fire:'cast
 function buff(s){if(GHOST)return;S.bAtk=s.atk||1;S.bDef=s.def||1;S.bAspd=s.aspd||1;S.buffUntil=gt+s.dur;S.buffIdx=SK[P.cls].findIndex(x=>x.n===s.n);toast(s.n+' ทำงาน '+s.dur+' วินาที')}
 function aoeHit(s,c,mult,kind){for(const m of M.slice())if(Math.hypot(m.x-c.x,m.y-c.y)<s.rad*TS+m.T.r)dmgMob(m,mult,s.col,{kind,stun:s.stun,slow:s.slow})}
 const elMul=m=>{const e=MELEM[m.type];return e==='ไฟ'?1.25:e==='น้ำ'?.85:1};
-function fgHit(m,mult,s,o){return dmgMob(m,mult*elMul(m),s.col,Object.assign({kind:'ice'},o||{}))}
+const fAtk=d=>Math.round(d.atk*.8+d.int*3);
+function fgHit(m,mult,s,o){return dmgMob(m,mult*elMul(m),s.col,Object.assign({kind:'ice',atk:fAtk(D())},o||{}))}
 const SKFX={
  fblade:(s,t)=>{const f=P.fx||1;fxImg('fgslash',t.x-f*6,t.y-Math.round(t.T.r*.8),.42,{sc:.4,s0:.75,s1:1.08,flip:f<0,fo:.55});fxAnim('icep','all',t.x,t.y+8,.6,.42,{foot:1});fxAnim('bluep','burst',t.x,t.y-t.T.r*.8,.45,.6,{delay:.08});parts(t.x,t.y-10,18,HITC.ice,{spd:110,life:.45,sh:'plus'});fgHit(t,s.mult,s,{slow:s.slow});shake(3)},
  fwall:(s)=>{fxImg('fgorb',P.x,P.y-30,.9,{sc:.42,s0:.4,s1:1.05,fo:.5,a0:.85});for(let j=0;j<6;j++){const a=j/6*6.283;fxAnim('icep','all',P.x+Math.cos(a)*30,P.y+Math.sin(a)*16+8,.9,.42,{foot:1,delay:j*.05,flip:j%2})}FX.push({k:'aura',x:P.x,y:P.y,cols:['#9fe4ff','#ffffff'],life:1.2});parts(P.x,P.y-20,26,['#d8f4ff','#9fe4ff','#ffffff'],{spd:90,life:.6,sh:'plus'});buff(s)},
@@ -2756,7 +2757,7 @@ const EN={
 'แสงศักดิ์สิทธิ์':'Holy Light','ฟื้นฟู':'Heal','พรแห่งเทพ':'Divine Blessing','ประกาศิตศักดิ์สิทธิ์':'Magnus Exorcismus','ฟาดสุดแรง':'Power Strike','ปฐมพยาบาล':'First Aid',
 'ผิวเหล็ก':'Iron Skin','โทสะนักรบ':'Berserk','สมาธิเวท':'Arcane Focus','เวทขยาย':'Amplify','สายตาเฉียบคม':'Keen Eye','ฝีเท้าพราน':'Ranger\'s Stride','ศรัทธา':'Faith','ปราการแสง':'Aegis of Light',
 // classes
-'โนวิส':'Novice','นักรบ':'Swordsman','ผู้พิทักษ์น้ำแข็ง':'Frost Guardian','ดาบเยือกแข็ง':'Frost Blade','ปราการธารน้ำแข็ง':'Glacial Bulwark','หนามน้ำแข็งผงาด':'Rising Ice Spikes','พายุหิมะนิรันดร์':'Eternal Blizzard','หัวใจธารน้ำแข็ง':'Glacier Heart','ประชิด ถึกทน พลังธาตุน้ำแข็ง ทำให้ศัตรูช้าและแช่แข็ง':'Melee tank wielding ice, slows and freezes foes','จอมเวท':'Mage','นักธนู':'Archer','อาโคไลท์':'Acolyte','ประชิดตัว ถึกทน':'Melee, tough','ระยะไกล สกิลวงกว้าง':'Ranged, area magic','ระยะไกล แม่นยำ คริแรง':'Ranged, precise, big crits','ประชิด ฟื้นฟู และพรศักดิ์สิทธิ์':'Melee, healing and blessings',
+'โนวิส':'Novice','นักรบ':'Swordsman','ผู้พิทักษ์น้ำแข็ง':'Frost Guardian','ดาบเยือกแข็ง':'Frost Blade','ปราการธารน้ำแข็ง':'Glacial Bulwark','หนามน้ำแข็งผงาด':'Rising Ice Spikes','พายุหิมะนิรันดร์':'Eternal Blizzard','หัวใจธารน้ำแข็ง':'Glacier Heart','กายาเหมันต์':'Winter Body','ประชิด ถึกทน พลังธาตุน้ำแข็ง ทำให้ศัตรูช้าและแช่แข็ง':'Melee tank wielding ice, slows and freezes foes','จอมเวท':'Mage','นักธนู':'Archer','อาโคไลท์':'Acolyte','ประชิดตัว ถึกทน':'Melee, tough','ระยะไกล สกิลวงกว้าง':'Ranged, area magic','ระยะไกล แม่นยำ คริแรง':'Ranged, precise, big crits','ประชิด ฟื้นฟู และพรศักดิ์สิทธิ์':'Melee, healing and blessings',
 // monsters
 'แกะนิทรา':'Slime','ตุ๊กตากระต่ายเย็บ':'Toxic Shroom','ประกายวิญญาณ':'Giant Bee','แมวกล่อมนอน':'Shadow Wolf','ตัวตลกฝันเพ้อ':'Goblin','หมึกฝันร้าย':'Deepwood Spider','ทหารไพ่':'Skeleton','หน้ากากขนนก':'Zombie','วิญญาณล่องลอย':'Wandering Spirit','ป้อมนิทรา':'Ancient Golem','สีรุ้ง':' (Rainbow)',
 // zones & npcs
@@ -3000,13 +3001,14 @@ function doRefine(){const x=refSel;if(!x)return;const o=x.o,it=IT[o.id],r=o.ref|
  else{o.ref=Math.max(0,r-1);setTimeout(()=>{toast('ตีบวกล้มเหลว… '+it.n+' เหลือ +'+o.ref);sfx('hurt')},250);chat('sys','','ตีบวกล้มเหลว: '+it.n+' ลดเหลือ +'+o.ref,'#ff8a8a')}
  clampHp();save()}
 const skReq=(b,L)=>(b.lv||1)+Math.max(0,L-1)*2;
-function rSkill(){const sp=P.spts||0;let h=pendBar('skill')+`<div class="kv"><span>แต้มสกิลว่าง · ได้ 1 แต้มทุกครั้งที่ Job เลเวลอัป (Job Lv ${P.jlv}/${jmax()})</span><b style="color:#9fd8ff">${sp}</b></div>`;
- h+=`<div class="sec"><h3>สกิลกดใช้</h3>`;
- SK[P.cls].forEach((b,i)=>{const L=skL(i),cur=skAt(P.cls,i,Math.max(1,L)),nx=L<skMax(i)?skAt(P.cls,i,L+1):null,lockLv=P.lv<b.lv,rq=L<skMax(i)?skReq(b,L+1):0,lvOk=P.lv>=rq,can=!lockLv&&lvOk&&sp>0&&L<skMax(i);
+let SKTAB=null;
+function rSkill(){const sp=P.spts||0,FR=CLS[P.cls].from,n0=FR?SK[FR].length:0,p0=FR?PASV[FR].length:0,tab=FR&&SKTAB===FR?FR:P.cls;let h=pendBar('skill')+(FR?`<div class="tabs" style="margin-bottom:8px"><button class="${tab===FR?'on':''}" data-a="sktab" data-v="${FR}">${CLS[FR].n} · Class 1</button><button class="${tab!==FR?'on':''}" data-a="sktab" data-v="${P.cls}">${CLS[P.cls].n} · Class 2</button></div>`:'')+`<div class="kv"><span>แต้มสกิลว่าง · ได้ 1 แต้มทุกครั้งที่ Job เลเวลอัป (Job Lv ${P.jlv}/${jmax()})</span><b style="color:#9fd8ff">${sp}</b></div>`;
+ h+=`<div class="sec"><h3>สกิลกดใช้</h3>`+(FR&&tab!==FR?`<div class="note">สกิลน้ำแข็งใช้พลัง ATK×0.8 + INT×3 (ตอนนี้ ${fAtk(D())} · ATK ปกติ ${D().atk}) · ทุกสกิลของ${CLS[FR].n}ยังใช้ได้ตามปกติ</div>`:'');
+ SK[P.cls].forEach((b,i)=>{if(FR&&((tab===FR)!==(i<n0)))return;const L=skL(i),cur=skAt(P.cls,i,Math.max(1,L)),nx=L<skMax(i)?skAt(P.cls,i,L+1):null,lockLv=P.lv<b.lv,rq=L<skMax(i)?skReq(b,L+1):0,lvOk=P.lv>=rq,can=!lockLv&&lvOk&&sp>0&&L<skMax(i);
   h+=`<div class="row skrow${L?'':' locked'}"><img class="skimg" src="${skillImg(P.cls,i)}" alt=""${L?` draggable="true" data-drag="s:${i}" title="ลากไปวางที่ปุ่มลัด"`:''}><div class="l"><b>${esc(b.n)}</b> ${pips(L,skMax(i))}<small>${L?esc(skDesc(cur)):'ยังไม่ได้เรียน · '+esc(skDesc(cur))}</small><small>MP ${cur.mp} · คูลดาวน์ ${cur.cd} วินาที${lockLv?' · ปลดล็อกที่ Lv '+b.lv:''}${rq&&!lockLv?` · <span style="color:${lvOk?'var(--muted)':'#ff8a8a'}">Lv ${L+1} ต้องการ Base Lv ${rq}</span>`:''}</small>${nx&&L?`<small class="nxt">Lv ${L+1}: ${esc(skDesc(nx))} · MP ${nx.mp} · คูลดาวน์ ${nx.cd} วิ</small>`:''}</div>
   <div class="btns skb">${L?`<button class="btn" data-a="skill" data-v="${i}">ใช้</button><button class="btn" data-a="hotset" data-v="s:${i}">ปุ่มลัด${(()=>{const j=P.hot.findIndex(x=>x&&x.t==='s'&&x.i===i);return j>=0?' ['+hotKey(j)+']':''})()}</button>`:''}<button class="btn${can?' pri':''}" data-a="skup" data-v="${i}" ${can?'':'disabled'}>${L?(L<skMax(i)?'อัป +':'สูงสุด'):'เรียน'}</button></div></div>`});
- h+=`</div><div class="sec"><h3>สกิลติดตัว · สูงสุด Lv ${PSMAX}</h3>`+(PASV[P.cls].length?'':'<div class="note">Novice ยังไม่มีสกิลติดตัว · เปลี่ยนอาชีพเพื่อปลดล็อก</div>');
- PASV[P.cls].forEach((p,i)=>{const L=pLv(p,i),rq=L>0&&L<PSMAX?skReq(p,L+1):0,can=L>0&&L<PSMAX&&sp>0&&P.lv>=rq;h+=`<div class="row skrow${L?'':' locked'}"><img class="skimg" src="${passImg(p)}" alt=""><div class="l"><b>${esc(p.n)}</b> ${pips(L,PSMAX)}<small>${esc(pDesc(p,L))}</small><small>${L?'ทำงานอยู่':'ปลดล็อกฟรีที่ Lv '+p.lv}${rq?` · <span style="color:${P.lv>=rq?'var(--muted)':'#ff8a8a'}">Lv ${L+1} ต้องการ Base Lv ${rq}</span>`:''}</small>${L&&L<PSMAX?`<small class="nxt">Lv ${L+1}: ${esc(pDesc(p,L+1))}</small>`:''}</div><button class="btn${can?' pri':''}" data-a="psup" data-v="${i}" ${can?'':'disabled'}>${L>=PSMAX?'สูงสุด':'อัป +'}</button></div>`});
+ h+=`</div><div class="sec"><h3>สกิลติดตัว</h3>`+(PASV[P.cls].length?'':'<div class="note">Novice ยังไม่มีสกิลติดตัว · เปลี่ยนอาชีพเพื่อปลดล็อก</div>');
+ PASV[P.cls].forEach((p,i)=>{if(FR&&((tab===FR)!==(i<p0)))return;const PM=psMax(p),L=pLv(p,i),rq=L>0&&L<PM?skReq(p,L+1):0,can=L>0&&L<PM&&sp>0&&P.lv>=rq;h+=`<div class="row skrow${L?'':' locked'}"><img class="skimg" src="${passImg(p)}" alt=""><div class="l"><b>${esc(p.n)}</b> ${pips(L,PM)}<small>${esc(pDesc(p,L))}</small><small>${L?'ทำงานอยู่':'ปลดล็อกฟรีที่ Lv '+p.lv}${rq?` · <span style="color:${P.lv>=rq?'var(--muted)':'#ff8a8a'}">Lv ${L+1} ต้องการ Base Lv ${rq}</span>`:''}</small>${L&&L<PM?`<small class="nxt">Lv ${L+1}: ${esc(pDesc(p,L+1))}</small>`:''}</div><button class="btn${can?' pri':''}" data-a="psup" data-v="${i}" ${can?'':'disabled'}>${L>=PM?'สูงสุด':'อัป +'}</button></div>`});
  return h+'</div>'}
 function qProg(q){const s=P.quests[q.id];if(!s)return 0;return q.type==='item'?Math.min(q.need,countItem(q.item)):s.p}
 function rQuest(){let h=inTown()?'':`<div class="note warn">ส่งเควสได้เมื่ออยู่ในเมืองอิลวาเรียเท่านั้น รับเควสได้ทุกที่</div>`;
@@ -3105,7 +3107,8 @@ $('#wb').addEventListener('click',e=>{const w2=e.target.closest('[data-w2]');if(
   case 'drop':if(dropArm===+v){P.inv.splice(+v,1);selInv=-1;dropArm=-1}else dropArm=+v;break;
   case 'skill':useSkill(+v);break;
   case 'skup':{const i=+v,b=SK[P.cls][i],L=skL(i);if(L<skMax(i)&&P.lv<skReq(b,L+1)){toast('ต้องการ Base Lv '+skReq(b,L+1)+' เพื่ออัป '+b.n+' เป็น Lv '+(L+1));break}if(P.lv<b.lv||(P.spts||0)<1||L>=skMax(i))break;if(!PSKILL)PSKILL={skl:[...P.skl],psl:[...(P.psl||[])],spts:P.spts};P.skl[i]=L+1;P.spts--;buildBar();toast((L?'อัปสกิล ':'เรียนสกิล ')+b.n+' → Lv '+(L+1));snd(880,.15,'triangle',.05);parts(P.x,P.y-20,14,['#9fd8ff','#ffffff'],{ang:-1.57,spread:1,spd:60,life:.6,sh:'star'});break}
-  case 'psup':{const i=+v,p=PASV[P.cls][i],L=pLv(p,i);if(L&&L<PSMAX&&P.lv<skReq(p,L+1)){toast('ต้องการ Base Lv '+skReq(p,L+1)+' เพื่ออัป '+p.n+' เป็น Lv '+(L+1));break}if(!L||L>=PSMAX||(P.spts||0)<1)break;if(!PSKILL)PSKILL={skl:[...P.skl],psl:[...(P.psl||[])],spts:P.spts};P.psl[i]=L+1;P.spts--;clampHp();toast('อัปสกิลติดตัว '+p.n+' → Lv '+(L+1));snd(880,.15,'triangle',.05);break}
+  case 'sktab':SKTAB=v;break;
+  case 'psup':{const i=+v,p=PASV[P.cls][i],L=pLv(p,i),PM=psMax(p);if(L&&L<PM&&P.lv<skReq(p,L+1)){toast('ต้องการ Base Lv '+skReq(p,L+1)+' เพื่ออัป '+p.n+' เป็น Lv '+(L+1));break}if(!L||L>=PM||(P.spts||0)<1)break;if(!PSKILL)PSKILL={skl:[...P.skl],psl:[...(P.psl||[])],spts:P.spts};P.psl[i]=L+1;P.spts--;clampHp();toast('อัปสกิลติดตัว '+p.n+' → Lv '+(L+1));snd(880,.15,'triangle',.05);break}
   case 'accept':{const qq=QUESTS.find(x=>x.id===v);P.quests[v]={st:'active',p:0};toast('รับเควส "'+qq.n+'"');chat('sys','','รับเควส: '+qq.n);break}
   case 'turnin':{const qq=QUESTS.find(x=>x.id===v);if(!inTown())break;if(qq.type==='item')removeItem(qq.item,qq.need);P.quests[v].st='done';P.gold+=qq.rew.gold;addItem(qq.rew.item,qq.rew.q);gainBoth(qq.rew.exp,'เควส '+qq.n);toast('ส่งเควสสำเร็จ! +'+qq.rew.exp+' EXP +'+qq.rew.gold+' ทอง');chat('sys','','ได้รับรางวัลเควส '+qq.n);snd(780,.3,'triangle',.05);break}
   case 'tab':shopTab=v;break;
@@ -3249,6 +3252,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'2.4',d:'5 ต.ค. 2026',t:'ปรับสมดุลผู้พิทักษ์น้ำแข็ง',L:['สกิลน้ำแข็งของผู้พิทักษ์น้ำแข็งแรงตาม STR+INT: ใช้พลัง ATK×0.8 + INT×3 (สาย STR+INT แรงกว่าเดิม สาย STR ล้วนเบาลงเล็กน้อย)','ปรับตัวคูณ: ดาบเยือกแข็ง 340%→360% · หนามน้ำแข็งผงาด 260%→280% · พายุหิมะนิรันดร์ 95%→100% ต่อระลอก','สกิลติดตัวใหม่: กายาเหมันต์ (Base Lv 32) ต้านทานธาตุน้ำแข็ง/ธาตุน้ำ +10% ต่อเลเวล สูงสุด Lv 3 (+30%)','สกิลของอาชีพเดิม (นักรบ) ทั้งกดใช้และติดตัว ยังใช้และอัปได้หลังเปลี่ยนอาชีพ (ยกเว้นสกิลโนวิส)','หน้าสกิลมีแท็บเลือกดูสกิลตามอาชีพ Class 1 / Class 2']},
  {v:'2.3',d:'5 ต.ค. 2026',t:'อาชีพใหม่ ผู้พิทักษ์น้ำแข็ง',L:['อาชีพใหม่ Class 2-1: ผู้พิทักษ์น้ำแข็ง (Frost Guardian) สายนักรบ เปลี่ยนได้ที่อาจารย์เซเรนเมื่อนักรบถึง Job Lv 40','สกิลนักรบเดิมติดตัวไปทั้งหมด ค่าสถานะ อุปกรณ์ และแต้มสกิลคงเดิม · Job Lv เริ่มใหม่ (สูงสุด 50)','สกิลใหม่: ดาบเยือกแข็ง (Base Lv 30) · ปราการธารน้ำแข็ง (Lv 34) · หนามน้ำแข็งผงาด (Lv 38) · พายุหิมะนิรันดร์ (Lv 44)','สกิลติดตัวใหม่: หัวใจธารน้ำแข็ง (Lv 30) HP สูงสุดและป้องกันเพิ่ม','สกิลน้ำแข็งเป็นธาตุน้ำ: แรงขึ้น 25% กับมอนธาตุไฟ เบาลง 15% กับมอนธาตุน้ำ','ตัวละครพร้อมแอนิเมชันเดิน โจมตี ร่ายเวท โดนตี และล้ม','ตัวละครเริ่มต้นของ GM กลับเป็นโนวิสปกติ']},
  {v:'2.2',d:'5 ต.ค. 2026',t:'ที่ราบหิมะโฉมใหม่ และมอนสเตอร์ใหม่',L:['ที่ราบหิมะเฟรสต์ฟาง: กราฟิกใหม่ทั้งแผนที่ พื้นหิมะ ต้นไม้หิมะ 8 แบบ บ่อน้ำแข็ง รอยเท้า หญ้าแห้ง หน้าผาน้ำแข็ง ผลึก ซุ้มหิน ขอนไม้','เปลี่ยนมอนสเตอร์ที่หน้าตาซ้ำของเดิมเป็นตัวใหม่ พร้อมแอนิเมชันเดิน โจมตี โดนตี และตาย','โกเลมหิมะน้ำแข็ง (แทนหมีขาวหิมะคลั่ง) และโกเลมหิมะหมวกแดง (แทนด้วงผลึกธารน้ำแข็ง)','มังกรไข่มุกผลึก (แทนวิญญาณเกล็ดหิมะ) และมังกรผลึกลายทอง (แทนแมงมุมผลึกยิงใย) โจมตีระยะไกล','บอสถ้ำธารน้ำแข็งเปลี่ยนเป็น มังกรน้ำแข็งโบราณ ค่าพลังและของดรอปเท่าเดิม','ทางเดินดินในที่ราบหิมะเปลี่ยนเป็นทางหิมะอัดแน่นมีรอยเท้า','การ์ดของมอนเดิมยังใช้ได้ตามปกติ (เปลี่ยนแค่ชื่อ)']},
  {v:'2.1',d:'5 ต.ค. 2026',t:'ชื่อไม่ซ้ำ และฝนธนูใหม่',L:['ชื่อตัวละครห้ามซ้ำกันในเซิร์ฟเวอร์ ตรวจสอบตอนสร้างตัวละคร','สกิลฝนธนู (นักธนู สกิล 4) เอฟเฟกต์ใหม่: แสดงวงรัศมีสกิล ลูกธนูเรืองแสงตกลงมา 5 ระลอก','ฝนธนูโดน 5 ครั้ง ครั้งละ 62% (รวม 310% จากเดิม 285%)','GM Novice เปลี่ยนเป็นนักธนูสาวชุดเขียว ยิงลูกธนูเรืองแสงตอนโจมตี','ย้าย NPC นักสะสมจิปาถะโมโม่ ไปลานหญ้าทางใต้ของลานน้ำพุ ข้างถนนหลัก มองเห็นง่ายขึ้น']},
@@ -3591,7 +3595,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261005133727';
+const BUILDV='20261005135753';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
