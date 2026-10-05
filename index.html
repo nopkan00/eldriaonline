@@ -743,7 +743,7 @@ const CLS={
  frostg:{n:'ผู้พิทักษ์น้ำแข็ง',c:'#7fd0ff',tier:2,from:'warrior',hp:150,mp:60,main:'str',range:1.4,base:{str:9,agi:5,vit:8,int:2,dex:5,luk:3},d:'ประชิด ถึกทน พลังธาตุน้ำแข็ง ทำให้ศัตรูช้าและแช่แข็ง'}
 };
 const STATS=['str','agi','vit','int','dex','luk'];const stCost=v=>1+Math.floor((v||0)/10);
-const STATN={str:['พลัง','STR','พลังโจมตีหลักของนักรบ'],agi:['ว่องไว','AGI','ความเร็วโจมตี และหลบหลีก'],vit:['อึด','VIT','HP สูงสุด และการป้องกัน'],int:['ปัญญา','INT','MP สูงสุด พลังของจอมเวทและอาโคไลท์'],dex:['แม่นยำ','DEX','ความแม่นยำ พลังโจมตีหลักของนักธนู'],luk:['โชค','LUK','คริติคอล ความแรงคริ และอัตราดรอป']};
+const STATN={str:['พลัง','STR','พลังโจมตีหลักของนักรบ'],agi:['ว่องไว','AGI','ความเร็วโจมตี และหลบหลีก'],vit:['อึด','VIT','HP สูงสุด การป้องกัน และการฟื้น HP'],int:['ปัญญา','INT','MP สูงสุด การฟื้น MP พลังของจอมเวทและอาโคไลท์'],dex:['แม่นยำ','DEX','ความแม่นยำ พลังโจมตีหลักของนักธนู'],luk:['โชค','LUK','คริติคอล ความแรงคริ และอัตราดรอป']};
 const SLOTS=[['head','หมวก'],['cape','ผ้าคลุม'],['body','เสื้อเกราะ'],['pants','กางเกง'],['shoes','รองเท้า'],['right','มือขวา'],['left','มือซ้าย'],['acc','เครื่องประดับ'],['rg1','แหวน 1'],['rg2','แหวน 2']];
 const SLOTN=Object.fromEntries(SLOTS);
 const TSLOT={weapon:'right',left:'left',armor:'body',pants:'pants',head:'head',cape:'cape',shoes:'shoes'};
@@ -1235,6 +1235,7 @@ const resOf=el=>Math.min(60,eqs(RESK[el]||'rn')+(P.rall||0)+(el==='น้ำ'?PV
 function eqs(k){let s=0;for(const sl in P.equip){const o=P.equip[sl];if(o&&IT[o.id])s+=instStat(o,k)}return s}
 const INV=50;
 const st=k=>(P[k]||0)+eqs(k)+(k==='int'?PV('frostmind',0):0);
+function regen(){const v=st('vit'),n=st('int'),f=1+PV('focus',1)/100;return {hr:1+v*.2,hc:.1+v*.02,mr:(.5+n*.1)*f,mc:(.1+n*.02)*f}}
 function D(){const c=CLS[P.cls],bOn=S.buffUntil>gt,str=st('str'),agi=st('agi'),vit=st('vit'),int=st('int'),dex=st('dex'),luk=st('luk'),main=st(c.main);
  const mhp=Math.round((c.hp+vit*10+P.lv*14+eqs('hp'))*(1+(PV('iron',0)+PV('grit',0))/100)),rage=hasP('rage')&&P.hp<mhp*.4,b=(bOn?S.bAtk:1)*(rage?1+PV('rage',0)/100:1)*(S.ib&&S.ib.until>gt?S.ib.atk:1),ibd=S.ib&&S.ib.until>gt?S.ib.def:1;
  return {str,agi,vit,int,dex,luk,rage,
@@ -1474,8 +1475,8 @@ function gainExp(n){P.exp+=n;let up=false;while(P.exp>=need(P.lv)){P.exp-=need(P
 const mobReach=m=>m.T.rng?m.T.rng*TS:m.T.r+16;
 function mobShot(m,tx,ty){FX.push({k:'shot',kind:m.T.shot||'magic',x:m.x+(m.fx||1)*6,y:m.y-m.T.r,tx,ty:ty-18,c:m.T.scol||'#9ad8ff',life:.22,t:0})}
 function hitPlayer(m,mult=1){if(S.dead)return;if(S.inv>gt){if(gt-(S.invF||0)>.6){S.invF=gt;float(P.x,P.y-40,'อมตะ','#ffe07a')}return}const d=D();const pz=m.poison&&gt<m.poison.until?10:0;if(R()*100<(mult===1?d.flee:0)+pz){sample('matk',.6);float(P.x,P.y-40,'หลบ','#cfe3ff');S.combat=gt;return}const el=(m.type&&MELEM[m.type])||m.T.el||'ไร้ธาตุ';let dmg=Math.max(1,Math.round((m.T.atk*mult*(.85+R()*.3)-d.def*.4)*(1-PV('ward',0)/100)*(1-resOf(el)/100)));P.hp-=dmg;S.lastHurt=gt;S.combat=gt;float(P.x,P.y-40,'-'+dmg,'#ff6b5b',false,'hurt');sample('matk',1);if(P.hp<=0)die()}
-function die(){P.hp=0;S.dead=true;S.target=null;S.moveTo=null;const lost=Math.floor(need(P.lv)*.1);P.exp=Math.max(0,P.exp-lost);for(const m of M)if(!MOBON||m.tgt===UID){m.agg=false;m.ret=true}
- $('#deadmsg').textContent='เสียค่าประสบการณ์ '+lost+' EXP · ของในกระเป๋ายังอยู่ครบ';$('#dead').hidden=false;sfx('die');chat('sys','','คุณถูกสังหาร');save()}
+function die(){P.hp=0;S.dead=true;S.target=null;S.moveTo=null;const lost=P.lv<=30?0:Math.floor(need(P.lv)*.1);P.exp=Math.max(0,P.exp-lost);for(const m of M)if(!MOBON||m.tgt===UID){m.agg=false;m.ret=true}
+ $('#deadmsg').textContent=(lost?'เสียค่าประสบการณ์ '+lost+' EXP':'Base Lv ไม่เกิน 30 ไม่เสีย EXP')+' · ของในกระเป๋ายังอยู่ครบ';$('#dead').hidden=false;sfx('die');chat('sys','','คุณถูกสังหาร');save()}
 $('#respawn').addEventListener('click',()=>{if(P&&S.dead)respawn()});
 function reviveBy(n){if(!P||!S.dead)return;const d=D();P.hp=Math.max(1,Math.round(d.mhp*.3));P.mp=Math.round(d.mmp*.2);S.dead=false;S.inv=gt+3;$('#dead').hidden=true;FX.push({k:'pillar',x:P.x,y:P.y,c:'#ffb347',w:6,life:1.2});elSph('el_fires',P.x,P.y-20,80,{life:1});parts(P.x,P.y-20,50,['#ffe07a','#ff8a3a','#ffffff'],{ang:-1.57,spread:1.4,spd:120,life:1.1,sh:'star'});sfx('holy');toast('ได้รับการชุบชีวิตจาก '+n+'!');chat('sys','',n+' ชุบชีวิตคุณด้วยขนนกฟีนิกซ์ · HP 30% · อมตะ 3 วินาที','#ffb347');save()}
 function respawn(){const d=D();P.x=TWN.x;P.y=TWN.y+80;P.hp=d.mhp;P.mp=d.mmp;S.dead=false;S.target=null;S.aim=null;S.pend=null;for(const m of M)if(!MOBON||m.tgt===UID){m.agg=false}$('#dead').hidden=true;save();toast('ฟื้นคืนชีพที่เมืองอิลวาเรีย')}
@@ -1712,7 +1713,7 @@ function updPlayer(dt){if(S.dead)return;if(updCast())return;const d=D();let mx=0
  updNodes();updVillagers(dt);updCritters(dt);updCat(dt);if(S.gather)updGather(dt);
  pickDrops();
  {const tt=tAt(Math.floor(P.x/TS),Math.floor(P.y/TS));if(tt===17&&gt>(S.portT||0)){S.portT=gt+1.5;const ptx=Math.floor(P.x/TS),pty=Math.floor(P.y/TS),pt=PORTALS.find(q=>Math.abs(q.a.x-ptx)<=1&&Math.abs(q.a.y-pty)<=1)||PORTALS[P.x<OW*TS?0:1],into=pt.t!=null,d=pt.to;S.inv=gt+10;chat('sys','','ได้รับสถานะอมตะ 10 วินาที · มอนสเตอร์มองไม่เห็นคุณ · โจมตีเมื่อไหร่สถานะจะหายไป','#ffe07a');if(into)showTitle(DUNGEONS[pt.t]);P.x=d.x*TS+16;P.y=d.y*TS+16;S.target=null;S.moveTo=null;S.path=null;S.pend=null;S.aim=null;cam.x=P.x-VW/2;cam.y=P.y-VH/2;sfx('holy');FX.push({k:'nova',x:P.x,y:P.y,r:70,c:'#b86cff',life:.6});toast(pt.msg)}}
- const ooc=gt-S.combat>5;if(!inSafe()){P.hp=Math.min(d.mhp,P.hp+d.mhp*(ooc?.025:.003)*dt);P.mp=Math.min(d.mmp,P.mp+d.mmp*(ooc?.025:.006)*(1+PV('focus',1)/100)*dt)}
+ const ooc=gt-S.combat>5;if(!inSafe()){const rg=regen();P.hp=Math.min(d.mhp,P.hp+(ooc?rg.hr:rg.hc)*dt);P.mp=Math.min(d.mmp,P.mp+(ooc?rg.mr:rg.mc)*dt)}
  if(d.rage&&Math.floor(gt*10)%3===0)parts(P.x+(R()-.5)*18,P.y-6,1,['#ff5a3b','#ffb13a'],{ang:-1.57,spread:.4,spd:40,life:.5,flat:1});
  }
 function updMob(m,dt){const T=m.T;m.flash=Math.max(0,m.flash-dt);if(m.poison){if(gt>m.poison.until)m.poison=null;else{if(Math.floor(gt*6+m.id)%4===0)parts(m.x+(R()-.5)*T.r,m.y-T.r,1,['#9ef08a','#5ab04a'],{ang:-1.57,spread:.5,spd:22,life:.6,flat:1});if(gt>=m.poison.nt){m.poison.nt+=1;const dmg=m.poison.dps;m.hp-=dmg;m.agg=true;float(m.x,m.y-T.r*1.6,'-'+dmg,'#8ad060');if(m.hp<=0){killMob(m);return}}}}if(m.stun>gt&&!m.ret)return;const sf=m.slow>gt?.5:1;
@@ -2847,7 +2848,7 @@ const EN={
 'ค่าสถานะ · แต้มว่าง':'Stats · free points','ความสามารถ':'Attributes','สกิลกดใช้ · สูงสุด':'Active skills · max','สกิลติดตัว · สูงสุด':'Passive skills · max','สกิลติดตัวใหม่':'New passive skill','อัปสกิลติดตัว':'Passive upgraded','อัปสกิล':'Skill upgraded','เรียนสกิล':'Skill learned',
 'ปลดล็อกฟรีที่':'Unlocks free at','ปลดล็อกที่':'Unlocks at','ทำงานอยู่':'Active','ทำงาน':'active for','สลับเป้าหมาย':'Switch target','โจมตีตัวใกล้สุด':'Attack nearest','เดิน / เลือกเป้าหมาย':'Move / select target','ปิดหน้าต่าง':'Close window',
 'ตีต่อวินาที':'Hits / sec','ครั้ง/วิ':'hits/s','ความเร็วโจมตี':'Attack speed','ความเร็วเดิน':'Move speed','ความแม่นยำ':'Accuracy','ความแรงคริ':'Crit damage','โอกาสคริติคอล':'crit chance','คริติคอล':'Critical','อัตราดรอป':'Drop rate','ระยะโจมตี':'Attack range','หลบหลีก':'Evasion','พลังโจมตี':'Attack','ป้องกัน':'Defense',
-'พลังโจมตีหลักของนักรบ':'main attack stat of Swordsmen','HP สูงสุด และการป้องกัน':'max HP and defense','ความเร็วโจมตี และหลบหลีก':'attack speed and evasion','MP สูงสุด พลังของจอมเวทและอาโคไลท์':'max MP, power of Mages and Acolytes','ความแม่นยำ พลังโจมตีหลักของนักธนู':'accuracy, main attack stat of Archers','คริติคอล ความแรงคริ และอัตราดรอป':'critical, crit damage and drop rate',
+'พลังโจมตีหลักของนักรบ':'main attack stat of Swordsmen','HP สูงสุด การป้องกัน และการฟื้น HP':'max HP, defense and HP regen','ความเร็วโจมตี และหลบหลีก':'attack speed and evasion','MP สูงสุด การฟื้น MP พลังของจอมเวทและอาโคไลท์':'max MP, MP regen, power of Mages and Acolytes','ความแม่นยำ พลังโจมตีหลักของนักธนู':'accuracy, main attack stat of Archers','คริติคอล ความแรงคริ และอัตราดรอป':'critical, crit damage and drop rate',
 'ว่องไว':'Agility','ปัญญา':'Intellect','แม่นยำ':'Dexterity','พลัง':'Strength','อึด':'Vitality','โชค':'Luck',
 'การฟื้น HP จากสกิลและยาแรงขึ้น':'HP healing from skills and potions +','เมื่อ HP ต่ำกว่า 40% พลังโจมตี':'Below 40% HP, attack','และโจมตีอันเดด (ทหารไพ่ หน้ากากขนนก วิญญาณ) แรงขึ้น':'and damage vs undead (skeleton, zombie, ghost) +',
 'สกิลแรงขึ้น':'Skill damage +','และคูลดาวน์สกิลลดลง':'and skill cooldown −','และฟื้น MP เร็วขึ้น':'and MP regen +','และป้องกัน':'and defense','และคริติคอล':'and critical','และหลบหลีก':'and evasion',
@@ -3021,7 +3022,7 @@ function rChar(){const d=D(),c=CLS[P.cls];
  <div class="kv"><span>พลังโจมตี${d.unarmed?' <small style="color:var(--muted)">(มือเปล่า · คิดจาก STR)</small>':''}</span><b>${d.atk}</b></div><div class="kv"><span>ป้องกัน</span><b>${d.def}</b></div>
  <div class="kv"><span>HP สูงสุด</span><b>${d.mhp}</b></div><div class="kv"><span>MP สูงสุด</span><b>${d.mmp}</b></div>
  <div class="kv"><span>ความเร็วโจมตี</span><b>${(1/d.aspd).toFixed(2)} ครั้ง/วิ</b></div><div class="kv"><span>ความแม่นยำ</span><b>${d.hit.toFixed(0)}%</b></div>
- <div class="kv"><span>คริติคอล</span><b>${d.crit.toFixed(1)}%</b></div><div class="kv"><span>ความแรงคริ</span><b>${Math.round(d.critDmg*100)}%</b></div><div class="kv"><span>ฟื้น HP <small style="color:var(--muted)">(พัก/สู้)</small></span><b>${(d.mhp*.025).toFixed(1)} / ${(d.mhp*.003).toFixed(1)} ต่อวิ</b></div><div class="kv"><span>ฟื้น MP <small style="color:var(--muted)">(พัก/สู้)</small></span><b>${(d.mmp*.025*(1+PV('focus',1)/100)).toFixed(1)} / ${(d.mmp*.006*(1+PV('focus',1)/100)).toFixed(1)} ต่อวิ</b></div>
+ <div class="kv"><span>คริติคอล</span><b>${d.crit.toFixed(1)}%</b></div><div class="kv"><span>ความแรงคริ</span><b>${Math.round(d.critDmg*100)}%</b></div><div class="kv"><span>ฟื้น HP <small style="color:var(--muted)">(พัก/สู้)</small></span><b>${regen().hr.toFixed(1)} / ${regen().hc.toFixed(2)} ต่อวิ</b></div><div class="kv"><span>ฟื้น MP <small style="color:var(--muted)">(พัก/สู้)</small></span><b>${regen().mr.toFixed(1)} / ${regen().mc.toFixed(2)} ต่อวิ</b></div>
  <div class="kv"><span>หลบหลีก</span><b>${d.flee.toFixed(1)}%</b></div><div class="kv"><span>อัตราดรอป</span><b>×${d.drop.toFixed(2)}</b></div>
  <div class="kv"><span>ความเร็วเดิน</span><b>${d.spd}</b></div><div class="kv"><span>ระยะโจมตี</span><b>${+(d.range/TS).toFixed(1)} ช่อง</b></div></div></div>
  <div class="sec"><h3>ต้านทานธาตุ · Elemental Resistances</h3><div class="grid2 resg">${RESL.map(([el])=>{const v=resOf(el);return `<div class="kv"><span><i class="eld" style="background:${ELC[el]}"></i>${el}</span><b style="color:${v>0?'#8fe07a':'var(--muted)'}">${v}%</b></div>`}).join('')}</div><div class="note" style="margin-top:6px">ลดความเสียหายจากมอนสเตอร์ธาตุนั้น (สูงสุด 60%) · ได้จากอุปกรณ์และการ์ด</div></div>`;
@@ -3365,6 +3366,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'3.9',d:'5 ต.ค. 2026',t:'ปรับระบบฟื้นฟู และโทษการตาย',L:['Base Lv ไม่เกิน 30 ตายแล้วไม่เสีย EXP (Lv 31 ขึ้นไปเสีย 10% ของ EXP เลเวลนั้นเหมือนเดิม)','ฟื้น HP เริ่มต้น 1 ต่อวิ (พัก) / 0.1 ต่อวิ (สู้) · VIT ทุก 1 แต้ม +0.2 / +0.02','ฟื้น MP เริ่มต้น 0.5 ต่อวิ (พัก) / 0.1 ต่อวิ (สู้) · INT ทุก 1 แต้ม +0.1 / +0.02','เลเวลและ HP/MP สูงสุดไม่มีผลกับการฟื้นฟูอีกต่อไป · ดูค่าได้ที่หน้าสถานะ']},
  {v:'3.8',d:'5 ต.ค. 2026',t:'แก้ยิงกระจาย',L:['แก้บัค นักธนู ยิงกระจาย: ดาเมจโดนมอนทุกตัวในวงรัศมี 3.3 ช่อง (ตรงกับวงเล็งที่เห็น) เดิมโดนแค่ตัวที่อยู่ปลายลูกธนู','นักธนู: สายตาพรานไกล ไม่มีเงื่อนไข Job Lv แล้ว อัปได้ตั้งแต่ Job Lv 1']},
  {v:'3.7',d:'5 ต.ค. 2026',t:'ตัวเลขดาเมจแบบเด้ง',L:['ตัวเลขดาเมจใหม่: โจมตีปกติ ตัวเลขขาวเด้งพุ่งออกด้านข้างแล้วตกกระเด้งพื้น','ดาเมจสกิล/เวทย์: ตัวเลขสีตามสกิล ขยายตัวแบบยืดหยุ่น มีแสงเรือง ลอยขึ้นช้าๆ','คริติคอล: ตัวเลขใหญ่สีทอง มีป้าย คริ! สั่นตอนออก แล้วกระเด้งแรงกว่าปกติ','ดาเมจที่ผู้เล่นโดน: ตัวเลขแดงเด้งออก · ข้อความอื่น (ทอง ไอเทม ฮีล) มีจังหวะเด้งเล็กน้อยตอนขึ้น','นักธนู: สลับตำแหน่งสกิลติดตัว สายตาพรานไกล ขึ้นเป็นช่องที่ 1 และ สายตาเฉียบคม ไปช่องที่ 3 (เลเวลสกิลที่อัปไว้ย้ายตามให้อัตโนมัติ)']},
  {v:'3.6',d:'5 ต.ค. 2026',t:'คำสั่ง GM เพิ่มเลเวลได้แต้มครบ',L:['GM: /lv เลข ตั้ง Base Lv แล้วได้แต้มสถานะตามเลเวลที่เพิ่ม (ลดเลเวลจะหักแต้มที่ยังไม่ได้ใช้)','GM: คำสั่งใหม่ /job เลข ตั้ง Job Lv แล้วได้แต้มสกิล 1 แต้มต่อเลเวล และปลดล็อกสกิลติดตัวตามเลเวล','พิมพ์ /gm เพื่อดูคำสั่งทั้งหมด']},
@@ -3730,7 +3732,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261005232555';
+const BUILDV='20261005234251';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
