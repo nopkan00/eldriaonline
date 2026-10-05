@@ -163,6 +163,13 @@
    "$uid": {
     ".write": "auth != null && auth.uid === $uid"
    }
+  },
+  "names": {
+   ".read": "auth != null",
+   "$n": {
+    ".write": "auth != null && ((!data.exists() && newData.val() === auth.uid) || data.val() === auth.uid)",
+    ".validate": "!newData.exists() || newData.val() === auth.uid"
+   }
   }
  }
 }
