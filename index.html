@@ -813,7 +813,7 @@ function skAt(cls,i,L){const b=SK[cls][i],s={...b},k=Math.max(0,L-1);
  if(b.pois)s.pois=+Math.min(.8,b.pois+.04*k).toFixed(2);if(b.pct)s.pct=+(b.pct+.02*k).toFixed(3);if(b.flat)s.flat=b.flat+k;if(b.heal)s.heal=+(b.heal+.02*k).toFixed(3);
  if(b.stun)s.stun=+(b.stun+.1*k).toFixed(1);if(b.slow)s.slow=+(b.slow+.3*k).toFixed(1);if(b.crit)s.crit=b.crit+3*k;s.L=L;return s}
 const pc=v=>Math.round(v*100)+'%',pb=v=>'+'+Math.round((v-1)*100)+'%';
-function skDesc(s){return s.d.replace('{m}',pc(s.mult||0)).replace('{atk}',pb(s.atk||1)).replace('{def}',pb(s.def||1)).replace('{aspd}',pb(s.aspd||1)).replace('{dur}',s.dur).replace('{stun}',s.stun).replace('{slow}',s.slow).replace('{crit}',s.crit).replace('{pct}',pc(s.pct||0)).replace('{pois}',Math.round((s.pois||0)*100)+'%').replace('{flat}',s.flat).replace('{heal}',pc(s.heal||0))}
+function skDesc(s){return s.d.replace('{m}',pc(s.mult||0)).replace('{atk}',pb(s.atk||1)).replace('{def}',pb(s.def||1)).replace('{aspd}',pb(s.aspd||1)).replace('{dur}',s.dur).replace('{stun}',s.stun).replace('{slow}',s.slow).replace('{crit}',s.crit).replace('{pct}',pc(s.pct||0)).replace('{pois}',Math.round((s.pois||0)*100)+'%').replace('{flat}',s.flat).replace('{heal}',pc(s.heal||0)).replace('{rad}',s.rad)}
 const pDesc=(p,L)=>p.d.replace('{a}',pVal(p,Math.max(1,L),0)).replace('{b}',p.v[1]!=null?pVal(p,Math.max(1,L),1):'');
 const skL=i=>(P.skl&&P.skl[i])||0;
 const IT={
@@ -3700,7 +3700,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261005201104';
+const BUILDV='20261005202013';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
