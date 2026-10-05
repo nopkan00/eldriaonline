@@ -1288,6 +1288,7 @@ const SFX={
  crit:()=>{thump(.75,200,.28);noise({ft:'lowpass',f:6000,f2:140,d:.26,v:.42});tone({type:'sawtooth',f:420,f2:60,d:.2,v:.12,dist:80});tone({type:'triangle',f:1600,f2:500,d:.12,v:.07});noise({ft:'highpass',f:5000,d:.05,v:.2,at:.01})},
  fire:()=>{noise({ft:'lowpass',f:500,f2:3000,d:.28,v:.35,a:.03});thump(.4,90,.25)},
  boom:()=>{thump(.9,110,.55);noise({ft:'lowpass',f:1800,f2:60,d:.7,v:.7});tone({type:'sawtooth',f:90,f2:30,d:.5,v:.25,dist:60});noise({ft:'highpass',f:4000,d:.08,v:.35})},
+ fghit:()=>{noise({ft:'bandpass',f:500,f2:3800,d:.16,v:.32,q:1.1});tone({type:'square',f:190,f2:48,d:.2,v:.08,dist:60,at:.03});thump(.9,105,.28);noise({ft:'highpass',f:4200,f2:9000,d:.22,v:.2,at:.07});for(let i=0;i<3;i++)tone({type:'triangle',f:2400+i*620,f2:1500+i*300,d:.18,v:.05,at:.07+i*.02});noise({ft:'lowpass',f:1200,f2:70,d:.3,v:.22,at:.07})},
  ice:()=>{for(let i=0;i<5;i++)tone({type:'triangle',f:1800+i*420,d:.25,v:.06,at:i*.03});noise({ft:'highpass',f:5000,f2:9000,d:.35,v:.18});thump(.35,130,.15)},
  bolt:()=>{noise({ft:'highpass',f:1500,d:.08,v:.7});tone({type:'sawtooth',f:1400,f2:60,d:.35,v:.3,dist:80});noise({ft:'lowpass',f:3000,f2:80,d:.6,v:.5,at:.04});thump(.8,90,.4)},
  holy:()=>{[523,659,784,1047].forEach((f,i)=>tone({type:'triangle',f,d:.6,v:.09,at:i*.035}));noise({ft:'highpass',f:6000,d:.4,v:.12})},
@@ -1579,10 +1580,12 @@ function updCast(){const c=S.cast;if(!c)return false;if(S.dead){S.cast=null;retu
  if(keys.w||keys.s||keys.a||keys.d||keys.arrowup||keys.arrowdown||keys.arrowleft||keys.arrowright||S.moveTo||S.npcGoal||S.objGoal){castCancel('เคลื่อนที่ · ยกเลิกการร่ายเวท');return false}
  if(c.t&&SK[P.cls][c.i].type==='dmg'&&!M.includes(c.t)){castCancel('เป้าหมายหายไป · ยกเลิกการร่าย');return false}
  if(gt>=c.t0+c.dur){S.cast=null;castFire(c);return false}return true}
-function autoAttack(t){P.fx=t.x>=P.x?1:-1;S.patkT=gt;const c=P.cls,un=!P.equip.right;if(c==='novice'&&playerLook().gmlook){sfx('bowshot');setPose('atk',.3);FX.push({k:'shot',kind:'arrow',gma:1,x:P.x+P.fx*12,y:P.y-24,tx:t.x,ty:t.y-t.T.r*.8,life:.16,t:0});timers.push({t:gt+.16,f:()=>{if(!M.includes(t))return;sfx('arrowhit');parts(t.x,t.y-t.T.r*.8,10,['#b8ffb0','#5ee06a','#ffffff'],{spd:90,life:.35});dmgMob(t,1,null,{kind:'arrow'})}});return}if(un||c==='warrior'||c==='novice'||c==='thief'||c==='acolyte')sample('patk',.4);else sfx(c==='archer'?'bowshot':'zap');
+function autoAttack(t){P.fx=t.x>=P.x?1:-1;S.patkT=gt;const c=P.cls,un=!P.equip.right;if(c==='novice'&&playerLook().gmlook){sfx('bowshot');setPose('atk',.3);FX.push({k:'shot',kind:'arrow',gma:1,x:P.x+P.fx*12,y:P.y-24,tx:t.x,ty:t.y-t.T.r*.8,life:.16,t:0});timers.push({t:gt+.16,f:()=>{if(!M.includes(t))return;sfx('arrowhit');parts(t.x,t.y-t.T.r*.8,10,['#b8ffb0','#5ee06a','#ffffff'],{spd:90,life:.35});dmgMob(t,1,null,{kind:'arrow'})}});return}if(un||c==='warrior'||c==='novice'||c==='thief'||c==='acolyte'||c==='frostg')sample('patk',c==='frostg'?.5:.4);else sfx(c==='archer'?'bowshot':'zap');
  if(un){setPose('atk',.2);if(!fxAnim('slash','cut',t.x-P.fx*4,t.y-12,.2,.32,{flip:(P.fx||1)<0}))FX.push({k:'arc',x:t.x-P.fx*6,y:t.y-12,r:8,c:'#ffe9c8',fx:P.fx,life:.14,thick:2});dmgMob(t,1,null,{kind:'phys'});return}
  if(c==='warrior'||c==='novice'||c==='thief'){setPose('atk',c==='thief'?.18:.22);if(!fxAnim('slash','cut',t.x-P.fx*4,t.y-12,.22,.44,{flip:(P.fx||1)<0}))FX.push({k:'arc',x:t.x-P.fx*6,y:t.y-12,r:12,c:'#dfe6ea',fx:P.fx,life:.18,thick:2});dmgMob(t,1,null,{kind:'phys'})}
  else if(c==='acolyte'){setPose('atk',.22);FX.push({k:'arc',x:t.x-P.fx*6,y:t.y-12,r:10,c:'#ffe07a',fx:P.fx,life:.18,thick:2});dmgMob(t,1,null,{kind:'holy'})}
+ else if(c==='frostg'){const fx=P.fx||1;setPose('atk',.26);sfx('fghit');FX.push({k:'arc',x:t.x-fx*8,y:t.y-14,r:18,c:'#bfe9ff',fx,life:.2,thick:3});if(!fxAnim('slash','cut',t.x-fx*4,t.y-12,.26,.6,{flip:fx<0}))FX.push({k:'arc',x:t.x-fx*4,y:t.y-12,r:13,c:'#ffffff',fx,life:.16,thick:2});
+  timers.push({t:gt+.07,f:()=>{if(!M.includes(t))return;const hx=t.x,hy=t.y-t.T.r*.8;elSph('el_waters',hx,hy,46,{life:.42});parts(hx,hy,16,['#ffffff','#e8f8ff','#9fd8ff','#5ab0ff'],{spd:160,life:.45,sh:'plus'});parts(hx,t.y-2,8,['#ffffff','#cfefff'],{ang:-1.57,spread:1.6,spd:80,life:.55,g:240});FX.push({k:'nova',x:t.x,y:t.y,r:26,c:'#9fd8ff',life:.22});shake(2);dmgMob(t,1,null,{kind:'ice'})}})}
  else if(c==='mage'){setPose('cast',.22);shoot('magic',t,'#b69cff',.24,m=>{sfx('mpop');dmgMob(m,1,null,{kind:'magic'});fxAnim('yelp','burst',m.x,m.y-m.T.r*.8,.42,.6)})}
  else{setPose('atk',.24);if(!heroOk('archer'))FX.push({k:'bowanim',x:P.x+(P.fx||1)*9,y:P.y-20,fx:P.fx||1,ang:Math.atan2(t.y-t.T.r*.8-(P.y-20),t.x-P.x),life:.45,t:0});const f=shoot('arrow',t,'#fff',.2,m=>{sfx('arrowhit');dmgMob(m,1,null,{kind:'arrow'});parts(m.x,m.y-10,6,['#ffffff','#e0c8c8'],{spd:60,life:.25})});f.pix=1}
  }
@@ -3375,6 +3378,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'5.1',d:'6 ต.ค. 2026',t:'ท่าโจมตีผู้พิทักษ์น้ำแข็ง',L:['ผู้พิทักษ์น้ำแข็ง: แก้โจมตีปกติที่มีลูกธนูพุ่งออกมา เปลี่ยนเป็นฟันดาบน้ำแข็งระยะประชิด มีรอยฟันสีฟ้า ระเบิดเกล็ดน้ำแข็งที่เป้าหมาย จอสั่นเล็กน้อย','เสียงโจมตีใหม่: เสียงฟันหนัก + เสียงน้ำแข็งแตก']},
  {v:'5.0',d:'6 ต.ค. 2026',t:'กราฟิกนักธนูใหม่',L:['นักธนูมีกราฟิกใหม่ แยกเพศชายและหญิง พร้อมท่าเดิน โจมตี โดนตี ร่ายสกิล และล้มลง']},
  {v:'4.9',d:'6 ต.ค. 2026',t:'เอาหลอดร่ายออกทั้งหมด',L:['ทุกสกิลไม่มีหลอดร่ายแล้ว ใช้ได้ทันที (ผู้พิทักษ์น้ำแข็ง หนามน้ำแข็งผงาด/พายุหิมะนิรันดร์ และอาโคไลท์ ชุบชีวิตทุกเลเวล)','ชุบชีวิต: Lv1 ฟื้น HP 20% · Lv2 35% · Lv3 50%']},
  {v:'4.8',d:'6 ต.ค. 2026',t:'ผิวเหล็กเพิ่มผลยา',L:['นักรบ (และผู้พิทักษ์น้ำแข็ง) สกิลติดตัว ผิวเหล็ก: ยาฟื้น HP ได้ผลเพิ่ม Lv1 +20% · Lv2 +26% · Lv3 +32% · Lv4 +38% · Lv5 +44% · Lv6 (สูงสุด) +50%']},
@@ -3762,7 +3766,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261006013919';
+const BUILDV='20261006015006';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
