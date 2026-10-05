@@ -766,12 +766,12 @@ const SK={
    {n:'พายุสายฟ้า',type:'aoe',at:'target',range:6.5,fx:'thunder',pose:'cast',rad:3,mult:1.3,slow:2,mp:48,cd:18,lv:12,col:'#d88aff',d:'พายุสายฟ้าหมุนถล่มพื้นที่ 4 ครั้ง ครั้งละ {m} และทำให้ช้าลง {slow} วินาที'}],
  archer:[
   {n:'ยิงทะลวง',type:'dmg',fx:'pierce',pose:'atk',mult:2.4,crit:40,range:7,mp:7,cd:3,lv:1,col:'#f0e0a0',d:'ลูกธนูเรืองแสง {m} โอกาสคริติคอล +{crit}%'},
-  {n:'ยิงกระจาย',type:'aoe',at:'target',range:7,fx:'spread',pose:'atk',rad:2.2,mult:1.5,mp:14,cd:7,lv:3,col:'#e8d08a',d:'ยิงลำแสงฟีนิกซ์ 3 ทางใส่พื้นที่ {m}'},
+  {n:'ยิงกระจาย',type:'aoe',at:'target',range:7,fx:'spread',pose:'atk',rad:3.3,mult:1.5,mp:14,cd:7,lv:3,col:'#e8d08a',d:'ยิงลำแสงฟีนิกซ์ 3 ทางใส่พื้นที่ {m}'},
   {n:'ตาเหยี่ยว',type:'buff',fx:'hawk',pose:'cast',atk:1.2,aspd:1.35,dur:15,mp:18,cd:30,lv:6,col:'#9be38a',d:'พลังโจมตี {atk} ความเร็วโจมตี {aspd} นาน {dur} วินาที'},
   {n:'ฝนธนู',type:'aoe',at:'target',range:7,fx:'rain',pose:'atk',rad:3,mult:.62,mp:34,cd:14,lv:9,col:'#9ef08a',d:'ห่าธนูเรืองแสง 5 ระลอก ระลอกละ {m} ในรัศมี {rad} ช่อง'}],
  thief:[
    {n:'แทงคู่เงา',type:'dmg',fx:'dstab',pose:'atk',mult:2.5,range:1.7,mp:7,cd:3,lv:1,col:'#b48aff',d:'แทงสองครั้งติด รวม {m}'},
-   {n:'ระเบิดควันพิษ',type:'aoe',at:'self',fx:'venom',pose:'cast',rad:2.4,mult:1.6,slow:3,pois:.3,mp:16,cd:8,lv:3,col:'#7ad06a',d:'ปล่อยควันพิษรอบตัว {m} ทำให้ช้าลง {slow} วินาที และมีโอกาสติดพิษ {pois} (เสียเลือดต่อเนื่อง 6 วินาที)'},
+   {n:'ระเบิดควันพิษ',type:'aoe',at:'self',fx:'venom',pose:'cast',rad:2.4,mult:1.6,slow:3,pois:.3,mp:16,cd:8,lv:3,col:'#7ad06a',d:'ปล่อยควันพิษรอบตัว {m} ทำให้ช้าลง {slow} วินาที และมีโอกาสติดพิษ {pois} (เสียเลือดต่อเนื่อง 6 วินาที · ความแม่นลดลง 10%)'},
    {n:'ย่างเงา',type:'buff',fx:'shadow',pose:'cast',atk:1.15,aspd:1.4,dur:15,mp:18,cd:30,lv:6,col:'#9a7ad8',d:'พลังโจมตี {atk} ความเร็วโจมตี {aspd} นาน {dur} วินาที'},
    {n:'พายุมีดเงา',type:'aoe',at:'target',range:5,fx:'blades',pose:'cast',rad:2.6,mult:1,mp:34,cd:14,lv:9,col:'#c08aff',d:'ใบมีดเงาถล่มพื้นที่ 3 ระลอก ระลอกละ {m}'}],
  acolyte:[
@@ -1461,7 +1461,7 @@ function gainExp(n){P.exp+=n;let up=false;while(P.exp>=need(P.lv)){P.exp-=need(P
  if(up){const d=D();P.hp=d.mhp;P.mp=d.mmp;FX.push({k:'lvl',x:P.x,y:P.y,t:0});toast('เลเวลอัป! Base Lv '+P.lv+' · แต้มสถานะ +'+ptsAt(P.lv));chat('sys','','คุณเลเวลอัปเป็น Lv '+P.lv);snd(660,.25,'triangle',.06);sfx('lvl');buildBar();save()}}
 const mobReach=m=>m.T.rng?m.T.rng*TS:m.T.r+16;
 function mobShot(m,tx,ty){FX.push({k:'shot',kind:m.T.shot||'magic',x:m.x+(m.fx||1)*6,y:m.y-m.T.r,tx,ty:ty-18,c:m.T.scol||'#9ad8ff',life:.22,t:0})}
-function hitPlayer(m,mult=1){if(S.dead)return;if(S.inv>gt){if(gt-(S.invF||0)>.6){S.invF=gt;float(P.x,P.y-40,'อมตะ','#ffe07a')}return}const d=D();if(mult===1&&R()*100<d.flee){sample('matk',.6);float(P.x,P.y-40,'หลบ','#cfe3ff');S.combat=gt;return}const el=(m.type&&MELEM[m.type])||m.T.el||'ไร้ธาตุ';let dmg=Math.max(1,Math.round((m.T.atk*mult*(.85+R()*.3)-d.def*.4)*(1-PV('ward',0)/100)*(1-resOf(el)/100)));P.hp-=dmg;S.lastHurt=gt;S.combat=gt;float(P.x,P.y-40,'-'+dmg,'#ff6b5b');sample('matk',1);if(P.hp<=0)die()}
+function hitPlayer(m,mult=1){if(S.dead)return;if(S.inv>gt){if(gt-(S.invF||0)>.6){S.invF=gt;float(P.x,P.y-40,'อมตะ','#ffe07a')}return}const d=D();const pz=m.poison&&gt<m.poison.until?10:0;if(R()*100<(mult===1?d.flee:0)+pz){sample('matk',.6);float(P.x,P.y-40,'หลบ','#cfe3ff');S.combat=gt;return}const el=(m.type&&MELEM[m.type])||m.T.el||'ไร้ธาตุ';let dmg=Math.max(1,Math.round((m.T.atk*mult*(.85+R()*.3)-d.def*.4)*(1-PV('ward',0)/100)*(1-resOf(el)/100)));P.hp-=dmg;S.lastHurt=gt;S.combat=gt;float(P.x,P.y-40,'-'+dmg,'#ff6b5b');sample('matk',1);if(P.hp<=0)die()}
 function die(){P.hp=0;S.dead=true;S.target=null;S.moveTo=null;const lost=Math.floor(need(P.lv)*.1);P.exp=Math.max(0,P.exp-lost);for(const m of M)if(!MOBON||m.tgt===UID){m.agg=false;m.ret=true}
  $('#deadmsg').textContent='เสียค่าประสบการณ์ '+lost+' EXP · ของในกระเป๋ายังอยู่ครบ';$('#dead').hidden=false;sfx('die');chat('sys','','คุณถูกสังหาร');save()}
 $('#respawn').addEventListener('click',()=>{if(P&&S.dead)respawn()});
@@ -2899,7 +2899,7 @@ Object.assign(EN,{'สมุดมอนสเตอร์':'Bestiary','📖 บ
 Object.assign(EN,{'เติมแต้มไปแล้ว':'Points assigned','ยังไม่ได้บันทึก':'not saved yet','ยืนยัน':'Confirm','ยกเลิก':'Cancel','บันทึกค่าสถานะแล้ว':'Stats saved','บันทึกสกิลแล้ว':'Skills saved','ยกเลิกการเติมแต้มแล้ว':'Point allocation cancelled','ยกเลิกการเติมแต้มที่ยังไม่ได้ยืนยัน':'Unconfirmed points were reverted'});
 Object.assign(EN,{'ซ่อนแชท · กด H เพื่อเปิด':'Chat hidden · press H to show','เปิดแชท · กด H เพื่อซ่อน':'Chat shown · press H to hide','(H ซ่อน)':'(H to hide)'});
 Object.assign(EN,{'โจมตีปกติ':'Basic attack','โจมตีมอนสเตอร์ที่ใกล้ที่สุด':'Attack the nearest monster','ปุ่ม Space':'Space key','คูลดาวน์':'Cooldown','ระยะ':'Range','รัศมี':'Radius','ช่อง':'tiles','ปลดล็อกที่':'Unlocks at','ยังไม่ได้เรียน · อัปได้ที่หน้าต่างสกิล':'Not learned · level it in the Skills window','Lv ถัดไป':'Next Lv','มีอยู่':'Owned','คลิกหรือกดปุ่มลัดเพื่อใช้':'Click or press the hotkey to use','ช่องว่าง · คลิกเพื่อเลือกสกิลหรือของใช้':'Empty · click to pick a skill or item'});
-Object.assign(EN,{'ติดพิษ!':'Poisoned!','และมีโอกาสติดพิษ':'and may poison','(เสียเลือดต่อเนื่อง 6 วินาที)':'(damage over 6 seconds)','ฟื้น HP':'HP regen','ฟื้น MP':'MP regen','(พัก/สู้)':'(rest/combat)','ต่อวิ':'/s'});
+Object.assign(EN,{'ติดพิษ!':'Poisoned!','และมีโอกาสติดพิษ':'and may poison','(เสียเลือดต่อเนื่อง 6 วินาที · ความแม่นลดลง 10%)':'(damage over 6 seconds · accuracy -10%)','ฟื้น HP':'HP regen','ฟื้น MP':'MP regen','(พัก/สู้)':'(rest/combat)','ต่อวิ':'/s'});
 const ENK=Object.keys(EN).sort((a,b)=>b.length-a.length),ENRX=new RegExp(ENK.map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'),'g');
 let KEEPN=[];function refreshKeep(){const a=[];if(P)a.push(P.name);try{for(const p of loadChars().slots)if(p)a.push(p.name)}catch(e){}KEEPN=[...new Set(a.filter(n=>n&&/[฀-๿]/.test(n)))].sort((x,y)=>y.length-x.length)}
 const tr=s=>{if(!(LANG==='en'&&s&&/[฀-๿]/.test(s)))return s;const kept=[];for(const n of KEEPN)if(s.includes(n)){s=s.split(n).join('\u0001'+kept.length+'\u0002');kept.push(n)}s=s.replace(ENRX,m=>EN[m]).replace(/[฀-๿]+/g,'').replace(/ {2,}/g,' ');return kept.length?s.replace(/\u0001(\d+)\u0002/g,(m,i)=>kept[+i]):s};
@@ -3353,6 +3353,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'3.5',d:'5 ต.ค. 2026',t:'พิษลดความแม่น และยิงกระจายวงกว้างขึ้น',L:['สถานะพิษ: มอนสเตอร์ที่ติดพิษ ความแม่นลดลง 10% (โจมตีพลาดบ่อยขึ้น ทั้งโจมตีปกติและสกิล)','นักธนู: ยิงกระจาย รัศมีวงกว้างเพิ่มจาก 2.2 เป็น 3.3 ช่อง']},
  {v:'3.4',d:'5 ต.ค. 2026',t:'ปุ่มหมุนจอบนมือถือ',L:['มือถือ: ปุ่มใหม่ ⟳ มุมบนขวา กดสลับ อัตโนมัติ / แนวตั้ง / แนวนอน (เข้าโหมดเต็มจอแล้วล็อกการหมุนให้ จำค่าไว้ใช้ครั้งต่อไป)','ยาเร่งความเร็วขั้นสูง ลดราคาเหลือ 800 ทอง']},
  {v:'3.3',d:'5 ต.ค. 2026',t:'สกิลระยะไกลนักธนู และยาเร่งความเร็ว',L:['สกิลติดตัวใหม่ นักธนู: สายตาพรานไกล (Job 12) ระยะโจมตีปกติและยิงทะลวง +1 ช่องต่อเลเวล สูงสุด Lv 10 (+10 ช่อง)','ระยะล็อกเป้าและปุ่มโจมตีตัวใกล้สุด ขยายตามระยะโจมตี','ไอเทมใหม่ในร้านค้า (หมวดยา): ยาเร่งความเร็ว ความเร็วโจมตี +10% นาน 10 นาที ราคา 150 ทอง · ยาเร่งความเร็วขั้นสูง +20% นาน 20 นาที ราคา 800 ทอง','บัฟยาเร่งความเร็วแสดงไอคอนพร้อมเวลาที่เหลือ (นาที) ใช้ซ้ำจะรีเซ็ตเวลา และไม่ทับบัฟที่แรงกว่า']},
  {v:'3.2',d:'5 ต.ค. 2026',t:'แต้มสถานะเพิ่มตามเลเวล',L:['แต้มสถานะต่อเลเวล: Lv 2-30 ได้ 5 แต้ม · Lv 31-50 ได้ 7 แต้ม · Lv 51-70 ได้ 9 แต้ม · Lv 71-90 ได้ 11 แต้ม (เพิ่ม +2 ทุก 20 เลเวล)','ตัวละครที่เลเวลเกิน 30 อยู่แล้ว ได้รับแต้มส่วนต่างย้อนหลังอัตโนมัติเมื่อเข้าเกม']},
@@ -3713,7 +3714,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261005203639';
+const BUILDV='20261005205207';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
