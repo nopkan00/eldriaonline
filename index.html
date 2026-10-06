@@ -617,7 +617,15 @@ img[src^="data:image/webp"]{image-rendering:auto!important}
 .cardv .cvs.many div{padding:1px 5px}
 .cardv .cvs .cer{border-color:rgba(255,210,74,.5)!important;background:rgba(60,40,10,.55)!important}.cardv .cvs .cer span{color:#ffe7a0}.cardv .cvs .cer b{color:#ffe07a}
 .cebox.c1{border-color:rgba(108,196,255,.6)!important}.cebox.c2{border-color:rgba(192,106,255,.6)!important}.cebox.c3{border-color:rgba(255,210,74,.7)!important}
-.cemats{max-height:170px;overflow:auto;margin:6px 0 8px;width:100%;text-align:left}
+.cemats{max-height:300px;overflow:auto;margin:6px 0 8px;width:100%;text-align:left;padding-right:2px}
+.cegh{font:600 12.5px 'Kanit',sans-serif;margin:8px 0 4px;padding:3px 8px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;gap:6px}.cegh small{color:var(--muted);font-weight:400;margin-left:auto;font-size:11px}
+.cegh.g3{color:#ffd24a;background:linear-gradient(90deg,rgba(255,122,122,.16),rgba(255,210,74,.16),rgba(122,200,255,.16))}.cegh.g2{color:#d08aff;background:rgba(190,100,255,.13)}.cegh.g1{color:#6cc4ff;background:rgba(90,176,255,.12)}.cegh.g0{color:#cfd3e6}.cegh.off{opacity:.55}
+.cegrp{max-height:none}.cegrp .refi:disabled{opacity:.38;cursor:not-allowed;filter:grayscale(.6)}.cenone{font-size:11.5px;color:var(--muted);padding:2px 10px 4px}
+.cemain{display:flex;gap:14px;align-items:flex-start;width:100%;flex-wrap:wrap;justify-content:center;margin-bottom:4px}
+.cemcard{width:150px;height:249px;flex:none;position:relative}.cemcard .cardv{position:absolute;left:0;top:0;width:230px;margin:0;transform:scale(.652);transform-origin:0 0}
+.cemi{flex:1;min-width:180px;text-align:left;font-size:12.5px;display:flex;flex-direction:column;gap:6px}.cemi h4{margin:0 0 2px;font:600 15px 'Kanit',sans-serif;color:#ffe7a8}
+.cemr{display:flex;gap:8px;align-items:flex-start}.cemr>i{font-style:normal;color:var(--muted);min-width:64px;flex:none}
+.cemst{display:flex;flex-wrap:wrap;gap:4px}.cemst span{padding:1px 7px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}.cemst span b{color:#9ef08a}.cemst .cer{border-color:rgba(255,224,122,.35)}.cemst .cer b{color:#ffe07a}
 .refst .btn.sm{padding:2px 9px;font-size:11px;margin-left:4px;min-height:0;line-height:1.5}
 #toast{z-index:60!important;display:flex!important;align-items:center;justify-content:center;width:max-content!important;max-width:calc(100% - 24px)}
 #toast .tic{width:26px;height:26px;margin-right:8px;flex:none;filter:drop-shadow(0 1px 2px #000)}
@@ -2660,7 +2668,7 @@ function safeStand(z){const cx=(z.x+.5)*TS,cy=(z.y+.5)*TS;for(const [dx,dy] of [
 function botSafeSpot(){const r=regAt(P.x,P.y),L=[{x:TWN.x,y:TWN.y+80,town:1}].concat(SAFES.map(safeStand));let b=null,bd=1e18;for(const q of L){const same=regAt(q.x,q.y)===r,d=Math.hypot(q.x-P.x,q.y-P.y)+(same?0:1e9);if(d<bd){bd=d;b=q}}return b||L[0]}
 function botTown(){if(S.dead||inSafe())return '';const c=botCfg(),q=botSafeSpot();if(q.town&&c.wing&&countItem('wing')){useItem('wing');return 'กลับเมืองแล้ว'}FX.push({k:'pillar',x:P.x,y:P.y,c:'#8fd0ff',w:6,life:.8});parts(P.x,P.y-20,30,['#e8f8ff','#8fd0ff','#ffffff'],{ang:-1.57,spread:1.2,spd:120,life:.7,sh:'star'});sfx('cast');P.x=q.x;P.y=q.y;cam.x=P.x-VW/2;cam.y=P.y-VH/2;S.path=null;S.moveTo=null;for(const m of M)if(m.agg){m.agg=false;m.ret=true}setTimeout(()=>{FX.push({k:'pillar',x:P.x,y:P.y,c:'#8fd0ff',w:6,life:.8})},60);save();return q.town?'กลับเมืองแล้ว':'ไปเขตปลอดภัยที่ใกล้ที่สุดแล้ว'}
 function botStop(why,town){if(!BOT.on)return;BOT.on=false;S.target=null;S.chase=false;S.moveTo=null;S.path=null;const k=(P.kills||0)-BOT.k0,t=Math.round(gt-BOT.t0);
- chat('sys','','🤖 หยุดล่าอัตโนมัติ'+(why?' · '+why:'')+' · เวลา '+Math.floor(t/60)+':'+String(t%60).padStart(2,'0')+' · ล่าได้ '+k+' ตัว · EXP +'+Math.round(BOT.ex).toLocaleString(),'#7ad8ff');{const w=botTown();if(w)why=(why?why+' · ':'')+w}if(why)toast('🤖 '+why);botPill();if(curWin==='bot')rWin()}
+ chat('sys','','🤖 หยุดล่าอัตโนมัติ'+(why?' · '+why:'')+' · เวลา '+Math.floor(t/60)+':'+String(t%60).padStart(2,'0')+' · ล่าได้ '+k+' ตัว · EXP +'+Math.round(BOT.ex).toLocaleString(),'#7ad8ff');if(why)toast('🤖 '+why);botPill();if(curWin==='bot')rWin()}
 function botToggle(){BOT.on?botStop():botStart()}
 function botMobOk(m,c){if(!M.includes(m)||m.hp<=0)return false;if(m.T.boss&&!c.boss)return false;if(m.rb&&!c.rb)return false;if((m.T.lv||1)>P.lv+c.lv&&!botAtkMe(m))return false;
  if(zoneOf(m.x,m.y)==='town'||(typeof inDSafe==='function'&&inDSafe(m.x,m.y)))return false;if(c.rad<99&&Math.hypot(m.x-BOT.ax,m.y-BOT.ay)>c.rad*TS)return botAtkMe(m)&&Math.hypot(m.x-P.x,m.y-P.y)<6*TS;
@@ -2723,8 +2731,8 @@ function rBot(){const c=botCfg(),L=SK[P.cls],on=BOT.on,t=Math.round(gt-BOT.t0);
  <div class="bsec"><h4>✨ สกิลที่ให้บอทใช้</h4><div class="bsk"><button class="bskb${c.atk?' on':''}" data-a="botset" data-v="atk:!"><img src="${skillImg(P.cls,-1)}" alt=""><span>โจมตีปกติ<small>ไม่ใช้ MP · ใช้ร่วมกับสกิลได้</small></span></button>${L.map((b,i)=>{const lv=skL(i),dis=!lv||b.type==='res',onk=!dis&&botSkOn(i);return `<button class="bskb${onk?' on':''}${dis?' dis':''}" data-a="botsk" data-v="${i}"${dis?' disabled':''}><img src="${skillImg(P.cls,i)}" alt=""><span>${esc(b.n)}<small>${dis?(b.type==='res'?'ใช้เองเท่านั้น':'ยังไม่ได้เรียน'):({dmg:'โจมตี',aoe:'พื้นที่',buff:'บัฟ',heal:'ฮีล'}[b.type]||'')+' · Lv '+lv}</small></span></button>`}).join('')}</div>
  ${step('aoe','ใช้สกิลพื้นที่เมื่อมอนรวมกันตั้งแต่',' ตัว',1,6,1)}${step('mpKeep','เก็บ MP สำรองไว้ (ไม่ใช้สกิลเมื่อต่ำกว่า)','%',0,80,5)}</div>
  <div class="bsec"><h4>🧪 ยาและความปลอดภัย</h4>${step('hp','กินยา HP เมื่อต่ำกว่า','%',10,90,5)}${step('mp','กินยา MP เมื่อต่ำกว่า','%',0,90,5)}
- <div class="bgrid">${tg('loot','เก็บของอัตโนมัติ','เดินไปเก็บของที่ดรอปในรัศมี')}${tg('wing','ใช้ปีกผีเสื้อตอนกลับเมือง','บอทหยุดเมื่อไหร่จะไปเมืองหรือเขตปลอดภัยที่ใกล้ที่สุดเสมอ · เปิดไว้ = ใช้ปีกถ้าจุดที่ใกล้สุดคือเมือง')}${tg('full','หยุดเมื่อกระเป๋าเต็ม')}</div>
- <div class="note">ยา HP ${countItem('hp1')+countItem('hp2')} · ยา MP ${countItem('mp1')} · ปีกผีเสื้อ ${countItem('wing')} · บอทจะหยุดชั่วคราว 4 วินาทีเมื่อคุณกดเดินหรือควบคุมเอง</div></div>`;
+ <div class="bgrid">${tg('loot','เก็บของอัตโนมัติ','เดินไปเก็บของที่ดรอปในรัศมี')}${tg('full','หยุดเมื่อกระเป๋าเต็ม')}</div>
+ <div class="note">ยา HP ${countItem('hp1')+countItem('hp2')} · ยา MP ${countItem('mp1')} · บอทจะหยุดชั่วคราว 4 วินาทีเมื่อคุณกดเดินหรือควบคุมเอง</div></div>`;
  return h}
 function drawNpc(n){if(P&&!n.wander||P&&n.wander&&gt<n.wt){const dp=Math.hypot(P.x-n.x,P.y-n.y);if(dp<120)n.fx=P.x>=n.x?1:-1;if(!n.gnext)n.gnext=gt+2+R()*6;if(gt>n.gnext){n.gnext=gt+5+R()*8;const k=dp<120?'wave':(R()<.5?'hop':'wave');n.gest={k,t0:gt,dur:k==='hop'?.45:.9,until:gt+(k==='hop'?.45:.9)}}}
  const y=heroAt(n,n.look||NPCLOOK[n.id],n.n,'#f0d28a',false);if(NROLE[n.id]&&LBL.length)LBL[LBL.length-1][5]=NROLE[n.id];const q=n.id==='elder'&&P?questMark():n.id==='collector'&&P?junkMark():n.id==='jobmaster'&&P&&((P.cls==='novice'&&P.jlv>=10&&!(P.spts>0))||(P.cls==='warrior'&&P.jlv>=40))?'!':null;
@@ -3393,30 +3401,46 @@ const CEK=[['atk',3],['def',2],['hp',3],['mmp',2],['str',1],['agi',1],['vit',1],
 const ceLab=k=>CELBL[k]||k.toUpperCase();
 function ceRoll(id){const L=(MOBS[IT[id].mob]||{}).lv||1,tot=CEK.reduce((a,[,w])=>a+w,0);let r=R()*tot,k='atk';for(const [kk,w] of CEK){if((r-=w)<0){k=kk;break}}
  const v=k==='atk'?2+Math.round(L*.12):k==='def'?1+Math.round(L*.08):k==='hp'?20+L*3:k==='mmp'?10+L*2:k==='crit'?1+Math.floor(L/30):1+Math.floor(L/20);return [k,v]}
-let ceMain=null,ceMat=null,ce5={};
-const ce5Avail=mainId=>{const o={};for(const s of P.inv)if(IT[s.id].t==='card'&&!s.ce)o[s.id]=(o[s.id]||0)+s.q;if(o[mainId])o[mainId]--;for(const k in o)if(o[k]<=0)delete o[k];return o},ce5N=()=>Object.values(ce5).reduce((a,b)=>a+b,0);
-function ce5Fix(mainId){const av=ce5Avail(mainId);for(const k in ce5){ce5[k]=Math.min(ce5[k],av[k]||0);if(!ce5[k])delete ce5[k]}return av}
+let ceMain=null,ceMat=null,ce5={};const ce5i=new Set();
+const ce5Avail=mainId=>{const o={};for(const s of P.inv)if(IT[s.id].t==='card'&&!s.ce)o[s.id]=(o[s.id]||0)+s.q;if(o[mainId])o[mainId]--;for(const k in o)if(o[k]<=0)delete o[k];return o},ce5N=()=>Object.values(ce5).reduce((a,b)=>a+b,0)+ce5i.size;
+function ce5Fix(mainId){const av=ce5Avail(mainId);for(const o of [...ce5i])if(!P.inv.includes(o)||!o.ce)ce5i.delete(o);for(const k in ce5){ce5[k]=Math.min(ce5[k],av[k]||0);if(!ce5[k])delete ce5[k]}return av}
 function ceList(){const L=[];const seen=new Set();P.inv.forEach((s,i)=>{if(IT[s.id].t!=='card')return;if(s.ce){if(s.ce.lv<3)L.push({o:s,i,lv:s.ce.lv})}else if(!seen.has(s.id)){seen.add(s.id);L.push({o:s,i,lv:0,plain:1})}});return L}
 function ceMats(main){const need=main.lv;return P.inv.map((s,i)=>({o:s,i})).filter(x=>x.o!==main.o&&IT[x.o.id].t==='card'&&x.o.ce&&x.o.ce.lv>=need)}
+function ceGroups(cur){const lv=cur.lv,H={3:'★★★ เสริมพลัง Lv 3',2:'★★ เสริมพลัง Lv 2',1:'★ เสริมพลัง Lv 1',0:'ไม่มีดาว · การ์ดธรรมดา'};let out='';const av=lv===0?ce5Fix(cur.o.id):null;
+ for(const g of [3,2,1,0]){const ok=lv===0||(g>0&&g>=lv);let items=[];
+  if(g===0){const o={};for(const s of P.inv)if(IT[s.id].t==='card'&&!s.ce)o[s.id]=(o[s.id]||0)+s.q;if(lv===0&&o[cur.o.id])o[cur.o.id]--;
+   for(const k in o){if(o[k]<=0)continue;const sel=lv===0?(ce5[k]||0):0;items.push(`<button class="refi${sel?' on':''}"${ok?` data-a="ce5add" data-v="${k}"`:' disabled'}>${icon(k)}<span>${esc(IT[k].n)}<small>${lv===0?'เลือก '+sel+' / มี '+o[k]:'มี '+o[k]+' ใบ'}</small></span></button>`)}}
+  else P.inv.forEach((s,i)=>{if(IT[s.id].t!=='card'||!s.ce||s.ce.lv!==g||s===cur.o)return;const on=lv===0?ce5i.has(s):s===ceMat;
+   items.push(`<button class="refi${on?' on':''}"${ok?` data-a="${lv===0?'ce5ins':'cemat'}" data-v="${i}"`:' disabled'}>${icon(s)}<span>${esc(IT[s.id].n)}<span class="cename c${g}">${'★'.repeat(g)}</span><small>${Object.entries(s.ce.b).map(([k,v])=>ceLab(k)+' +'+v).join(' · ')||'—'}</small></span></button>`)});
+  out+=`<div class="cegh g${g}${ok?'':' off'}">${H[g]}<small>${items.length} ใบ${ok?'':' · ใช้กับระดับนี้ไม่ได้'}</small></div>`+(items.length?`<div class="reflist cegrp">${items.join('')}</div>`:`<div class="cenone">— ไม่มี —</div>`)}
+ return `<div class="cemats">${out}</div>`}
+function ceInfo(x){const o=x.plain?{id:x.o.id}:x.o,it=IT[o.id],T=MOBS[it.mob]||{},st=CARDK.filter(([k])=>it[k]).map(([k,n])=>`<span>${n} <b>+${it[k]}</b></span>`).concat(RESL.filter(([,k])=>it[k]).map(([el,k])=>`<span>ต้าน${el} <b>+${it[k]}%</b></span>`)),cb=o.ce?Object.entries(o.ce.b).map(([k,v])=>`<span class="cer">✦ ${ceLab(k)} <b>+${v}</b></span>`):[];
+ return `<div class="cemain"><div class="cemcard">${cardView(x.plain?x.o.id:x.o)}</div><div class="cemi"><h4>${esc(it.n)}${x.lv?`<span class="cename c${x.lv}">${'★'.repeat(x.lv)}</span>`:''}</h4>
+  <div class="cemr"><i>ระดับ</i><span>${x.lv?'เสริมพลัง Lv '+x.lv+' / 3':'การ์ดธรรมดา · ยังไม่เสริมพลัง'}</span></div>
+  <div class="cemr"><i>ได้จาก</i><span>${esc(T.n||'-')}${T.lv?' · Lv '+T.lv:''}${T.boss?' · บอส':''}</span></div>
+  <div class="cemr"><i>ใส่ได้ที่</i><span>${it.fit.map(f=>FITN[f]).join(' · ')}</span></div>
+  <div class="cemr"><i>ค่าพลัง</i><div class="cemst">${st.join('')||'—'}</div></div>
+  ${cb.length?`<div class="cemr"><i>เสริมแล้ว</i><div class="cemst">${cb.join('')}</div></div>`:''}
+  ${x.plain?`<div class="cemr"><i>ในกระเป๋า</i><span>${countItem(x.o.id)} ใบ</span></div>`:''}
+  <div class="cemr"><i>ราคาขาย</i><span>${sellVal(o).toLocaleString()} ทอง</span></div></div></div>`}
 function rCenh(){const L=ceList();let h=`<div class="detail"><div class="l"><b>"การ์ดทุกใบซ่อนพลังที่ยังไม่ตื่น"</b><small>เสริมพลังการ์ดได้ 3 ระดับ · แต่ละระดับสุ่มเพิ่มค่าพลัง 1 อย่าง<br>★ Lv 1: ใช้การ์ดอะไรก็ได้ 5 ใบเป็นวัตถุดิบ · สำเร็จ 100%<br>★★ Lv 2: ใช้การ์ดอะไรก็ได้ที่เสริมพลัง Lv 1 ขึ้นไป 1 ใบ · สำเร็จ 50%<br>★★★ Lv 3: ใช้การ์ดอะไรก็ได้ที่เสริมพลัง Lv 2 ขึ้นไป 1 ใบ · สำเร็จ 10%<br>ถ้าล้มเหลว การ์ดหลักไม่หาย แต่การ์ดวัตถุดิบจะหายไป</small></div></div>`;
  if(!L.length)return h+`<div class="note">ไม่มีการ์ดในกระเป๋าที่เสริมพลังได้ (การ์ดที่ใส่ในอุปกรณ์แล้วเสริมพลังไม่ได้)</div>`;
  let cur=ceMain&&L.find(x=>x.plain?(ceMain.plain&&x.o.id===ceMain.id):x.o===ceMain.o)||L[0];ceMain=cur.plain?{plain:1,id:cur.o.id}:{o:cur.o};
  h+=`<div class="reflist">${L.map((x,k)=>`<button class="refi${x===cur?' on':''}" data-a="cesel" data-v="${k}">${icon(x.plain?x.o.id:x.o)}<span>${esc(IT[x.o.id].n)}${x.lv?`<span class="cename c${x.lv}">${'★'.repeat(x.lv)}</span>`:''}<small>${x.plain?'มี '+countItem(x.o.id)+' ใบ':'เสริมพลัง Lv '+x.lv}</small></span></button>`).join('')}</div>`;
  const lv=cur.lv,rate=Math.round(CERATE[lv]*100),it=IT[cur.o.id];let req='',rl='',ok=false;
- if(lv===0){const av=ce5Fix(it.id),n=ce5N();ok=n===5;ceMat=null;const ks=Object.keys(av);
-  req=`เลือกการ์ดวัตถุดิบ 5 ใบ (การ์ดอะไรก็ได้ · กดที่การ์ดเพื่อเพิ่มทีละใบ) <b style="color:${ok?'#9ef08a':'#ff8a8a'}">${n}/5</b> <button class="btn sm" data-a="ce5auto">เลือกอัตโนมัติ</button> <button class="btn sm" data-a="ce5clr">ล้าง</button>`;rl=(ks.length?`<div class="reflist cemats">${ks.map(k=>`<button class="refi${ce5[k]?' on':''}" data-a="ce5add" data-v="${k}">${icon(k)}<span>${esc(IT[k].n)}<small>เลือก ${ce5[k]||0} / มี ${av[k]}</small></span></button>`).join('')}</div>`:`<div class="note">ไม่มีการ์ดธรรมดาเหลือให้ใช้เป็นวัตถุดิบ</div>`)}
+ if(lv===0){ce5Fix(it.id);const n=ce5N();ok=n===5;ceMat=null;
+  req=`เลือกการ์ดวัตถุดิบ 5 ใบ (การ์ดอะไรก็ได้ · กดที่การ์ดเพื่อเพิ่มทีละใบ) <b style="color:${ok?'#9ef08a':'#ff8a8a'}">${n}/5</b> <button class="btn sm" data-a="ce5auto">เลือกอัตโนมัติ</button> <button class="btn sm" data-a="ce5clr">ล้าง</button>`;rl=ceGroups(cur)}
  else{const M2=ceMats(cur);if(ceMat&&!M2.some(x=>x.o===ceMat))ceMat=null;ok=!!ceMat;
-  req=`เลือกการ์ดวัตถุดิบ (เสริมพลัง Lv ${lv} ขึ้นไป · ใช้ชนิดไหนก็ได้):`;rl=(M2.length?`<div class="reflist cemats">${M2.map(x=>`<button class="refi${x.o===ceMat?' on':''}" data-a="cemat" data-v="${x.i}">${icon(x.o)}<span>${esc(IT[x.o.id].n)}<span class="cename c${x.o.ce.lv}">${'★'.repeat(x.o.ce.lv)}</span><small>${Object.entries(x.o.ce.b).map(([k,v])=>ceLab(k)+' +'+v).join(' · ')}</small></span></button>`).join('')}</div>`:`<div class="note">ยังไม่มีการ์ดที่เสริมพลัง Lv ${lv} ขึ้นไปเหลือในกระเป๋า</div>`)}
+  req=`เลือกการ์ดวัตถุดิบ 1 ใบ (เสริมพลัง Lv ${lv} ขึ้นไป · ใช้ชนิดไหนก็ได้)`;rl=ceGroups(cur)}
  const curB=cur.plain?{}:cur.o.ce.b;
- h+=`<div class="refbox cebox c${lv+1}"><div class="refbig">${lv?'★'.repeat(lv):'การ์ดธรรมดา'} <i>→</i> <span class="cename c${lv+1}">${'★'.repeat(lv+1)}</span></div>
+ h+=`<div class="refbox cebox c${lv+1}">${ceInfo(cur)}<div class="refbig">${lv?'★'.repeat(lv):'การ์ดธรรมดา'} <i>→</i> <span class="cename c${lv+1}">${'★'.repeat(lv+1)}</span></div>
   <div class="refst">${esc(it.n)} · โอกาสสำเร็จ <b>${rate}%</b> · สุ่มค่าพลังเพิ่ม 1 อย่าง</div>
-  ${Object.keys(curB).length?`<div class="refst">ค่าพลังที่เสริมแล้ว: ${Object.entries(curB).map(([k,v])=>`<b style="color:#ffe07a">${ceLab(k)} +${v}</b>`).join(' · ')}</div>`:''}
   <div class="refst">${req}</div>${rl}
   <button class="btn pri" data-a="cedo"${ok?'':' disabled'}>${lv===0?'เสริมพลัง (ใช้วัตถุดิบ 5 ใบ)':'เสริมพลัง'}</button></div>`;
  return h}
 function doCenh(){const L=ceList(),cur=ceMain&&L.find(x=>x.plain?(ceMain.plain&&x.o.id===ceMain.id):x.o===ceMain.o);if(!cur)return;const lv=cur.lv,id=cur.o.id,it=IT[id],npc=NPCS.find(n=>n.id==='enhancer');
  let main=null;
- if(lv===0){ce5Fix(id);if(ce5N()!==5||!countItem(id))return;removeItem(id,1);for(const k in ce5)removeItem(k,ce5[k]);ce5={};if(P.inv.length>=INV){addItem(id,1);return toast('กระเป๋าเต็ม')}main={id,q:1,ce:{lv:0,b:{}}};P.inv.push(main)}
+ if(lv===0){ce5Fix(id);if(ce5N()!==5||!countItem(id))return;removeItem(id,1);for(const k in ce5)removeItem(k,ce5[k]);ce5={};for(const o of ce5i){const j=P.inv.indexOf(o);if(j>=0)P.inv.splice(j,1)}ce5i.clear();if(P.inv.length>=INV){addItem(id,1);return toast('กระเป๋าเต็ม')}main={id,q:1,ce:{lv:0,b:{}}};P.inv.push(main)}
  else{if(!ceMat||!P.inv.includes(ceMat))return;const mi=P.inv.indexOf(ceMat);P.inv.splice(mi,1);ceMat=null;main=cur.o}
  const col=['#6cc4ff','#c06aff','#ffd24a'][lv];if(npc){FX.push({k:'nova',x:npc.x,y:npc.y,r:44,c:col,life:.6});parts(npc.x,npc.y-30,30,[col,'#ffffff'],{spd:120,life:.7,sh:'star'})}sfx('cast');
  if(R()<CERATE[lv]){const [k,v]=ceRoll(id);main.ce.lv=lv+1;main.ce.b[k]=(main.ce.b[k]||0)+v;ceMain={o:main};
@@ -3545,7 +3569,7 @@ $('#wb').addEventListener('click',e=>{const w2=e.target.closest('[data-w2]');if(
   case 'turnin':{const qq=QUESTS.find(x=>x.id===v);if(!inTown())break;if(qq.type==='item')removeItem(qq.item,qq.need);P.quests[v].st='done';P.gold+=qq.rew.gold;addItem(qq.rew.item,qq.rew.q);gainBoth(qq.rew.exp,'เควส '+qq.n);toast('ส่งเควสสำเร็จ! +'+qq.rew.exp+' EXP +'+qq.rew.gold+' ทอง');chat('sys','','ได้รับรางวัลเควส '+qq.n);snd(780,.3,'triangle',.05);break}
   case 'tab':shopTab=v;break;
   case 'refsel':{const [src,k]=v.split(':');const L=refList();refSel=L.find(x=>x.src===src&&String(x.k)===k)||null;break}
-  case 'refine':doRefine();break;case 'cedo':doCenh();break;case 'bot':botToggle();break;case 'botsk':{const c=botCfg(),i=+v;c.sk[P.cls+i]=!botSkOn(i);break}case 'botset':{const c=botCfg(),[k,x]=v.split(':');if(x==='!')c[k]=!c[k];else if(/^[+-]/.test(x)){const lim={lv:[0,30],aoe:[1,6],mpKeep:[0,80],hp:[10,90],mp:[0,90]}[k]||[0,999];c[k]=Math.max(lim[0],Math.min(lim[1],(+c[k]||0)+(+x)))}else c[k]=isNaN(+x)?x:+x;save();break}case 'ce5add':{const L=ceList(),cur=ceMain&&ceMain.plain?ceMain.id:null;if(!cur)break;const av=ce5Avail(cur);if(ce5N()<5&&(ce5[v]||0)<(av[v]||0))ce5[v]=(ce5[v]||0)+1;else if(ce5[v]){ce5[v]--;if(!ce5[v])delete ce5[v]}break}case 'ce5clr':ce5={};break;case 'ce5auto':{const cur=ceMain&&ceMain.plain?ceMain.id:null;if(!cur)break;const av=ce5Avail(cur);ce5={};let need=5;for(const k of Object.keys(av).sort((a,b)=>av[b]-av[a])){const t=Math.min(need,av[k]);if(t){ce5[k]=t;need-=t}if(!need)break}break}case 'cesel':{const L=ceList(),x=L[+v];if(x){ceMain=x.plain?{plain:1,id:x.o.id}:{o:x.o};ceMat=null;ce5={}}break}case 'cemat':{const o=P.inv[+v];if(o&&o.ce)ceMat=o;break}
+  case 'refine':doRefine();break;case 'cedo':doCenh();break;case 'bot':botToggle();break;case 'botsk':{const c=botCfg(),i=+v;c.sk[P.cls+i]=!botSkOn(i);break}case 'botset':{const c=botCfg(),[k,x]=v.split(':');if(x==='!')c[k]=!c[k];else if(/^[+-]/.test(x)){const lim={lv:[0,30],aoe:[1,6],mpKeep:[0,80],hp:[10,90],mp:[0,90]}[k]||[0,999];c[k]=Math.max(lim[0],Math.min(lim[1],(+c[k]||0)+(+x)))}else c[k]=isNaN(+x)?x:+x;save();break}case 'ce5add':{const L=ceList(),cur=ceMain&&ceMain.plain?ceMain.id:null;if(!cur)break;const av=ce5Avail(cur);if(ce5N()<5&&(ce5[v]||0)<(av[v]||0))ce5[v]=(ce5[v]||0)+1;else if(ce5[v]){ce5[v]--;if(!ce5[v])delete ce5[v]}break}case 'ce5clr':ce5={};ce5i.clear();break;case 'ce5ins':{const o=P.inv[+v];if(!o||!o.ce||!(ceMain&&ceMain.plain))break;if(ce5i.has(o))ce5i.delete(o);else if(ce5N()<5)ce5i.add(o);break}case 'ce5auto':{const cur=ceMain&&ceMain.plain?ceMain.id:null;if(!cur)break;const av=ce5Avail(cur);ce5={};ce5i.clear();let need=5;for(const k of Object.keys(av).sort((a,b)=>av[b]-av[a])){const t=Math.min(need,av[k]);if(t){ce5[k]=t;need-=t}if(!need)break}break}case 'cesel':{const L=ceList(),x=L[+v];if(x){ceMain=x.plain?{plain:1,id:x.o.id}:{o:x.o};ceMat=null;ce5={};ce5i.clear()}break}case 'cemat':{const o=P.inv[+v];if(o&&o.ce)ceMat=o;break}
   case 'craft':doCraft(+v);break;
   case 'plant':plantSeed(v);break;
   case 'hotset':{const [t,x]=v.split(':');startAssign(t==='s'?{t:'s',i:+x}:{t:'i',id:x});break}
@@ -3685,6 +3709,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'6.4',d:'6 ต.ค. 2026',t:'บอท และหน้าเสริมพลังการ์ด',L:['บอทหยุดทำงานหรือกระเป๋าเต็ม จะหยุดอยู่ที่เดิม ไม่วาปกลับเมืองหรือเขตปลอดภัยเองแล้ว','หน้าเสริมพลังการ์ด: แสดงรูปการ์ดหลัก พร้อมรายละเอียด ระดับ มอนที่ดรอป ช่องที่ใส่ได้ ค่าพลัง ค่าที่เสริมแล้ว และราคาขาย','การ์ดวัตถุดิบแบ่งกลุ่มตามระดับ ★★★ / ★★ / ★ / ไม่มีดาว · กลุ่มที่ใช้กับระดับนั้นไม่ได้จะแสดงเป็นสีจาง','เสริมพลัง Lv 1 เลือกการ์ดที่มีดาวเป็นวัตถุดิบได้ด้วย (ปุ่มเลือกอัตโนมัติจะใช้เฉพาะการ์ดไม่มีดาว)']},
  {v:'6.3',d:'6 ต.ค. 2026',t:'ถ้ำน้ำแข็งโฉมใหม่',L:['กราฟิกใหม่ในถ้ำธารน้ำแข็งและถ้ำผลึกคราม: พื้นน้ำแข็งแตกลาย ธารน้ำแข็งสีน้ำเงินเข้ม ผนังหินน้ำแข็งมีหินย้อย','ของตกแต่งใหม่: กลุ่มผลึก เสาน้ำแข็ง แท่งน้ำแข็งแหลม ก้อนน้ำแข็ง ตะเกียงน้ำแข็งเรืองแสง แท่นอักขระ','วงวาปในเขตปลอดภัยของทุกดันเจี้ยนย้ายไปอยู่กลางเขตปลอดภัย และขยายเป็นขนาด 4×4 ช่อง','ทางเข้าถ้ำธารน้ำแข็งในที่ราบหิมะ เปลี่ยนเป็นปากถ้ำน้ำแข็งขนาดใหญ่ มีหินย้อยและผลึกเรืองแสง เดินเข้าปากถ้ำเพื่อเข้าดัน']},
  {v:'6.2',d:'6 ต.ค. 2026',t:'ดันเจี้ยนใหม่ 2 แห่ง',L:['เหมืองร้างพสุธา (Lv 36–44): เหมืองแร่ใต้ดิน 10 โถงทรงกลมเชื่อมด้วยอุโมงค์คดเคี้ยว พื้นดิน ทางหิน และสะพานไม้ · มีลังไม้ ถังไม้ ตะเกียง · ทางเข้าอยู่ในห้องบอสถ้ำธารน้ำแข็ง','ถ้ำผลึกคราม (Lv 44–52): ถ้ำหินขาว 9 โถงเชื่อมด้วยธารน้ำแข็งสีครามระยิบระยับ · ทางเข้าอยู่ในห้องบอสของเหมืองร้าง','มอนใหม่ 10 ชนิด + บอส 2 ตัว: ราชาโกเลมพสุธา Lv 45 และจักรพรรดิมังกรคราม Lv 54 · การ์ดใหม่ครบทุกตัว','ไอเทมใหม่: แร่แก่นพสุธา · ผลึกคราม · แหวนแก่นพสุธา · สร้อยผลึกคราม (ดรอปจากบอส)','ทั้งสองดันมีจุดพักปลอดภัยที่ทางเข้า']},
  {v:'6.1.1',d:'6 ต.ค. 2026',t:'วาปทันที',L:['GM วาป / วาปไปหาผู้เล่น / ปีกผีเสื้อ / บอทกลับเมือง: กล้องย้ายไปจุดหมายทันที ไม่เลื่อนช้าๆ ข้ามแผนที่อีกต่อไป']},
@@ -4098,7 +4123,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261006145131';
+const BUILDV='20261006150243';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
