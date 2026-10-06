@@ -1627,7 +1627,9 @@ function killMob(m){if(MOBON&&!m.__rw&&!mobKillOK(m))return;if(MOBON)DROPOWN=loo
  for(const q of QUESTS){const s=P.quests[q.id];if(s&&s.st==='active'&&q.type==='kill'&&q.mob===m.type&&s.p<q.need){s.p++;if(s.p>=q.need){toast('เควส "'+q.n+'" สำเร็จ · กลับไปหาผู้เฒ่าอิลวา');chat('sys','','เควส "'+q.n+'" ทำครบแล้ว')}}}
  if(T.boss)chat('sys','','🜂 '+P.name+' ปราบ '+T.n+' สำเร็จ!'.replace('🜂 ',''));
  snd(220,.12,'triangle',.05);refreshWin(['char','quest','inv'])}
-function dropAt(m,id,gold,inst){let x=m.x+(R()-.5)*46,y=m.y+(R()-.5)*30;if(!canStand(x,y,4)){x=m.x;y=m.y}DROPS.push({id,gold,inst,x,y,sx:m.x,sy:m.y-8,t0:gt,owner:P?P.name:null})}
+function dropPos(m){if(m.__dt!==gt){m.__dt=gt;m.__dn=0;m.__da=R()*6.283}const k=m.__dn++,RG=[[5,1.8],[8,3.3],[12,4.8]];let q=k,ri=0;while(ri<2&&q>=RG[ri][0]){q-=RG[ri][0];ri++}const [n,rr]=RG[ri];
+ for(let t=0;t<10;t++){const a=m.__da+ri*.31+q*6.283/n+(t?(t%2?1:-1)*Math.ceil(t/2)*.35:0)+(R()-.5)*.15,r=(rr+(R()-.5)*.3-(t>5?(t-5)*.3:0))*TS,x=m.x+Math.cos(a)*r,y=m.y+Math.sin(a)*r;if(canStand(x,y,6)&&(typeof losOK!=='function'||losOK(m.x,m.y,x,y))&&!(typeof inDSafe==='function'&&inDSafe(x,y)))return [x,y]}return [m.x+(R()-.5)*20,m.y+(R()-.5)*14]}
+function dropAt(m,id,gold,inst){let [x,y]=dropPos(m);DROPS.push({id,gold,inst,x,y,sx:m.x,sy:m.y-8,t0:gt,owner:P?P.name:null})}
 function pickDrops(){if(S.dead)return;for(let i=DROPS.length-1;i>=0;i--){const d=DROPS[i];if(gt-d.t0<.4||Math.hypot(d.x-P.x,d.y-P.y)>22)continue;if(d.owner&&d.owner!==P.name&&gt-d.t0<30){if(!d.warned){d.warned=1;toast('ของชิ้นนี้เป็นของผู้เล่นอื่น · เก็บได้หลัง 30 วินาที')}continue}
   if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);DROPS.splice(i,1);continue}
   if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);DROPS.splice(i,1);refreshWin(['inv','quest'])}
@@ -3795,6 +3797,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'7.7',d:'6 ต.ค. 2026',t:'ของดรอปกระจายตัว',L:['ของที่ดรอปจากมอนจะกระเด็นกระจายรอบตัวมอน แต่ละชิ้นห่างกันประมาณ 2–4 ช่อง ไม่กองทับกัน มองและเลือกเก็บง่ายขึ้น','ของจะไม่กระเด็นเข้ากำแพงหรือเขตปลอดภัย']},
  {v:'7.6',d:'6 ต.ค. 2026',t:'ดูข้อมูลของที่ตกพื้น',L:['เอาเมาส์ชี้ของที่ตกบนพื้น จะแสดงชื่อ เกรด ประเภท ค่าพลัง คำอธิบาย และราคาขายของไอเทมนั้น','บอกด้วยว่าเป็นของผู้เล่นอื่นหรือไม่ · ชี้ทองจะแสดงจำนวนทอง']},
  {v:'7.5',d:'6 ต.ค. 2026',t:'บอทเลือกของที่จะเก็บ',L:['บอท: เลือกได้ว่าจะเก็บของประเภทไหน · ขยะ (วัตถุดิบจากมอน) · ขวดยา · การ์ด/แร่/อื่น ๆ','เลือกเกรดอุปกรณ์ที่จะเก็บได้ทีละเกรด: ธรรมดา ดี หายาก มหากาพย์ ตำนาน เทพ','ทองเก็บเสมอ · ค่าเริ่มต้นเก็บทุกอย่าง']},
  {v:'7.4',d:'6 ต.ค. 2026',t:'บอทวาปกลับเมืองเมื่อกระเป๋าเต็ม',L:['บอท: ตัวเลือกใหม่ กระเป๋าเต็มใช้ปีกผีเสื้อกลับเมือง · บอทหยุดแล้ววาปกลับเมืองอิลวาเรียให้อัตโนมัติ','ถ้าไม่มีปีกผีเสื้อ บอทจะหยุดอยู่ที่เดิมพร้อมแจ้งเตือน · หน้าบอทแสดงจำนวนปีกผีเสื้อที่เหลือ']},
@@ -4227,7 +4230,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
  dr.on('child_added',s=>{const v=s.val();if(!v||!IT[v.i])return;const age=snow()-(v.ts||0);if(age>50000){s.ref.remove().catch(()=>{});return}if(DROPS.some(d=>d.k===s.key))return;
   let inst;try{inst=v.n?JSON.parse(v.n):undefined}catch(e){}DROPS.push({k:s.key,id:v.i,gold:v.g||0,inst,x:v.x,y:v.y,sx:v.sx,sy:v.sy,t0:gt-Math.max(0,age)/1000,ou:v.ou||null,op:v.op||null})});
  dr.on('child_removed',s=>{const i=DROPS.findIndex(d=>d.k===s.key);if(i>=0)DROPS.splice(i,1)});
- const d0=dropAt;dropAt=function(m,id,gold,inst){if(!MOBON||!netOK())return d0(m,id,gold,inst);let x=m.x+(R()-.5)*46,y=m.y+(R()-.5)*30;if(!canStand(x,y,4)){x=m.x;y=m.y}const o=DROPOWN||{ou:UID};
+ const d0=dropAt;dropAt=function(m,id,gold,inst){if(!MOBON||!netOK())return d0(m,id,gold,inst);let [x,y]=dropPos(m);const o=DROPOWN||{ou:UID};
   const r=FDB.ref('drops').push({i:id,g:gold||0,n:inst?JSON.stringify(inst):null,x:Math.round(x),y:Math.round(y),sx:Math.round(m.x),sy:Math.round(m.y-8),ts:snow(),ou:o.ou||null,op:o.op||null});setTimeout(()=>r.remove().catch(()=>{}),51000)};
  const p0=pickDrops;pickDrops=function(){if(!MOBON)return p0();if(S.dead||!P)return;
   for(let i=DROPS.length-1;i>=0;i--){const d=DROPS[i];if(gt-d.t0>50){DROPS.splice(i,1);if(d.k)FDB.ref('drops/'+d.k).remove().catch(()=>{});continue}if(Math.hypot(d.x-P.x,d.y-P.y)>22){d.inr=0;continue}if(d.pk||gt-d.t0<.4)continue;
@@ -4239,7 +4242,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261006211114';
+const BUILDV='20261006211420';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
