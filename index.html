@@ -2573,8 +2573,9 @@ function botCfg(){P.bot=Object.assign({},BOTDEF,P.bot||{});P.bot.sk=P.bot.sk||{}
 function botSkOn(i){const c=botCfg(),b=SK[P.cls][i];if(!b||b.type==='res')return false;return c.sk[P.cls+i]!==undefined?c.sk[P.cls+i]:true}
 function botStart(){if(!P||S.dead)return;const c=botCfg();if(inSafe()){toast('ออกไปนอกเมืองหรือเขตปลอดภัยก่อนเริ่มบอท');return}
  Object.assign(BOT,{on:true,ax:P.x,ay:P.y,t0:gt,k0:P.kills||0,ex:0,bl:new Map(),tgt:null,pause:0,msg:'กำลังหาเป้าหมาย'});toast('🤖 เริ่มล่าอัตโนมัติ · รัศมี '+(c.rad>=99?'ทั้งแผนที่':c.rad+' ช่อง'));sfx('lvl');botPill();if(curWin==='bot')rWin()}
-function botStop(why){if(!BOT.on)return;BOT.on=false;S.target=null;S.chase=false;S.moveTo=null;S.path=null;const k=(P.kills||0)-BOT.k0,t=Math.round(gt-BOT.t0);
- chat('sys','','🤖 หยุดล่าอัตโนมัติ'+(why?' · '+why:'')+' · เวลา '+Math.floor(t/60)+':'+String(t%60).padStart(2,'0')+' · ล่าได้ '+k+' ตัว · EXP +'+Math.round(BOT.ex).toLocaleString(),'#7ad8ff');if(why)toast('🤖 '+why);botPill();if(curWin==='bot')rWin()}
+function botTown(){if(S.dead||inTown())return;const c=botCfg();if(c.wing&&countItem('wing')){useItem('wing');return}FX.push({k:'pillar',x:P.x,y:P.y,c:'#8fd0ff',w:6,life:.8});parts(P.x,P.y-20,30,['#e8f8ff','#8fd0ff','#ffffff'],{ang:-1.57,spread:1.2,spd:120,life:.7,sh:'star'});sfx('cast');P.x=TWN.x;P.y=TWN.y+80;S.path=null;for(const m of M)if(m.agg){m.agg=false;m.ret=true}setTimeout(()=>{FX.push({k:'pillar',x:P.x,y:P.y,c:'#8fd0ff',w:6,life:.8})},60);save()}
+function botStop(why,town){if(!BOT.on)return;BOT.on=false;S.target=null;S.chase=false;S.moveTo=null;S.path=null;const k=(P.kills||0)-BOT.k0,t=Math.round(gt-BOT.t0);
+ chat('sys','','🤖 หยุดล่าอัตโนมัติ'+(why?' · '+why:'')+' · เวลา '+Math.floor(t/60)+':'+String(t%60).padStart(2,'0')+' · ล่าได้ '+k+' ตัว · EXP +'+Math.round(BOT.ex).toLocaleString(),'#7ad8ff');if(town){botTown();why=(why||'')+' · กลับเมืองแล้ว'}if(why)toast('🤖 '+why);botPill();if(curWin==='bot')rWin()}
 function botToggle(){BOT.on?botStop():botStart()}
 function botMobOk(m,c){if(!M.includes(m)||m.hp<=0)return false;if(m.T.boss&&!c.boss)return false;if(m.rb&&!c.rb)return false;if((m.T.lv||1)>P.lv+c.lv&&!botAtkMe(m))return false;
  if(zoneOf(m.x,m.y)==='town'||(typeof inDSafe==='function'&&inDSafe(m.x,m.y)))return false;if(c.rad<99&&Math.hypot(m.x-BOT.ax,m.y-BOT.ay)>c.rad*TS)return botAtkMe(m)&&Math.hypot(m.x-P.x,m.y-P.y)<6*TS;
@@ -2606,8 +2607,8 @@ function botTick(dt){if(!BOT.on||!P)return;const c=botCfg(),d=D();
  // potions (always, even while paused)
  if(gt-BOT.potT>.3){BOT.potT=gt;if(P.hp/d.mhp*100<c.hp&&!(S.potCd>gt)&&(countItem('hp1')||countItem('hp2')))usePot('hp');else if(P.mp/d.mmp*100<c.mp&&!(S.potCd>gt)&&countItem('mp1'))usePot('mp')}
  // safety: very low HP with no potions
- if(P.hp/d.mhp<.25&&!countItem('hp1')&&!countItem('hp2')){if(c.wing&&countItem('wing')){useItem('wing');botStop('HP ต่ำและยาหมด · ใช้ปีกผีเสื้อกลับเมือง');return}}
- if(c.full&&P.inv.length>=INV){if(c.wing&&countItem('wing'))useItem('wing');botStop('กระเป๋าเต็ม');return}
+ if(P.hp/d.mhp<.25&&!countItem('hp1')&&!countItem('hp2')){botStop('HP ต่ำและยาหมด',true);return}
+ if(c.full&&P.inv.length>=INV){botStop('กระเป๋าเต็ม',true);return}
  if(gt<BOT.pause){BOT.msg='หยุดชั่วคราว (ควบคุมเอง)';return}
  if(S.manualT&&gt-S.manualT<.2){BOT.pause=gt+4;S.manualT=0;BOT.msg='หยุดชั่วคราว (ควบคุมเอง)';return}
  if(inSafe()){BOT.msg='อยู่ในเขตปลอดภัย · เดินออกนอกเมือง';return}
@@ -2636,7 +2637,7 @@ function rBot(){const c=botCfg(),L=SK[P.cls],on=BOT.on,t=Math.round(gt-BOT.t0);
  <div class="bsec"><h4>✨ สกิลที่ให้บอทใช้</h4><div class="bsk">${L.map((b,i)=>{const lv=skL(i),dis=!lv||b.type==='res',onk=!dis&&botSkOn(i);return `<button class="bskb${onk?' on':''}${dis?' dis':''}" data-a="botsk" data-v="${i}"${dis?' disabled':''}><img src="${skillImg(P.cls,i)}" alt=""><span>${esc(b.n)}<small>${dis?(b.type==='res'?'ใช้เองเท่านั้น':'ยังไม่ได้เรียน'):({dmg:'โจมตี',aoe:'พื้นที่',buff:'บัฟ',heal:'ฮีล'}[b.type]||'')+' · Lv '+lv}</small></span></button>`}).join('')}</div>
  ${step('aoe','ใช้สกิลพื้นที่เมื่อมอนรวมกันตั้งแต่',' ตัว',1,6,1)}${step('mpKeep','เก็บ MP สำรองไว้ (ไม่ใช้สกิลเมื่อต่ำกว่า)','%',0,80,5)}</div>
  <div class="bsec"><h4>🧪 ยาและความปลอดภัย</h4>${step('hp','กินยา HP เมื่อต่ำกว่า','%',10,90,5)}${step('mp','กินยา MP เมื่อต่ำกว่า','%',0,90,5)}
- <div class="bgrid">${tg('loot','เก็บของอัตโนมัติ','เดินไปเก็บของที่ดรอปในรัศมี')}${tg('wing','ใช้ปีกผีเสื้อหนีกลับเมือง','เมื่อ HP ต่ำมากและยาหมด')}${tg('full','หยุดเมื่อกระเป๋าเต็ม')}</div>
+ <div class="bgrid">${tg('loot','เก็บของอัตโนมัติ','เดินไปเก็บของที่ดรอปในรัศมี')}${tg('wing','ใช้ปีกผีเสื้อตอนกลับเมือง','บอทหยุดเอง (กระเป๋าเต็ม / ยาหมด) จะกลับเมืองเสมอ · เปิดไว้ = ใช้ปีกถ้ามี')}${tg('full','หยุดเมื่อกระเป๋าเต็ม')}</div>
  <div class="note">ยา HP ${countItem('hp1')+countItem('hp2')} · ยา MP ${countItem('mp1')} · ปีกผีเสื้อ ${countItem('wing')} · บอทจะหยุดชั่วคราว 4 วินาทีเมื่อคุณกดเดินหรือควบคุมเอง</div></div>`;
  return h}
 function drawNpc(n){if(P&&!n.wander||P&&n.wander&&gt<n.wt){const dp=Math.hypot(P.x-n.x,P.y-n.y);if(dp<120)n.fx=P.x>=n.x?1:-1;if(!n.gnext)n.gnext=gt+2+R()*6;if(gt>n.gnext){n.gnext=gt+5+R()*8;const k=dp<120?'wave':(R()<.5?'hop':'wave');n.gest={k,t0:gt,dur:k==='hop'?.45:.9,until:gt+(k==='hop'?.45:.9)}}}
@@ -3597,6 +3598,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'6.0.1',d:'6 ต.ค. 2026',t:'บอทกลับเมือง',L:['บอทหยุดเองเพราะกระเป๋าเต็ม หรือ HP ต่ำและยาหมด จะพาตัวละครกลับเมืองอิลวาเรียเสมอ (ใช้ปีกผีเสื้อถ้ามีและเปิดตัวเลือกไว้ ไม่มีก็กลับได้)','หยุดบอทเอง (กด F / ปุ่ม ■) ตัวละครจะอยู่ที่เดิม']},
  {v:'6.0',d:'6 ต.ค. 2026',t:'บอทล่าอัตโนมัติ',L:['ระบบใหม่ บอทล่าอัตโนมัติ: เมนู 🎯 บอท (ปุ่ม O) · กดปุ่ม F เพื่อเริ่ม/หยุดเร็ว','บอทจะตีมอน ใช้สกิล กินยา และเก็บของให้เอง ในรัศมีรอบจุดที่เริ่ม (6 / 10 / 16 ช่อง หรือทั้งแผนที่)','ฉลาด: ตีตัวที่กำลังโจมตีเราก่อนเสมอ · ใช้สกิลพื้นที่เมื่อมอนรวมกลุ่ม · ใช้สกิลแรงสุดที่พร้อมใช้ · ร่ายบัฟเมื่อหมดเวลา · ฮีลตัวเองเมื่อเลือดต่ำ · เปลี่ยนเป้าถ้าเดินไปไม่ถึง · กลับจุดเริ่มถ้าออกนอกรัศมี','ตั้งค่าได้: เลือกเป้า (ใกล้สุด / เลือดน้อย / EXP สูง) · ไม่ตีมอนที่เลเวลสูงเกิน · ตีบอส/มอนสีรุ้งหรือไม่ · เลือกสกิลที่ให้ใช้ · กินยา HP/MP ที่กี่ % · เก็บ MP สำรอง','ปลอดภัย: ยาหมดและ HP ต่ำมากจะใช้ปีกผีเสื้อกลับเมือง · หยุดเมื่อกระเป๋าเต็มหรือหมดสติ · หยุดชั่วคราว 4 วินาทีเมื่อคุณควบคุมเอง','แถบสถานะบอทด้านบนจอ: เวลา · จำนวนที่ล่า · EXP ที่ได้ · กด ■ เพื่อหยุด']},
  {v:'5.9.1',d:'6 ต.ค. 2026',t:'ข้อความซื้อของ',L:['ซื้อของจากร้านค้า: ข้อความแจ้งแสดงไอคอนไอเทมด้วย และขึ้นอยู่เหนือหน้าต่างร้านค้า ไม่โดนบังแล้ว']},
  {v:'5.9',d:'6 ต.ค. 2026',t:'ปีกผีเสื้อ และแก้จอดำ',L:['ไอเทมใหม่ ปีกผีเสื้อ: วาปกลับเมืองอิลวาเรียทันที · ขายที่พ่อค้าโบรัน 50 ทอง','แก้จอดำ: ถ้ามีข้อผิดพลาดระหว่างวาดภาพ เกมจะไม่หยุดทำงานทั้งหมดอีกต่อไป และข้ามรูปที่โหลดไม่สำเร็จ','ถ้ายังเกิดปัญหา จะมีกล่องข้อความสีแดงบอกสาเหตุด้านบนจอ ให้ถ่ายภาพส่งผู้พัฒนาได้เลย']},
@@ -4002,7 +4004,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261006114748';
+const BUILDV='20261006115519';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
