@@ -3778,6 +3778,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'7.1',d:'6 ต.ค. 2026',t:'จำกัดผู้เล่นและระบบคิว',L:['จำกัดจำนวนผู้เล่นออนไลน์ได้ (ค่าเริ่มต้น 60 คน) · GM ไม่นับรวมและเข้าได้เสมอ','ถ้าเซิร์ฟเวอร์เต็ม ผู้เล่นใหม่จะเข้าคิว เห็นลำดับคิว จำนวนคนรอ และผู้เล่นออนไลน์ตอนนี้','เมื่อมีที่ว่าง ระบบพาเข้าเกมอัตโนมัติตามลำดับ · กดออกจากคิวได้ · ปิดหน้าเว็บจะหลุดคิว','GM: /maxp จำนวน เพื่อเปลี่ยนจำนวนผู้เล่นสูงสุด · /maxp เฉย ๆ ดูสถานะ']},
  {v:'7.0',d:'6 ต.ค. 2026',t:'เขตปลอดภัยที่จุดวาป และบอท',L:['ทุกจุดวาป (ทางเข้าดันเจี้ยน ปากถ้ำ ประตูในห้องบอส) มีเขตปลอดภัย 4×4 ช่องเสมอ · มอนเข้าไม่ได้และโจมตีผู้เล่นในเขตไม่ได้','ใช้บอท: ทองจากมอนเหลือ 50% (EXP และดรอปยังเป็น 70%)','ตรวจอัตราดรอป: ทดสอบฆ่า 400 ตัวต่อชนิด อัตราที่ได้ตรงกับที่ตั้งไว้ · แต่ละไอเทมสุ่มแยกกันทุกตัว จึงมักได้ของอย่างน้อย 1 ชิ้นแทบทุกครั้ง','สมุดมอนสเตอร์: แก้อัตราแร่ที่แสดงผิด (เดิมแสดงสูงเกินจริงถึง 45%) และแสดงอัตราจริงของคุณที่รวมค่า LUK แล้ว']},
  {v:'6.9.1',d:'6 ต.ค. 2026',t:'แปลภาษาอังกฤษ',L:['หน้าบอทล่าอัตโนมัติในภาษาอังกฤษแปลครบทุกข้อความ รวมสถานะบอท ข้อความเริ่ม/หยุด และข้อความในแชท','แปลภาษาอังกฤษเพิ่ม: ติดตั้งอุปกรณ์อัตโนมัติ ขายแบบกลุ่ม คลังฝากของ เสริมพลังการ์ด จัดเรียง และตัวเลือกเล่นต่อเบื้องหลัง']},
  {v:'6.9',d:'6 ต.ค. 2026',t:'ขายแบบกลุ่มที่ร้านค้า',L:['หน้าขายของในร้านค้า มีกล่องขายแบบกลุ่ม: ติ๊กเลือกขยะ (วัตถุดิบที่ดรอปจากมอน) และอุปกรณ์แยกตามเกรด ธรรมดา ดี หายาก มหากาพย์ ตำนาน เทพ','ปุ่มเลือกทั้งหมด / ล้าง · แสดงจำนวนชิ้นและราคารวมก่อนขาย','ต้องกดยืนยันอีกครั้งก่อนขายจริง · ไม่รวมของผูกมัด และอุปกรณ์ที่ตีบวกหรือใส่การ์ดแล้ว','ของที่ขายไปเข้ารายการซื้อคืนตามปกติ (10 รายการล่าสุด)']},
@@ -3927,11 +3928,30 @@ document.addEventListener('click',async e=>{const t=e.target.closest('[data-av],
  }catch(err){amsg(aerr(err))}});
 async function onAuthed(u){UID=u.uid;authView('loading');CKEY_U=CKEY+'-'+UID;
  try{const snap=await FDB.ref('users/'+UID+'/data').get();if(snap.exists()){localStorage.setItem(ckey(),snap.val())}}catch(e){console.warn(e)}
- $('#auth').style.display='none';buildLogin();netStart();gmInit(u);partyInit();pmInit();worldInit();onlineInit(u);nmClaimAll()}
+ $('#auth').style.display='none';buildLogin();netStart();queueInit();gmInit(u);partyInit();pmInit();worldInit();onlineInit(u);nmClaimAll()}
 function netBoot(){authUI();if(typeof firebase==='undefined'){amsg('โหลด Firebase ไม่ได้ ตรวจสอบอินเทอร์เน็ต');return}
  FB=firebase.initializeApp(FBCFG);FDB=firebase.database();
  FB.auth().onAuthStateChanged(u=>{if(!u){UID=null;$('#auth').style.display='';authView('login');return}
   const pw=u.providerData.some(p=>p.providerId==='password');if(pw&&!u.emailVerified){$('#auth').style.display='';authView('verify',u.email);return}onAuthed(u)})}
+
+/* ---- online player cap + waiting queue ---- */
+let MAXP=60,QOKU=0,QON=false,QLIST=[],QSEL='',QHB=0,QT0=0;
+const onlineCount=()=>Object.values(OTHERS).filter(o=>!o.gm).length;
+function queueInit(){FDB.ref('cfg/maxp').on('value',s=>{const v=+s.val();MAXP=v>0?v:60;qRender();qTry()});
+ FDB.ref('queue').on('value',s=>{const v=s.val()||{},now=Date.now();QLIST=Object.entries(v).filter(([k,x])=>x&&x.t&&(k===UID||now-(x.h||x.t)<90000)).sort((a,b)=>a[1].t-b[1].t||(a[0]<b[0]?-1:1)).map(([k])=>k);qRender();qTry()});
+ setInterval(()=>{if(QON){qRender();qTry()}},1000)}
+function qFree(){return MAXP-onlineCount()}
+function qTry(){if(!QON)return;const pos=QLIST.indexOf(UID);if(pos<0)return;if(pos<qFree())qAdmit()}
+function qJoin(sel){QSEL=sel;QON=true;QT0=Date.now();const r=FDB.ref('queue/'+UID);r.set({t:firebase.database.ServerValue.TIMESTAMP,h:Date.now()});r.onDisconnect().remove();clearInterval(QHB);QHB=setInterval(()=>{if(QON)r.child('h').set(Date.now()).catch(()=>{})},20000);qRender()}
+function qLeave(){QON=false;clearInterval(QHB);FDB.ref('queue/'+UID).remove().catch(()=>{});const b=$('#qbox');if(b)b.remove()}
+function qAdmit(){qLeave();QOKU=Date.now()+10000;try{sfx('lvl')}catch(e){}toast('ถึงคิวของคุณแล้ว · กำลังเข้าเกม');const el=document.querySelector(QSEL);if(el)el.click()}
+function qRender(){if(!QON){const b=$('#qbox');if(b)b.remove();return}let b=$('#qbox');if(!b){b=document.createElement('div');b.id='qbox';document.body.appendChild(b);b.addEventListener('click',e=>{if(e.target.closest('[data-q=leave]'))qLeave()})}
+ const pos=QLIST.indexOf(UID)+1,on=onlineCount(),w=Math.round((Date.now()-QT0)/1000);
+ b.innerHTML=`<div class="qin"><div class="qic">⏳</div><b>เซิร์ฟเวอร์เต็ม · กำลังรอคิว</b><div class="qpos">${pos>0?pos:'…'}</div><small>ลำดับคิวของคุณ · รอทั้งหมด ${QLIST.length} คน</small><div class="qbar"><span>ผู้เล่นออนไลน์</span><b>${on} / ${MAXP}</b></div><small>รอมาแล้ว ${Math.floor(w/60)}:${String(w%60).padStart(2,'0')} · เมื่อมีที่ว่างระบบจะพาเข้าเกมอัตโนมัติ · อย่าปิดหน้านี้</small><button class="btn" data-q="leave">ออกจากคิว</button></div>`}
+window.addEventListener('click',e=>{const el=e.target.closest&&e.target.closest('#start,[data-play]');if(!el||!FDB||!UID||ISGM||P||Date.now()<QOKU)return;
+ const waiting=QLIST.filter(k=>k!==UID).length;if(qFree()>waiting){QOKU=Date.now()+10000;return}
+ e.stopImmediatePropagation();e.preventDefault();if(QON)return;qJoin(el.id==='start'?'#start':`[data-play="${el.dataset.play}"]`)},true);
+(()=>{const st=document.createElement('style');st.textContent=`#qbox{position:fixed;inset:0;z-index:9500;display:flex;align-items:center;justify-content:center;background:rgba(6,8,18,.72);backdrop-filter:blur(3px)}#qbox .qin{display:flex;flex-direction:column;align-items:center;gap:8px;padding:22px 26px;min-width:280px;max-width:min(92vw,380px);border-radius:16px;background:linear-gradient(180deg,#1b2140,#11152a);border:1px solid rgba(255,200,97,.45);box-shadow:0 14px 40px rgba(0,0,0,.6);color:#e8ecff;font-family:'Kanit',sans-serif;text-align:center}#qbox .qic{font-size:34px;animation:qspin 2.4s linear infinite}@keyframes qspin{0%{transform:rotate(0)}50%{transform:rotate(180deg)}100%{transform:rotate(360deg)}}#qbox b{color:#ffe7a8;font-size:16px}#qbox .qpos{font:700 56px 'Chakra Petch','Kanit',sans-serif;color:#ffd27a;line-height:1;text-shadow:0 0 18px rgba(255,190,90,.5)}#qbox small{color:#9aa4c7;font-size:12px}#qbox .qbar{display:flex;gap:10px;align-items:center;padding:6px 14px;border-radius:10px;background:rgba(255,255,255,.06)}#qbox .qbar b{font-size:15px}`;document.head.appendChild(st)})();
 /* ---- presence + chat ---- */
 let NETT=0,LASTPUB='',CHATREF=null,JOINT=0;
 function netStart(){if(NETT)return;JOINT=Date.now();
@@ -3964,9 +3984,10 @@ function showAnnounce(m){let d=$('#gmann');if(!d){d=document.createElement('div'
 const findP=n=>Object.values(OTHERS).find(o=>o.n===n)||Object.values(OTHERS).find(o=>o.n&&o.n.toLowerCase().startsWith(n.toLowerCase()));
 function gmCmd(c,arg){if(c==='w'||c==='whisper'){const sp=arg.indexOf(' ');if(sp<1){chat('sys','','ใช้ /w ชื่อ ข้อความ');return true}whisper(arg.slice(0,sp),arg.slice(sp+1));return true}if(c==='r'&&LASTW){if(arg)whisper(LASTW,arg);return true}if(c==='trade'){const o=findP(arg);if(o)tReq(o);else chat('sys','','ไม่พบผู้เล่น +arg+');return true}if(c==='invite'){pInvite(arg);return true}if(c==='leave'){pLeave();return true}if(c==='p'||c==='party'){if(arg)pChat(arg);return true}if(!ISGM){chat('sys','','คำสั่งนี้สำหรับแอดมินเท่านั้น');return true}
  const say=t=>chat('sys','','[GM] '+t,'#ffcf4a');
+ if(c==='maxp'||c==='cap'){const n=parseInt(arg,10);if(!(n>0)){say('จำกัดผู้เล่นออนไลน์: '+MAXP+' คน · ออนไลน์ตอนนี้ '+onlineCount()+' · รอคิว '+QLIST.length+' · ใช้ /maxp จำนวน เพื่อเปลี่ยน');return true}FDB.ref('cfg/maxp').set(Math.min(5000,n)).then(()=>say('ตั้งจำกัดผู้เล่นออนไลน์เป็น '+n+' คนแล้ว')).catch(e=>say('ตั้งค่าไม่สำเร็จ: '+e.message));return true}
  if(c==='hide'||c==='invis'){const a=(arg||'').trim().toLowerCase();GMHIDE=a==='on'||a==='เปิด'?true:a==='off'||a==='ปิด'?false:!GMHIDE;if(GMHIDE){for(const m of M)if(m.tgt===UID){m.tgt=null;m.agg=false}}say('สถานะล่องหน: '+(GMHIDE?'เปิด · ผู้เล่นและมอนสเตอร์มองไม่เห็นคุณ':'ปิด · ทุกคนมองเห็นคุณแล้ว'));LASTPUB='';return true}
  if(c==='warp'||c==='tp'){const q=(arg||'').trim().toLowerCase();if(!q){rGmWarp();return true}const all=gmWarpList().flatMap(g=>g[1]),hit=all.find(x=>x.n.toLowerCase()===q)||all.find(x=>x.n.toLowerCase().includes(q));if(hit)gmWarpTo(hit);else{say('ไม่พบจุด "'+arg+'" · เปิดรายการให้เลือก');rGmWarp()}return true}
- if(c==='gm'){say('/warp เปิดรายการวาป (/warp ชื่อจุด) · /hide เปิด-ปิดล่องหน (/hide on · /hide off) · /online ดูผู้เล่นออนไลน์ · /announce ข้อความ · /kick ชื่อ · /mute ชื่อ นาที · /unmute ชื่อ · /clearchat · /goto ชื่อ · /item รหัส จำนวน · /lv เลข (ได้แต้มสถานะตามเลเวล) · /job เลข (ได้แต้มสกิลตามเลเวล) · /gold เลข · /who');return true}
+ if(c==='gm'){say('/warp เปิดรายการวาป (/warp ชื่อจุด) · /hide เปิด-ปิดล่องหน (/hide on · /hide off) · /maxp จำนวน จำกัดผู้เล่นออนไลน์ (เกินจะต้องรอคิว) · /online ดูผู้เล่นออนไลน์ · /announce ข้อความ · /kick ชื่อ · /mute ชื่อ นาที · /unmute ชื่อ · /clearchat · /goto ชื่อ · /item รหัส จำนวน · /lv เลข (ได้แต้มสถานะตามเลเวล) · /job เลข (ได้แต้มสกิลตามเลเวล) · /gold เลข · /who');return true}
  if(c==='announce'){if(!arg)return say('ใส่ข้อความด้วย'),true;FDB.ref('announce').push({m:arg.slice(0,140),t:Date.now()});return true}
  if(c==='online'){rGmw();return true}if(c==='who'){say('ออนไลน์ '+(Object.keys(OTHERS).length+1)+' คน: '+[P.name,...Object.values(OTHERS).map(o=>o.n)].join(', '));return true}
  if(['kick','mute','unmute','goto'].includes(c)){const parts=arg.split(' '),nm=c==='mute'&&parts.length>1?parts.slice(0,-1).join(' '):arg,o=findP(nm.trim());if(!o)return say('ไม่พบผู้เล่น "'+nm+'"'),true;
@@ -4200,7 +4221,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261006190750';
+const BUILDV='20261006191757';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}

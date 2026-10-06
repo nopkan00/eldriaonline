@@ -170,6 +170,20 @@
     ".write": "auth != null && ((!data.exists() && newData.val() === auth.uid) || data.val() === auth.uid)",
     ".validate": "!newData.exists() || newData.val() === auth.uid"
    }
+  },
+  "cfg": {
+   ".read": "auth != null",
+   ".write": "auth != null && auth.token.email === 'nopkan00@gmail.com' && auth.token.email_verified === true",
+   "maxp": {
+    ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 5000"
+   }
+  },
+  "queue": {
+   ".read": "auth != null",
+   "$uid": {
+    ".write": "auth != null && auth.uid === $uid",
+    ".validate": "!newData.exists() || (newData.child('t').isNumber() && newData.child('t').val() <= now)"
+   }
   }
  }
 }
