@@ -2672,7 +2672,7 @@ function botTown(){if(S.dead||inSafe())return '';const c=botCfg(),q=botSafeSpot(
 function botStop(why,town){if(!BOT.on)return;BOT.on=false;S.target=null;S.chase=false;S.moveTo=null;S.path=null;const k=(P.kills||0)-BOT.k0,t=Math.round(gt-BOT.t0);
  chat('sys','','🤖 หยุดล่าอัตโนมัติ'+(why?' · '+why:'')+' · เวลา '+Math.floor(t/60)+':'+String(t%60).padStart(2,'0')+' · ล่าได้ '+k+' ตัว · EXP +'+Math.round(BOT.ex).toLocaleString(),'#7ad8ff');if(why)toast('🤖 '+why);botPill();if(curWin==='bot')rWin()}
 function botToggle(){BOT.on?botStop():botStart()}
-function botMobOk(m,c){if(!M.includes(m)||m.hp<=0)return false;if(m.T.boss&&!c.boss)return false;if(m.rb&&!c.rb)return false;if((m.T.lv||1)>P.lv+c.lv&&!botAtkMe(m))return false;
+function botMobOk(m,c){if(!M.includes(m)||m.hp<=0)return false;if(regAt(m.x,m.y)!==regAt(P.x,P.y))return false;if(m.T.boss&&!c.boss)return false;if(m.rb&&!c.rb)return false;if((m.T.lv||1)>P.lv+c.lv&&!botAtkMe(m))return false;
  if(zoneOf(m.x,m.y)==='town'||(typeof inDSafe==='function'&&inDSafe(m.x,m.y)))return false;if(c.rad<99&&Math.hypot(m.x-BOT.ax,m.y-BOT.ay)>c.rad*TS)return botAtkMe(m)&&Math.hypot(m.x-P.x,m.y-P.y)<6*TS;
  const b=BOT.bl.get(m);if(b&&b>gt)return false;return true}
 function botAtkMe(m){return m.agg&&!m.ret&&(m.tgt==null||(typeof UID!=='undefined'&&m.tgt===UID))&&Math.hypot(m.x-P.x,m.y-P.y)<8*TS}
@@ -2718,6 +2718,7 @@ function botTick(dt){if(!BOT.on||!P)return;const c=botCfg(),d=D();
  if(t!==BOT.hT){BOT.hT=t;BOT.hHp=t.hp;BOT.hitT=gt}else if(t.hp<BOT.hHp-.5){BOT.hHp=t.hp;BOT.hitT=gt}
  if(gt-BOT.hitT>5){BOT.bl.set(t,gt+10);S.target=null;S.chase=false;BOT.tgt=null;BOT.hT=null;BOT.msg=(dd>d.range+t.T.r+8?'ไกลเกินไป':'โจมตีไม่โดน')+' 5 วินาที · เปลี่ยนเป้า';return}
  if(dd>d.range+t.T.r+8&&gt-BOT.bestT>5){BOT.bl.set(t,gt+12);S.target=null;BOT.tgt=null;BOT.msg='เป้าหมายเข้าไม่ถึง · เปลี่ยนเป้า';return}
+ {const lockR=Math.max(11*TS,d.range+5*TS)-TS;if(dd>lockR){if(S.target===t)S.target=null;S.chase=false;BOT.hT=t;BOT.hitT=gt;if(!S.moveTo||Math.hypot(S.moveTo.x-t.x,S.moveTo.y-t.y)>2*TS)S.moveTo={x:t.x,y:t.y};BOT.msg='เดินไปหา '+mobName(t)+' Lv'+t.T.lv;return}}
  S.target=t;S.chase=true;S.moveTo=null;BOT.msg='ล่า '+mobName(t)+' Lv'+t.T.lv;
  const anySk=SK[P.cls].some((b,i)=>skL(i)&&b.type!=='res'&&botSkOn(i));if(!c.atk&&anySk)S.nextAtk=Math.max(S.nextAtk||0,gt+.3);
  botSkills(c,t)}
@@ -3733,6 +3734,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'6.7.1',d:'6 ต.ค. 2026',t:'แก้บอทตีมอนนอกฉาก',L:['บอทเลือกเฉพาะมอนในแผนที่เดียวกับตัวละคร (ไม่ล็อกมอนจากดินแดนอื่น เช่น ที่ราบหิมะ ตอนอยู่สุสาน)','ถ้ามอนที่เลือกอยู่ไกลเกินระยะล็อกเป้า บอทจะเดินเข้าไปหาก่อนแล้วค่อยล็อก ไม่ขึ้นข้อความ "ยกเลิกการล็อคเป้าหมาย" ซ้ำ ๆ อีก']},
  {v:'6.7',d:'6 ต.ค. 2026',t:'ติดตั้งอุปกรณ์อัตโนมัติ',L:['หน้าสถานะตัวละคร มีปุ่มติดตั้งอุปกรณ์อัตโนมัติ','เลือกค่าที่ต้องการเน้นได้ 3 ลำดับ: พลังโจมตี ป้องกัน HP MP STR AGI VIT INT DEX LUK คริติคอล ความเร็วเดิน','ระบบเทียบชิ้นที่สวมอยู่กับของในกระเป๋าทุกช่อง (รวมแหวน 2 วง) แล้วเลือกชิ้นที่ค่าลำดับ 1 สูงสุด ถ้าเท่ากันดูลำดับ 2 และ 3 · นับรวมค่าตีบวก ความหายาก และการ์ดที่ใส่','ค่าเริ่มต้นตั้งตามอาชีพ และจำค่าที่เลือกไว้']},
  {v:'6.6',d:'6 ต.ค. 2026',t:'แก้ความแม่นยำ หน้าเสริมพลังการ์ด และบอท',L:['แก้ความแม่นยำ: เดิมค่าแม่นยำถูกจำกัดที่ 100 ก่อนหักเลเวลมอน ทำให้ DEX เกินประมาณ 12 ไม่มีผล · ตอนนี้ DEX เพิ่มโอกาสโดนได้เต็มที่ (หักเลเวลมอน ×1.5 · ต่ำสุด 50% สูงสุด 100%)','ตัวอย่าง: DEX 30 Lv 20 ตีมอน Lv 10–20 โดน 100% · Lv 30 ประมาณ 86% · Lv 40 ประมาณ 71%','หน้าเสริมพลังการ์ด: แก้รายการเลือกการ์ดหลักที่หายไป','บอท: ถ้าโจมตีเป้าหมายไม่โดนหรืออยู่ไกลเกินไปนาน 5 วินาที จะเปลี่ยนไปตีตัวอื่นทันที']},
  {v:'6.5',d:'6 ต.ค. 2026',t:'กระเป๋า 80 ช่อง และเล่นต่อเบื้องหลัง',L:['กระเป๋าตัวละครเพิ่มเป็น 80 ช่อง','เล่นต่อเบื้องหลัง: สลับแท็บหรือย่อหน้าต่าง เกมและบอทยังทำงานต่อ','พับจอมือถือ: ช่วยให้เบราว์เซอร์ไม่พักเกม · ถ้ายังถูกพัก เมื่อกลับมาจะเล่นต่อช่วงที่ขาดให้อัตโนมัติ (โหมดออฟไลน์ สูงสุด 30 นาที)','กันหน้าจอดับระหว่างเปิดเกม · ตั้งค่าเปิด-ปิดได้ที่หน้าตั้งค่า']},
@@ -4150,7 +4152,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261006152330';
+const BUILDV='20261006152615';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
