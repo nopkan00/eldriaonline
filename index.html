@@ -617,6 +617,7 @@ img[src^="data:image/webp"]{image-rendering:auto!important}
 .cardv .cvs.many div{padding:1px 5px}
 .cardv .cvs .cer{border-color:rgba(255,210,74,.5)!important;background:rgba(60,40,10,.55)!important}.cardv .cvs .cer span{color:#ffe7a0}.cardv .cvs .cer b{color:#ffe07a}
 .cebox.c1{border-color:rgba(108,196,255,.6)!important}.cebox.c2{border-color:rgba(192,106,255,.6)!important}.cebox.c3{border-color:rgba(255,210,74,.7)!important}
+#catchup{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%);z-index:9000;background:rgba(14,16,34,.94);border:1px solid rgba(255,200,97,.5);border-radius:14px;padding:14px 20px;display:flex;flex-direction:column;align-items:center;gap:6px;color:#ffe7a8;font:600 14px 'Kanit',sans-serif;min-width:240px;box-shadow:0 10px 30px rgba(0,0,0,.6)}#catchup span{font:400 12px 'Kanit',sans-serif;color:#cfd3e6}#catchup i{display:block;width:100%;height:6px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden}#catchup u{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffb84a,#ffe07a)}
 .cemats{max-height:300px;overflow:auto;margin:6px 0 8px;width:100%;text-align:left;padding-right:2px}
 .cegh{font:600 12.5px 'Kanit',sans-serif;margin:8px 0 4px;padding:3px 8px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;gap:6px}.cegh small{color:var(--muted);font-weight:400;margin-left:auto;font-size:11px}
 .cegh.g3{color:#ffd24a;background:linear-gradient(90deg,rgba(255,122,122,.16),rgba(255,210,74,.16),rgba(122,200,255,.16))}.cegh.g2{color:#d08aff;background:rgba(190,100,255,.13)}.cegh.g1{color:#6cc4ff;background:rgba(90,176,255,.12)}.cegh.g0{color:#cfd3e6}.cegh.off{opacity:.55}
@@ -1380,7 +1381,7 @@ function instStat(o,k){const it=IT[o.id];let v=(k==='atk'||k==='def')?refBonus(o
 const RESL=[['ไฟ','rf'],['น้ำ','rw'],['ดิน','re'],['ลม','rwi'],['มืด','rd'],['พิษ','rp'],['อันเดด','ru'],['วิญญาณ','rg'],['ไร้ธาตุ','rn']],RESK=Object.fromEntries(RESL);
 const resOf=el=>Math.min(60,eqs(RESK[el]||'rn')+(P.rall||0)+(el==='น้ำ'?PV('frostres',0):0));
 function eqs(k){let s=0;for(const sl in P.equip){const o=P.equip[sl];if(o&&IT[o.id])s+=instStat(o,k)}return s}
-const INV=50;
+const INV=80;
 let _pstOK=false;const _pst=()=>{if(_pstOK)return PSTAT;try{const v=PSTAT;_pstOK=true;return v}catch(e){return null}};
 const st=k=>{const ps=_pst();return (ps&&ps.st&&ps.st[k]!=null?ps.st[k]:(P[k]||0))+eqs(k)+(k==='int'?PV('frostmind',0):0)};
 function regen(){const v=st('vit'),n=st('int'),f=1+PV('focus',1)/100;return {hr:1+v*.2,hc:.1+v*.02,mr:(.5+n*.1)*f,mc:(.1+n*.02)*f}}
@@ -2717,7 +2718,8 @@ function botTick(dt){if(!BOT.on||!P)return;const c=botCfg(),d=D();
  S.target=t;S.chase=true;S.moveTo=null;BOT.msg='ล่า '+mobName(t)+' Lv'+t.T.lv;
  const anySk=SK[P.cls].some((b,i)=>skL(i)&&b.type!=='res'&&botSkOn(i));if(!c.atk&&anySk)S.nextAtk=Math.max(S.nextAtk||0,gt+.3);
  botSkills(c,t)}
-function botPill(){let b=document.getElementById('botpill');if(!BOT.on){if(b)b.remove();return}
+function botPill(){try{kaSync()}catch(e){}botPill0()}
+function botPill0(){let b=document.getElementById('botpill');if(!BOT.on){if(b)b.remove();return}
  if(!b){b=document.createElement('div');b.id='botpill';b.innerHTML='<span class="bpi">🤖</span><span class="bpt"></span><button class="bps" title="หยุดบอท">■</button>';(document.getElementById('hud')||document.body).appendChild(b);b.querySelector('.bps').onclick=e=>{e.stopPropagation();botStop('หยุดโดยผู้เล่น')};b.onclick=()=>openWin('bot')}
  const t=Math.round(gt-BOT.t0);b.querySelector('.bpt').innerHTML=`<b>ล่าอัตโนมัติ</b> ${Math.floor(t/60)}:${String(t%60).padStart(2,'0')} · ล่า ${(P.kills||0)-BOT.k0} · EXP +${Math.round(BOT.ex).toLocaleString()}<small>${esc(BOT.msg||'')}</small>`}
 function rBot(){const c=botCfg(),L=SK[P.cls],on=BOT.on,t=Math.round(gt-BOT.t0);
@@ -3542,7 +3544,7 @@ function drawBigMap(){const c=$('#bigmap');if(!c)return;const g=c.getContext('2d
  for(const [n,x,y] of L){g.strokeText(tr(n),x*k,y*k);g.fillStyle='#f0e6cc';g.fillText(tr(n),x*k,y*k)}
  g.fillStyle='#fff';g.strokeStyle='#000';g.lineWidth=2;g.beginPath();g.arc(P.x*s,P.y*s,5,0,6.283);g.fill();g.stroke();g.restore()}
 function rOpt(){const o=P.opts;const rg=(k,n)=>`<label class="tog"><span>${n}</span><input type="range" id="opt-${k}" data-ov="${k}" min="0" max="1" step="0.05" value="${o[k]}"></label>`;const tg=(k,n,d)=>`<label class="tog"><span>${n}<br><small style="color:var(--muted)">${d}</small></span><input type="checkbox" id="opt-${k}" data-o="${k}" ${o[k]?'checked':''}></label>`;
- return `<div class="sec"><h3>ภาษา · Language</h3><div class="langsw big"><button data-lang="th" class="${LANG==='th'?'on':''}">ไทย (TH)</button><button data-lang="en" class="${LANG==='en'?'on':''}">English (EN)</button></div></div><div class="sec"><h3>การแสดงผลและเสียง</h3><div style="display:grid;gap:6px">${tg('music','เพลงประกอบ','เปลี่ยนตามโซน: เมือง ทุ่ง/ป่า สุสาน และตอนสู้บอส')}${rg('musv','ระดับเสียงเพลง')}${tg('sound','เสียงเอฟเฟกต์','เสียงโจมตี สกิล เลเวลอัป และเก็บเงิน')}${rg('sfxv','ระดับเสียงเอฟเฟกต์')}<label class="tog"><span>ขนาด UI<br><small style="color:var(--muted)">ปรับขนาดแถบสถานะ ปุ่มลัด แชท เมนู และหน้าต่าง · ตอนนี้ <b id="uisv">${Math.round(uiScale()*100)}%</b></small></span><input type="range" data-uis="1" min="0.7" max="1.3" step="0.05" value="${uiScale()}"></label>${tg('dmg','ตัวเลขความเสียหาย','แสดงตัวเลขลอยเมื่อโจมตี')}${tg('names','ชื่อ NPC','แสดงชื่อเหนือหัว NPC ในเมือง')}</div></div>
+ return `<div class="sec"><h3>ภาษา · Language</h3><div class="langsw big"><button data-lang="th" class="${LANG==='th'?'on':''}">ไทย (TH)</button><button data-lang="en" class="${LANG==='en'?'on':''}">English (EN)</button></div></div><div class="sec"><h3>การแสดงผลและเสียง</h3><div style="display:grid;gap:6px">${tg('music','เพลงประกอบ','เปลี่ยนตามโซน: เมือง ทุ่ง/ป่า สุสาน และตอนสู้บอส')}${rg('musv','ระดับเสียงเพลง')}${tg('sound','เสียงเอฟเฟกต์','เสียงโจมตี สกิล เลเวลอัป และเก็บเงิน')}${rg('sfxv','ระดับเสียงเอฟเฟกต์')}<label class="tog"><span>ขนาด UI<br><small style="color:var(--muted)">ปรับขนาดแถบสถานะ ปุ่มลัด แชท เมนู และหน้าต่าง · ตอนนี้ <b id="uisv">${Math.round(uiScale()*100)}%</b></small></span><input type="range" data-uis="1" min="0.7" max="1.3" step="0.05" value="${uiScale()}"></label>${tg('dmg','ตัวเลขความเสียหาย','แสดงตัวเลขลอยเมื่อโจมตี')}<label class="tog"><span>เล่นต่อเบื้องหลัง<br><small style="color:var(--muted)">เกมและบอททำงานต่อเมื่อสลับแท็บหรือพับจอ (ระหว่างบอททำงานจะเปิดเสียงเงียบไว้กันเบราว์เซอร์พักเกม) · ถ้าเบราว์เซอร์พักเกมไว้ จะเล่นต่อช่วงที่ขาดให้อัตโนมัติ (สูงสุด 30 นาที · เฉพาะโหมดออฟไลน์)</small></span><input type="checkbox" data-o="bg" ${o.bg!==false?'checked':''}></label><label class="tog"><span>กันหน้าจอดับ<br><small style="color:var(--muted)">ไม่ให้หน้าจอมือถือดับเองระหว่างเปิดเกม</small></span><input type="checkbox" data-o="wake" ${o.wake!==false?'checked':''}></label>${tg('names','ชื่อ NPC','แสดงชื่อเหนือหัว NPC ในเมือง')}</div></div>
  <div class="sec"><h3>ปุ่มลัด</h3><div class="keys"><div><kbd>WASD</kbd>เดิน</div><div><kbd>คลิก</kbd>เดิน / เลือกเป้าหมาย</div><div><kbd>Space</kbd>โจมตีตัวใกล้สุด</div><div><kbd>Tab</kbd>สลับเป้าหมาย</div><div><kbd>1–9, 0</kbd>ปุ่มลัด 10 ช่อง</div><div><kbd>Q</kbd>ปุ่มลัด Q (เริ่มต้น: ยาฟื้นพลัง)</div><div><kbd>E</kbd>ปุ่มลัด E (เริ่มต้น: ยามานา)</div><div><kbd>C</kbd>ตัวละคร</div><div><kbd>I</kbd>กระเป๋า</div><div><kbd>K</kbd>สกิล</div><div><kbd>L</kbd>เควส</div><div><kbd>M</kbd>แผนที่</div><div><kbd>Esc</kbd>ตั้งค่า (เมื่อไม่มีหน้าต่างเปิด)</div><div><kbd>Enter</kbd>แชท</div><div><kbd>Esc</kbd>ปิดหน้าต่าง</div></div></div>
  <div class="sec"><h3>ข้อมูลตัวละคร</h3><div class="note">เกมบันทึกอัตโนมัติทุก 10 วินาทีในเบราว์เซอร์นี้</div><div class="btns" style="margin-top:8px"><button class="btn" data-a="save">บันทึกตอนนี้</button><button class="btn" data-a="logout">กลับหน้าเลือกตัวละคร</button><button class="btn bad" data-a="delete">${delArm?'ยืนยันลบตัวละครถาวร':'ลบตัวละคร'}</button></div></div>`}
 
@@ -3594,7 +3596,7 @@ $('#wb').addEventListener('click',e=>{const w2=e.target.closest('[data-w2]');if(
   case 'delete':if(delArm){deleteSlot(curSlot);P=null;location.reload()}else delArm=true;break;
  }
  rWin();save()});
-$('#wb').addEventListener('change',e=>{const k=e.target.dataset.o;if(k){P.opts[k]=e.target.checked;if(k==='music'||k==='sound'){startMusic();applyVol()}save()}});
+$('#wb').addEventListener('change',e=>{const k=e.target.dataset.o;if(k){P.opts[k]=e.target.checked;if(k==='music'||k==='sound'){startMusic();applyVol()}if(k==='bg'||k==='wake'){try{kaSync();wlSync()}catch(e){}}save()}});
 $('#wb').addEventListener('input',e=>{const t=e.target;if(t.dataset.uis){setUiScale(+t.value);const l=$('#uisv');if(l)l.textContent=Math.round(+t.value*100)+'%'}if(t.dataset.ov){P.opts[t.dataset.ov]=+t.value;applyVol()}if(t.dataset.qk){QTY[t.dataset.qk]=t.value;const tot=t.closest('.qrow')&&t.closest('.qrow').querySelector('.tot');if(tot&&t.dataset.unit)tot.textContent=((Math.max(1,Math.floor(+t.value)||1))*+t.dataset.unit).toLocaleString()+' ทอง'}});
 $('#wx').addEventListener('click',closeWin);
 $('#pf').addEventListener('click',e=>{const b=e.target.closest('[data-w]');if(b)openWin(b.dataset.w,true)});
@@ -3709,6 +3711,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'6.5',d:'6 ต.ค. 2026',t:'กระเป๋า 80 ช่อง และเล่นต่อเบื้องหลัง',L:['กระเป๋าตัวละครเพิ่มเป็น 80 ช่อง','เล่นต่อเบื้องหลัง: สลับแท็บหรือย่อหน้าต่าง เกมและบอทยังทำงานต่อ','พับจอมือถือ: ช่วยให้เบราว์เซอร์ไม่พักเกม · ถ้ายังถูกพัก เมื่อกลับมาจะเล่นต่อช่วงที่ขาดให้อัตโนมัติ (โหมดออฟไลน์ สูงสุด 30 นาที)','กันหน้าจอดับระหว่างเปิดเกม · ตั้งค่าเปิด-ปิดได้ที่หน้าตั้งค่า']},
  {v:'6.4',d:'6 ต.ค. 2026',t:'บอท และหน้าเสริมพลังการ์ด',L:['บอทหยุดทำงานหรือกระเป๋าเต็ม จะหยุดอยู่ที่เดิม ไม่วาปกลับเมืองหรือเขตปลอดภัยเองแล้ว','หน้าเสริมพลังการ์ด: แสดงรูปการ์ดหลัก พร้อมรายละเอียด ระดับ มอนที่ดรอป ช่องที่ใส่ได้ ค่าพลัง ค่าที่เสริมแล้ว และราคาขาย','การ์ดวัตถุดิบแบ่งกลุ่มตามระดับ ★★★ / ★★ / ★ / ไม่มีดาว · กลุ่มที่ใช้กับระดับนั้นไม่ได้จะแสดงเป็นสีจาง','เสริมพลัง Lv 1 เลือกการ์ดที่มีดาวเป็นวัตถุดิบได้ด้วย (ปุ่มเลือกอัตโนมัติจะใช้เฉพาะการ์ดไม่มีดาว)']},
  {v:'6.3',d:'6 ต.ค. 2026',t:'ถ้ำน้ำแข็งโฉมใหม่',L:['กราฟิกใหม่ในถ้ำธารน้ำแข็งและถ้ำผลึกคราม: พื้นน้ำแข็งแตกลาย ธารน้ำแข็งสีน้ำเงินเข้ม ผนังหินน้ำแข็งมีหินย้อย','ของตกแต่งใหม่: กลุ่มผลึก เสาน้ำแข็ง แท่งน้ำแข็งแหลม ก้อนน้ำแข็ง ตะเกียงน้ำแข็งเรืองแสง แท่นอักขระ','วงวาปในเขตปลอดภัยของทุกดันเจี้ยนย้ายไปอยู่กลางเขตปลอดภัย และขยายเป็นขนาด 4×4 ช่อง','ทางเข้าถ้ำธารน้ำแข็งในที่ราบหิมะ เปลี่ยนเป็นปากถ้ำน้ำแข็งขนาดใหญ่ มีหินย้อยและผลึกเรืองแสง เดินเข้าปากถ้ำเพื่อเข้าดัน']},
  {v:'6.2',d:'6 ต.ค. 2026',t:'ดันเจี้ยนใหม่ 2 แห่ง',L:['เหมืองร้างพสุธา (Lv 36–44): เหมืองแร่ใต้ดิน 10 โถงทรงกลมเชื่อมด้วยอุโมงค์คดเคี้ยว พื้นดิน ทางหิน และสะพานไม้ · มีลังไม้ ถังไม้ ตะเกียง · ทางเข้าอยู่ในห้องบอสถ้ำธารน้ำแข็ง','ถ้ำผลึกคราม (Lv 44–52): ถ้ำหินขาว 9 โถงเชื่อมด้วยธารน้ำแข็งสีครามระยิบระยับ · ทางเข้าอยู่ในห้องบอสของเหมืองร้าง','มอนใหม่ 10 ชนิด + บอส 2 ตัว: ราชาโกเลมพสุธา Lv 45 และจักรพรรดิมังกรคราม Lv 54 · การ์ดใหม่ครบทุกตัว','ไอเทมใหม่: แร่แก่นพสุธา · ผลึกคราม · แหวนแก่นพสุธา · สร้อยผลึกคราม (ดรอปจากบอส)','ทั้งสองดันมีจุดพักปลอดภัยที่ทางเข้า']},
@@ -4123,7 +4126,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261006150243';
+const BUILDV='20261006150830';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
@@ -4237,6 +4240,29 @@ function frame0(now){const dt=Math.min(.05,(now-last)/1000);last=now;try{update(
 requestAnimationFrame(frame);
 window.addEventListener('beforeunload',()=>{if(P)save()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)save()});
+// ---- keep the game running while the tab is hidden / screen off ----
+const optOn=k=>!(P&&P.opts&&P.opts[k]===false);
+let BGW=null,bgLast=0,bgOn=false,CATCH=null;
+function bgStep(sec){let el=Math.min(sec,5);while(el>0){const d=Math.min(.05,el);el-=d;try{update(d)}catch(e){}}saveT+=sec}
+function bgTick(){if(!bgOn||!P)return;const now=performance.now(),sec=(now-bgLast)/1000;bgLast=now;last=now;if(sec>6){catchUp(sec);return}bgStep(sec);if(saveT>10){saveT=0;try{save()}catch(e){}}}
+function bgStart(){if(bgOn)return;bgOn=true;bgLast=performance.now();try{if(!BGW){BGW=new Worker(URL.createObjectURL(new Blob(['let t=null;onmessage=e=>{clearInterval(t);t=null;if(e.data>0)t=setInterval(()=>postMessage(0),e.data)}'],{type:'text/javascript'})));BGW.onmessage=bgTick}BGW.postMessage(100)}catch(e){BGW=null;bgStart.iv=setInterval(bgTick,100)}}
+function bgStop(){if(!bgOn)return;bgOn=false;if(BGW)BGW.postMessage(0);if(bgStart.iv){clearInterval(bgStart.iv);bgStart.iv=null}const sec=(performance.now()-bgLast)/1000;last=performance.now();if(sec>2)catchUp(sec)}
+// the browser froze the page (phone locked / app switched): replay the missed time quickly
+function catchUp(sec){if(!P||CATCH)return;const online=typeof MOBON!=='undefined'&&MOBON;
+ if(online||!optOn('bg')){if(sec>20)toast('⏸ เบราว์เซอร์พักเกมไว้ '+fmtGap(sec)+(online?' · โหมดออนไลน์ซิงค์กับเซิร์ฟเวอร์แล้ว':''));return}
+ const tot=Math.min(sec,1800);let left=tot;CATCH={tot};const box=document.createElement('div');box.id='catchup';box.innerHTML='<b>⏩ กำลังเล่นต่อช่วงที่พับจอ</b><span>0%</span><i><u></u></i>';document.body.appendChild(box);
+ const run=()=>{const t0=performance.now();while(left>0&&performance.now()-t0<30){const d=Math.min(.1,left);left-=d;try{update(d)}catch(e){}}
+  const p=Math.round((1-left/tot)*100);box.querySelector('span').textContent=p+'% · '+fmtGap(tot-left)+' / '+fmtGap(tot);box.querySelector('u').style.width=p+'%';
+  if(left>0)setTimeout(run,0);else{box.remove();CATCH=null;last=performance.now();cam.x=P.x-VW/2;cam.y=P.y-VH/2;try{save()}catch(e){}toast('⏩ เล่นต่อช่วงที่พับจอแล้ว '+fmtGap(tot)+(sec>tot?' (สูงสุด 30 นาที)':''))}};run()}
+function fmtGap(s){s=Math.round(s);return s<60?s+' วินาที':s<3600?Math.floor(s/60)+' นาที'+(s%60?' '+(s%60)+' วินาที':''):Math.floor(s/3600)+' ชม. '+Math.floor(s%3600/60)+' นาที'}
+// keep-alive: an almost silent audio loop stops mobile browsers from freezing the tab while it plays
+let KA=null;function kaWav(){const sr=8000,n=sr,b=new ArrayBuffer(44+n*2),v=new DataView(b),w=(o,t)=>{for(let i=0;i<t.length;i++)v.setUint8(o+i,t.charCodeAt(i))};w(0,'RIFF');v.setUint32(4,36+n*2,true);w(8,'WAVEfmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,sr,true);v.setUint32(28,sr*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n*2,true);for(let i=0;i<n;i++)v.setInt16(44+i*2,(i%2?1:-1)*2,true);return URL.createObjectURL(new Blob([b],{type:'audio/wav'}))}
+function kaSync(){try{const want=P&&optOn('bg')&&typeof BOT!=='undefined'&&BOT.on;if(want){if(!KA){KA=new Audio(kaWav());KA.loop=true;KA.volume=.02;KA.setAttribute('playsinline','');if('mediaSession' in navigator)try{navigator.mediaSession.metadata=new MediaMetadata({title:'ELDRIA Online',artist:'เกมกำลังทำงานเบื้องหลัง'})}catch(e){}}if(KA.paused)KA.play().catch(()=>{})}else if(KA&&!KA.paused)KA.pause()}catch(e){}}
+let WL=null;async function wlSync(){try{const want=P&&optOn('wake')&&!document.hidden;if(want&&!WL&&navigator.wakeLock){WL=await navigator.wakeLock.request('screen');WL.addEventListener('release',()=>{WL=null})}else if(!want&&WL){WL.release();WL=null}}catch(e){WL=null}}
+['pointerdown','keydown','touchend'].forEach(ev=>addEventListener(ev,()=>{kaSync();wlSync()},{passive:true}));
+document.addEventListener('visibilitychange',()=>{if(document.hidden){if(P&&optOn('bg'))bgStart()}else{bgStop();wlSync();kaSync()}});
+addEventListener('pageshow',()=>{if(!document.hidden)bgStop()});
+
 })();
 </script>
 </body></html>
