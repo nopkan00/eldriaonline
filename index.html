@@ -621,6 +621,23 @@ img[src^="data:image/webp"]{image-rendering:auto!important}
 .refst .btn.sm{padding:2px 9px;font-size:11px;margin-left:4px;min-height:0;line-height:1.5}
 #toast{z-index:60!important;display:flex!important;align-items:center;justify-content:center;width:max-content!important;max-width:calc(100% - 24px)}
 #toast .tic{width:26px;height:26px;margin-right:8px;flex:none;filter:drop-shadow(0 1px 2px #000)}
+#botpill{position:absolute;left:50%;top:calc(8px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:40;display:flex;align-items:center;gap:8px;padding:5px 6px 5px 10px;border-radius:999px;background:linear-gradient(180deg,rgba(20,40,70,.94),rgba(12,22,44,.94));border:1px solid rgba(122,216,255,.6);box-shadow:0 0 14px rgba(90,176,255,.45),0 6px 18px rgba(0,0,0,.5);color:#e8f6ff;font:500 12px/1.25 'Kanit',sans-serif;cursor:pointer;pointer-events:auto;max-width:calc(100% - 20px)}
+#botpill .bpi{font-size:18px;animation:botb 1.2s ease-in-out infinite}@keyframes botb{50%{transform:translateY(-2px) rotate(-6deg)}}
+#botpill .bpt{display:flex;flex-direction:column;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#botpill .bpt b{color:#7ad8ff;margin-right:4px}#botpill small{color:#a8c4dc;font-size:10.5px;overflow:hidden;text-overflow:ellipsis}
+#botpill .bps{width:26px;height:26px;border-radius:50%;border:1px solid #ff8a8a;background:#5a1a24;color:#ffd0d0;font-size:11px;cursor:pointer;flex:none}
+.botbox{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:12px;background:linear-gradient(135deg,rgba(40,60,110,.55),rgba(20,28,56,.55));border:1px solid rgba(122,216,255,.35);margin-bottom:10px}
+.botbox.on{border-color:#7ad8ff;box-shadow:0 0 16px rgba(90,176,255,.35) inset}.bothd{display:flex;align-items:center;gap:10px;min-width:0}.bothd b{display:block;font-size:15px;color:#e8f6ff}.bothd small{display:block;color:#a8c4dc;font-size:11.5px}
+.botav{font-size:30px;width:44px;height:44px;display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle at 40% 35%,#7ad8ff55,#1a2a4a);border:1px solid #7ad8ff88;flex:none}.botbox.on .botav{animation:botb 1.2s ease-in-out infinite}
+.botgo{flex:none;min-width:150px;font-weight:600}
+.bsec{padding:10px 12px;border-radius:10px;background:rgba(10,14,30,.35);border:1px solid rgba(120,140,220,.18);margin-bottom:10px}.bsec h4{margin:0 0 8px;font:600 13px 'Kanit',sans-serif;color:#ffd98a}
+.brow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:8px}.brow>span{min-width:70px;color:#c8d4ee;font-size:12.5px}
+.bopt{padding:4px 10px;border-radius:999px;border:1px solid rgba(160,180,240,.3);background:rgba(30,40,80,.5);color:#d8e2ff;font:500 12px 'Kanit',sans-serif;cursor:pointer}.bopt.on{background:linear-gradient(180deg,#3a8ad8,#245aa8);border-color:#7ad8ff;color:#fff;box-shadow:0 0 8px rgba(90,176,255,.5)}
+.bstep{display:flex;align-items:center;gap:6px;margin:6px 0;font-size:12.5px;color:#c8d4ee}.bstep>span{flex:1}.bstep button{width:26px;height:26px;border-radius:8px;border:1px solid rgba(160,180,240,.35);background:rgba(30,40,80,.6);color:#fff;cursor:pointer}.bstep b{min-width:62px;text-align:center;color:#ffe9a8}
+.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px;margin-top:6px}
+.btog{display:flex;align-items:center;gap:8px;text-align:left;padding:6px 8px;border-radius:8px;border:1px solid rgba(160,180,240,.22);background:rgba(30,40,80,.4);color:#d8e2ff;font:500 12.5px 'Kanit',sans-serif;cursor:pointer}.btog small{display:block;color:#9aaccc;font-size:10.5px}
+.btog i{width:30px;height:17px;border-radius:9px;background:#3a4258;position:relative;flex:none;transition:.2s}.btog i::after{content:'';position:absolute;left:2px;top:2px;width:13px;height:13px;border-radius:50%;background:#c8cfe0;transition:.2s}.btog.on i{background:#3aa86a}.btog.on i::after{left:15px;background:#fff}
+.bsk{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px;margin-bottom:6px}.bskb{display:flex;align-items:center;gap:8px;padding:5px 7px;border-radius:8px;border:1px solid rgba(160,180,240,.22);background:rgba(30,40,80,.35);color:#d8e2ff;text-align:left;font:500 12px 'Kanit',sans-serif;cursor:pointer;opacity:.6}.bskb img{width:30px;height:30px;border-radius:6px;filter:grayscale(.8)}.bskb small{display:block;font-size:10.5px;color:#9aaccc}
+.bskb.on{opacity:1;border-color:#7ad8ff;background:rgba(40,70,130,.5);box-shadow:0 0 8px rgba(90,176,255,.35)}.bskb.on img{filter:none}.bskb.dis{opacity:.35;cursor:not-allowed}
 .cardfit{margin-top:8px;padding:8px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}.cardfit>b{display:block;font-size:12px;margin-bottom:6px;color:#ffe07a}.cfrow{display:flex;align-items:center;gap:8px;padding:4px 0;border-top:1px solid rgba(255,255,255,.06)}.cfrow:first-of-type{border-top:0}.cfrow .l{flex:1;min-width:0;font-size:12px}.cfrow .l small{display:block;opacity:.7}.cfrow .btn{white-space:nowrap}.eqb{display:inline-block;padding:0 6px;border-radius:8px;font-size:10px;font-weight:700;background:rgba(255,255,255,.1);color:#aab}.eqb.on{background:rgba(94,224,140,.2);color:#7ef0a8}.cfrow canvas,.cfrow img{width:32px;height:32px}
 #chh{display:flex;align-items:center;justify-content:space-between;padding:3px 8px;font-size:11px;font-weight:700;color:#aab4e0;cursor:move;user-select:none;touch-action:none;background:rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.07)}#chh button{background:none;border:0;color:#cfd6f5;font-size:15px;line-height:1;padding:0 6px;cursor:pointer}#chat.min #log,#chat.min #ci{display:none!important}#chat.min{width:auto!important;right:auto!important}
 .bookw{display:grid;grid-template-columns:1.25fr 1fr;gap:10px}.bkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:6px;max-height:430px;overflow:auto;padding-right:4px}.bkc{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:inherit;cursor:pointer;font:inherit}.bkc img{width:46px;height:46px;image-rendering:pixelated}.bkc b{font-size:11px;text-align:center;line-height:1.2}.bkc small{font-size:10px;opacity:.7}.bkc.sel{border-color:#ffd24a;background:rgba(255,210,74,.12)}.bkc.lock img,.lockimg{filter:brightness(0) opacity(.55)}.bkc.lock b{opacity:.6}.bkd{min-width:0}.bkhead{display:flex;gap:10px;align-items:center;margin-bottom:6px}.bkhead img{width:64px;height:64px;image-rendering:pixelated;background:rgba(255,255,255,.05);border-radius:10px}.bkhead b{display:block;font-size:15px}.bkhead small{display:block;opacity:.75;font-size:11px}.elb{display:inline-block;margin-top:3px;padding:1px 8px;border-radius:8px;font-size:11px;font-weight:700;color:var(--c);border:1px solid var(--c);background:rgba(0,0,0,.25)}.bksec{margin:8px 0 4px;font-size:12px;font-weight:700;color:#ffe07a}.kvs{display:grid;grid-template-columns:1fr 1fr;gap:3px 10px}.bkdrop{display:flex;flex-direction:column;gap:3px}.bkit{display:flex;align-items:center;gap:6px;font-size:12px}.bkit span:nth-child(2){flex:1}.bkit .ic{width:26px;height:26px}.bkit b{color:#9ef0b0}@media(max-width:640px){.bookw{grid-template-columns:1fr}.bkgrid{max-height:220px}}
@@ -1526,7 +1543,7 @@ function gainJob(n){if(P.jlv>=jmax()){if(P.cls==='novice'&&!S.jobHint){S.jobHint
 function gainBoth(n,src,x,y){const j=Math.round(n*.75);chat('exp','','+'+n.toLocaleString()+' Base EXP · +'+j.toLocaleString()+' Job EXP'+(src?' · '+src:''));if(x!=null){TXT.push({x,y,s:'+'+n+' EXP',c:'#c8e67a',t:0,big:true,side:1});TXT.push({x,y:y+16,s:'+'+j+' Job EXP',c:'#5ee0d0',t:0,side:1})}gainExp(n);gainJob(j)}
 /* status points per base level: 5 up to Lv 30, 7 from Lv 31, then +2 more every 20 levels (51+: 9, 71+: 11 …) */
 const ptsAt=L=>L<=30?5:7+2*Math.floor((L-31)/20);
-function gainExp(n){P.exp+=n;let up=false;while(P.exp>=need(P.lv)){P.exp-=need(P.lv);P.lv++;P.pts+=ptsAt(P.lv);up=true;}
+function gainExp(n){if(BOT.on)BOT.ex+=n;P.exp+=n;let up=false;while(P.exp>=need(P.lv)){P.exp-=need(P.lv);P.lv++;P.pts+=ptsAt(P.lv);up=true;}
  if(up){const d=D();P.hp=d.mhp;P.mp=d.mmp;FX.push({k:'lvl',x:P.x,y:P.y,t:0});toast('เลเวลอัป! Base Lv '+P.lv+' · แต้มสถานะ +'+ptsAt(P.lv));chat('sys','','คุณเลเวลอัปเป็น Lv '+P.lv);snd(660,.25,'triangle',.06);sfx('lvl');buildBar();save()}}
 const mobReach=m=>m.T.rng?m.T.rng*TS:m.T.r+16;
 function mobShot(m,tx,ty){FX.push({k:'shot',kind:m.T.shot||'magic',x:m.x+(m.fx||1)*6,y:m.y-m.T.r,tx,ty:ty-18,c:m.T.scol||'#9ad8ff',life:.22,t:0})}
@@ -1788,7 +1805,7 @@ function updMob(m,dt){const T=m.T;m.flash=Math.max(0,m.flash-dt);if(m.poison){if
  if(m.agg){if(T.boss){m.sk-=dt;if(m.sk<=0&&dp<4*TS){m.sk=7;FX.push({k:'warn',x:m.x,y:m.y,r:3*TS,t:0,cb:()=>{if(M.includes(m)&&!S.dead&&dist(m,P)<3*TS)hitPlayer(m,1.7);FX.push({k:'ring',x:m.x,y:m.y,r:3*TS,c:'#e0a05a',t:0})}});chat('sys','',T.n+' กำลังกระแทกพื้น! ถอยออกมา')}}
   if(dp>mobReach(m)){m.inr=0;moveEnt(m,P.x,P.y,T.speed*sf,dt)}else{if(!m.inr){m.inr=1;m.cd=Math.min(m.cd,.15)}m.cd-=dt*sf;if(m.cd<=0){m.cd=T.as;m.atkT=gt;m.fx=P.x>=m.x?1:-1;if(T.rng)mobShot(m,P.x,P.y);hitPlayer(m)}}}
  else{m.wt-=dt;if(m.wt<=0){m.wt=2+R()*4;m.wx=m.hx+(R()-.5)*4*TS;m.wy=m.hy+(R()-.5)*4*TS}moveEnt(m,m.wx,m.wy,T.speed*.4,dt)}}
-function update(dt){gt+=dt;
+function update(dt){gt+=dt;try{botTick(dt)}catch(e){reportErr(e,'bot')}
  for(let i=timers.length-1;i>=0;i--)if(timers[i].t<=gt){const tm=timers[i];timers.splice(i,1);withCB(tm.cbx||null,tm.f)}
  for(let i=COMBOS.length-1;i>=0;i--){const c=COMBOS[i];if((c.n&&gt-c.last>.6)||gt-c.st>8){if(c.mm)for(const [m,e] of c.mm)if(e.n>=2){const al=M.includes(m),x=al?m.x:e.x,y=(al?m.y:e.y)-e.r*2.3-18;float(x,y,e.t,'#ffd24a',false,'total',e.n)}COMBOS.splice(i,1)}}
  if(P)updPlayer(dt);
@@ -2549,6 +2566,79 @@ function reportErr(e,where){const msg=String(e&&e.message||e).slice(0,160),k=whe
   const st=String(e&&e.stack||'').split('\n').slice(0,3).join('\n');b.textContent+=(b.textContent?'\n\n':'')+'⚠ เกิดข้อผิดพลาด ('+where+') v'+(PATCHES[0]&&PATCHES[0].v)+'\n'+msg+'\n'+st+'\n'+navigator.userAgent.slice(0,120)+'\n(แตะเพื่อปิด · ส่งภาพนี้ให้ผู้พัฒนา)'}catch(_){}}
 addEventListener('error',ev=>{if(ev&&ev.error)reportErr(ev.error,'global')});addEventListener('unhandledrejection',ev=>{const r=ev&&ev.reason;if(r&&r.stack)reportErr(r,'promise')});
 {const di=CanvasRenderingContext2D.prototype.drawImage;CanvasRenderingContext2D.prototype.drawImage=function(im){if(!im)return;if(im instanceof HTMLImageElement&&(!im.complete||!im.naturalWidth))return;if((im instanceof HTMLCanvasElement)&&(!im.width||!im.height))return;try{return di.apply(this,arguments)}catch(e){if(!this.__die){this.__die=1;console.warn('drawImage skipped',e)}}}}
+/* ================= AUTO-HUNT BOT ================= */
+var BOT={on:false,ax:0,ay:0,t0:0,k0:0,ex:0,bl:new Map(),lastCast:0,tgt:null,tgtT:0,bestD:1e9,bestT:0,pause:0,msg:'',pillT:0,lootT:0,potT:0};
+const BOTDEF={rad:10,pri:'near',lv:8,boss:false,rb:true,sk:{},aoe:2,hp:50,mp:30,mpKeep:15,loot:true,wing:true,full:true};
+function botCfg(){P.bot=Object.assign({},BOTDEF,P.bot||{});P.bot.sk=P.bot.sk||{};return P.bot}
+function botSkOn(i){const c=botCfg(),b=SK[P.cls][i];if(!b||b.type==='res')return false;return c.sk[P.cls+i]!==undefined?c.sk[P.cls+i]:true}
+function botStart(){if(!P||S.dead)return;const c=botCfg();if(inSafe()){toast('ออกไปนอกเมืองหรือเขตปลอดภัยก่อนเริ่มบอท');return}
+ Object.assign(BOT,{on:true,ax:P.x,ay:P.y,t0:gt,k0:P.kills||0,ex:0,bl:new Map(),tgt:null,pause:0,msg:'กำลังหาเป้าหมาย'});toast('🤖 เริ่มล่าอัตโนมัติ · รัศมี '+(c.rad>=99?'ทั้งแผนที่':c.rad+' ช่อง'));sfx('lvl');botPill();if(curWin==='bot')rWin()}
+function botStop(why){if(!BOT.on)return;BOT.on=false;S.target=null;S.chase=false;S.moveTo=null;S.path=null;const k=(P.kills||0)-BOT.k0,t=Math.round(gt-BOT.t0);
+ chat('sys','','🤖 หยุดล่าอัตโนมัติ'+(why?' · '+why:'')+' · เวลา '+Math.floor(t/60)+':'+String(t%60).padStart(2,'0')+' · ล่าได้ '+k+' ตัว · EXP +'+Math.round(BOT.ex).toLocaleString(),'#7ad8ff');if(why)toast('🤖 '+why);botPill();if(curWin==='bot')rWin()}
+function botToggle(){BOT.on?botStop():botStart()}
+function botMobOk(m,c){if(!M.includes(m)||m.hp<=0)return false;if(m.T.boss&&!c.boss)return false;if(m.rb&&!c.rb)return false;if((m.T.lv||1)>P.lv+c.lv&&!botAtkMe(m))return false;
+ if(zoneOf(m.x,m.y)==='town'||(typeof inDSafe==='function'&&inDSafe(m.x,m.y)))return false;if(c.rad<99&&Math.hypot(m.x-BOT.ax,m.y-BOT.ay)>c.rad*TS)return botAtkMe(m)&&Math.hypot(m.x-P.x,m.y-P.y)<6*TS;
+ const b=BOT.bl.get(m);if(b&&b>gt)return false;return true}
+function botAtkMe(m){return m.agg&&!m.ret&&(m.tgt==null||(typeof UID!=='undefined'&&m.tgt===UID))&&Math.hypot(m.x-P.x,m.y-P.y)<8*TS}
+function botPick(c){let best=null,bs=1e18;for(const m of M){if(!botMobOk(m,c))continue;const d=Math.hypot(m.x-P.x,m.y-P.y);let sc=d;
+  if(botAtkMe(m))sc-=4000;if(c.pri==='weak')sc=sc*.3+(m.hp/m.mhp)*600;else if(c.pri==='exp')sc=d-(m.T.exp||0)*3;if(m===BOT.tgt)sc-=40;if(sc<bs){bs=sc;best=m}}return best}
+function botCount(x,y,r){let n=0;for(const m of M)if(!m.T.boss||true)if(Math.hypot(m.x-x,m.y-y)<r+m.T.r)n++;return n}
+function botSkills(c,t){if(gt-BOT.lastCast<.35||S.cast)return false;const d=D(),L=SK[P.cls],mpPct=P.mp/d.mmp*100;
+ const ok=i=>{const lv=skL(i);if(!lv||!botSkOn(i))return null;if((S.cds[i]||0)>gt)return null;const s=skAt(P.cls,i,lv);if(P.mp<s.mp)return null;return s};
+ // 1) self heal
+ for(let i=0;i<L.length;i++){const s=ok(i);if(s&&s.type==='heal'&&P.hp/d.mhp<.6){useSkill(i);BOT.lastCast=gt;return true}}
+ // 2) buffs when expired and enemies around
+ if(t)for(let i=0;i<L.length;i++){const s=ok(i);if(s&&s.type==='buff'&&!(S.buffUntil>gt&&S.buffIdx===i)&&!(S.buffUntil>gt)){useSkill(i);BOT.lastCast=gt;return true}}
+ if(!t||mpPct<c.mpKeep)return false;const dt=Math.hypot(t.x-P.x,t.y-P.y);
+ // 3) AoE when the pack is big enough
+ let bestA=null,bv=0;for(let i=0;i<L.length;i++){const s=ok(i);if(!s||s.type!=='aoe')continue;let n=0,inR=true;
+  if(s.at==='self')n=botCount(P.x,P.y,(s.rad||2)*TS);else if(s.cone){inR=dt<=(s.rad||5)*TS+t.T.r;n=botCount(t.x,t.y,1.5*TS)}else{inR=dt<=(s.range||6)*TS;n=botCount(t.x,t.y,(s.rad||2)*TS)}
+  if(!inR||n<Math.max(1,c.aoe))continue;const v=(s.mult||1)*(s.hits||1)*n;if(v>bv){bv=v;bestA=[i,s]}}
+ if(bestA){const [i,s]=bestA;useSkill(i,s.at==='self'?null:{x:t.x,y:t.y},true);BOT.lastCast=gt;return true}
+ // 4) strongest single-target skill
+ let bestD=null,bm=0;for(let i=0;i<L.length;i++){const s=ok(i);if(!s||s.type!=='dmg')continue;const v=(s.mult||1)*(s.hits||1);if(v>bm){bm=v;bestD=i}}
+ if(bestD!=null&&dt<=(skAt(P.cls,bestD,skL(bestD)).range||2)*TS+t.T.r+4){S.target=t;useSkill(bestD);BOT.lastCast=gt;return true}
+ return false}
+function botLoot(c){if(!c.loot)return null;let b=null,bd=c.rad<99?Math.max(6,c.rad)*TS:14*TS;for(const d of DROPS){if(gt-d.t0<.4||d.pk||d.full)continue;if(BOT.dbl&&BOT.dbl.get(d)>gt)continue;if(typeof dropMine==='function'?(!dropMine(d)&&gt-d.t0<30):(d.owner&&d.owner!==P.name&&gt-d.t0<30))continue;const dd=Math.hypot(d.x-P.x,d.y-P.y);if(c.rad<99&&Math.hypot(d.x-BOT.ax,d.y-BOT.ay)>(c.rad+2)*TS)continue;if(dd<bd){bd=dd;b=d}}return b}
+function botTick(dt){if(!BOT.on||!P)return;const c=botCfg(),d=D();
+ if(S.dead){botStop('ตัวละครหมดสติ');return}
+ if(gt-BOT.pillT>.5){BOT.pillT=gt;botPill();if(curWin==='bot'&&!document.querySelector('#wb:hover'))rWin()}
+ // potions (always, even while paused)
+ if(gt-BOT.potT>.3){BOT.potT=gt;if(P.hp/d.mhp*100<c.hp&&!(S.potCd>gt)&&(countItem('hp1')||countItem('hp2')))usePot('hp');else if(P.mp/d.mmp*100<c.mp&&!(S.potCd>gt)&&countItem('mp1'))usePot('mp')}
+ // safety: very low HP with no potions
+ if(P.hp/d.mhp<.25&&!countItem('hp1')&&!countItem('hp2')){if(c.wing&&countItem('wing')){useItem('wing');botStop('HP ต่ำและยาหมด · ใช้ปีกผีเสื้อกลับเมือง');return}}
+ if(c.full&&P.inv.length>=INV){if(c.wing&&countItem('wing'))useItem('wing');botStop('กระเป๋าเต็ม');return}
+ if(gt<BOT.pause){BOT.msg='หยุดชั่วคราว (ควบคุมเอง)';return}
+ if(S.manualT&&gt-S.manualT<.2){BOT.pause=gt+4;S.manualT=0;BOT.msg='หยุดชั่วคราว (ควบคุมเอง)';return}
+ if(inSafe()){BOT.msg='อยู่ในเขตปลอดภัย · เดินออกนอกเมือง';return}
+ let t=S.target&&M.includes(S.target)&&botMobOk(S.target,c)?S.target:null;
+ const threat=M.some(m=>botAtkMe(m));
+ // loot when nothing is attacking us
+ if(!threat&&(!t||!t.agg)){const dr=botLoot(c);if(dr){if(BOT.ld!==dr){BOT.ld=dr;BOT.ldT=gt}else if(gt-BOT.ldT>3){(BOT.dbl||(BOT.dbl=new Map())).set(dr,gt+20);BOT.ld=null}S.target=null;S.chase=false;S.moveTo={x:dr.x,y:dr.y};BOT.msg='เก็บของ';BOT.tgt=null;return}}
+ if(!t||(threat&&!botAtkMe(t)&&gt-BOT.tgtT>1.5)){t=botPick(c);if(t&&t!==BOT.tgt){BOT.tgt=t;BOT.tgtT=gt;BOT.bestD=1e9;BOT.bestT=gt}}
+ if(!t){BOT.tgt=null;const da=Math.hypot(P.x-BOT.ax,P.y-BOT.ay);if(c.rad<99&&da>2*TS){if(!S.moveTo)S.moveTo={x:BOT.ax,y:BOT.ay};BOT.msg='กลับจุดเริ่ม'}else{BOT.msg='รอมอนสเตอร์เกิด';if(c.rad>=99&&!S.moveTo&&gt-BOT.lootT>4){BOT.lootT=gt;const a=R()*6.283;S.moveTo={x:P.x+Math.cos(a)*5*TS,y:P.y+Math.sin(a)*5*TS}}}return}
+ // stuck detection: no progress toward the target for 4s while out of range
+ const dd=Math.hypot(t.x-P.x,t.y-P.y);if(dd<BOT.bestD-6){BOT.bestD=dd;BOT.bestT=gt}
+ if(dd>d.range+t.T.r+8&&gt-BOT.bestT>4){BOT.bl.set(t,gt+12);S.target=null;BOT.tgt=null;BOT.msg='เป้าหมายเข้าไม่ถึง · เปลี่ยนเป้า';return}
+ S.target=t;S.chase=true;S.moveTo=null;BOT.msg='ล่า '+mobName(t)+' Lv'+t.T.lv;
+ botSkills(c,t)}
+function botPill(){let b=document.getElementById('botpill');if(!BOT.on){if(b)b.remove();return}
+ if(!b){b=document.createElement('div');b.id='botpill';b.innerHTML='<span class="bpi">🤖</span><span class="bpt"></span><button class="bps" title="หยุดบอท">■</button>';(document.getElementById('hud')||document.body).appendChild(b);b.querySelector('.bps').onclick=e=>{e.stopPropagation();botStop('หยุดโดยผู้เล่น')};b.onclick=()=>openWin('bot')}
+ const t=Math.round(gt-BOT.t0);b.querySelector('.bpt').innerHTML=`<b>ล่าอัตโนมัติ</b> ${Math.floor(t/60)}:${String(t%60).padStart(2,'0')} · ล่า ${(P.kills||0)-BOT.k0} · EXP +${Math.round(BOT.ex).toLocaleString()}<small>${esc(BOT.msg||'')}</small>`}
+function rBot(){const c=botCfg(),L=SK[P.cls],on=BOT.on,t=Math.round(gt-BOT.t0);
+ const opt=(k,v,lab)=>`<button class="bopt${c[k]===v?' on':''}" data-a="botset" data-v="${k}:${v}">${lab}</button>`,tg=(k,lab,sub)=>`<button class="btog${c[k]?' on':''}" data-a="botset" data-v="${k}:!"><i></i><span>${lab}${sub?`<small>${sub}</small>`:''}</span></button>`,step=(k,lab,unit,mn,mx,st)=>`<div class="bstep"><span>${lab}</span><button data-a="botset" data-v="${k}:-${st}">−</button><b>${c[k]}${unit}</b><button data-a="botset" data-v="${k}:+${st}">+</button></div>`;
+ let h=`<div class="botbox${on?' on':''}"><div class="bothd"><div class="botav">🤖</div><div><b>${on?'กำลังล่าอัตโนมัติ':'บอทล่าอัตโนมัติ'}</b><small>${on?esc(BOT.msg||'')+' · '+Math.floor(t/60)+':'+String(t%60).padStart(2,'0')+' · ล่า '+((P.kills||0)-BOT.k0)+' ตัว · EXP +'+Math.round(BOT.ex).toLocaleString():'ตีมอน ใช้สกิล กินยา เก็บของ ให้อัตโนมัติ · กดปุ่ม F เพื่อเริ่ม/หยุดได้เร็ว'}</small></div></div>
+ <button class="btn ${on?'bad':'pri'} botgo" data-a="bot">${on?'■ หยุดบอท':'▶ เริ่มล่าอัตโนมัติ'}</button></div>
+ <div class="bsec"><h4>🎯 พื้นที่และเป้าหมาย</h4><div class="brow"><span>รัศมีล่า</span>${opt('rad',6,'6 ช่อง')}${opt('rad',10,'10 ช่อง')}${opt('rad',16,'16 ช่อง')}${opt('rad',99,'ทั้งแผนที่')}</div>
+ <div class="brow"><span>เลือกเป้า</span>${opt('pri','near','ใกล้สุด')}${opt('pri','weak','เลือดน้อย')}${opt('pri','exp','EXP สูง')}</div>
+ ${step('lv','ไม่ตีมอนที่เลเวลสูงกว่าเรา','',0,30,1).replace('</b>',' เลเวล</b>')}
+ <div class="bgrid">${tg('boss','ตีบอส')}${tg('rb','ตีมอนสีรุ้ง')}</div></div>
+ <div class="bsec"><h4>✨ สกิลที่ให้บอทใช้</h4><div class="bsk">${L.map((b,i)=>{const lv=skL(i),dis=!lv||b.type==='res',onk=!dis&&botSkOn(i);return `<button class="bskb${onk?' on':''}${dis?' dis':''}" data-a="botsk" data-v="${i}"${dis?' disabled':''}><img src="${skillImg(P.cls,i)}" alt=""><span>${esc(b.n)}<small>${dis?(b.type==='res'?'ใช้เองเท่านั้น':'ยังไม่ได้เรียน'):({dmg:'โจมตี',aoe:'พื้นที่',buff:'บัฟ',heal:'ฮีล'}[b.type]||'')+' · Lv '+lv}</small></span></button>`}).join('')}</div>
+ ${step('aoe','ใช้สกิลพื้นที่เมื่อมอนรวมกันตั้งแต่',' ตัว',1,6,1)}${step('mpKeep','เก็บ MP สำรองไว้ (ไม่ใช้สกิลเมื่อต่ำกว่า)','%',0,80,5)}</div>
+ <div class="bsec"><h4>🧪 ยาและความปลอดภัย</h4>${step('hp','กินยา HP เมื่อต่ำกว่า','%',10,90,5)}${step('mp','กินยา MP เมื่อต่ำกว่า','%',0,90,5)}
+ <div class="bgrid">${tg('loot','เก็บของอัตโนมัติ','เดินไปเก็บของที่ดรอปในรัศมี')}${tg('wing','ใช้ปีกผีเสื้อหนีกลับเมือง','เมื่อ HP ต่ำมากและยาหมด')}${tg('full','หยุดเมื่อกระเป๋าเต็ม')}</div>
+ <div class="note">ยา HP ${countItem('hp1')+countItem('hp2')} · ยา MP ${countItem('mp1')} · ปีกผีเสื้อ ${countItem('wing')} · บอทจะหยุดชั่วคราว 4 วินาทีเมื่อคุณกดเดินหรือควบคุมเอง</div></div>`;
+ return h}
 function drawNpc(n){if(P&&!n.wander||P&&n.wander&&gt<n.wt){const dp=Math.hypot(P.x-n.x,P.y-n.y);if(dp<120)n.fx=P.x>=n.x?1:-1;if(!n.gnext)n.gnext=gt+2+R()*6;if(gt>n.gnext){n.gnext=gt+5+R()*8;const k=dp<120?'wave':(R()<.5?'hop':'wave');n.gest={k,t0:gt,dur:k==='hop'?.45:.9,until:gt+(k==='hop'?.45:.9)}}}
  const y=heroAt(n,n.look||NPCLOOK[n.id],n.n,'#f0d28a',false);if(NROLE[n.id]&&LBL.length)LBL[LBL.length-1][5]=NROLE[n.id];const q=n.id==='elder'&&P?questMark():n.id==='collector'&&P?junkMark():n.id==='jobmaster'&&P&&((P.cls==='novice'&&P.jlv>=10&&!(P.spts>0))||(P.cls==='warrior'&&P.jlv>=40))?'!':null;
  if(q)LBL.push([q,ax(n.x)*2,(y-(n._hh||42)+Math.floor(gt*3)%2)*2,q==='?'?'#a2e05a':'#ffd24a',22])}
@@ -3082,13 +3172,13 @@ $('#bar').addEventListener('drop',e=>{const b=e.target.closest('.sk[data-h]');if
 function useHot(j){const e=P.hot[j];if(!e)return toast('ช่อง '+hotKey(j)+' ว่างอยู่');if(e.t==='s')return useSkill(e.i);if(!countItem(e.id))return toast('ไม่มี '+IT[e.id].n+' ในกระเป๋า');useItem(e.id)}
 function setHot(j,e){for(let k=0;k<P.hot.length;k++){const x=P.hot[k];if(x&&e&&x.t===e.t&&(x.i===e.i&&x.id===e.id))P.hot[k]=null}P.hot[j]=e;S.assign=null;buildBar();save()}
 function startAssign(e){S.assign=e;$('#bar').classList.add('assigning');toast('กดปุ่ม Q, E, 1–9, 0 หรือคลิกช่องปุ่มลัดด้านล่างเพื่อวาง')}
-const MENU=[['char','ตัวละคร','C','bust'],['inv','กระเป๋า','I','bag'],['skill','สกิล','K','star'],['life','ทักษะชีวิต','G','leaf'],['quest','เควส','L','scroll'],['map','แผนที่','M','map'],['book','สมุดมอนสเตอร์','B','eye'],['party','ปาร์ตี้','P','shieldg'],['opt','ตั้งค่า','Esc','gear']];
-const WICON={cenh:'star',junk:'chest',farm:'leaf',life:'leaf',refine:'hammer',job:'crown',bank:'chest',char:'bust',inv:'bag',skill:'star',quest:'scroll',shop:'shop',map:'map',opt:'gear',book:'eye',party:'shieldg'};
+const MENU=[['char','ตัวละคร','C','bust'],['inv','กระเป๋า','I','bag'],['skill','สกิล','K','star'],['life','ทักษะชีวิต','G','leaf'],['quest','เควส','L','scroll'],['map','แผนที่','M','map'],['book','สมุดมอนสเตอร์','B','eye'],['party','ปาร์ตี้','P','shieldg'],['bot','บอทล่าอัตโนมัติ','O','target'],['opt','ตั้งค่า','Esc','gear']];
+const WICON={bot:'target',cenh:'star',junk:'chest',farm:'leaf',life:'leaf',refine:'hammer',job:'crown',bank:'chest',char:'bust',inv:'bag',skill:'star',quest:'scroll',shop:'shop',map:'map',opt:'gear',book:'eye',party:'shieldg'};
 function buildMenu(){$('#menu').innerHTML=MENU.map(([k,n,c,g])=>`<button data-w="${k}" title="${n} (${c})"><img src="${glyphURL(g)}" alt=""><span>${n}</span><kbd>${c}</kbd></button>`).join('')+`<button class="chatbtn" data-w="chat" title="แชท"><img src="${glyphURL('chat')}" alt=""><span>แชท</span></button>`}
 
 /* ================= windows ================= */
 let selSlot=null,shopCat='pot',curWin=null,selInv=-1,dropArm=-1,shopTab='buy',delArm=false;
-const WIN={cenh:['เสริมพลังการ์ด · นักเวทการ์ดเอลิออส',rCenh],farm:['ปลูกผัก · ฟาร์มชุมชน',rFarm],life:['ทักษะชีวิต · ตัดไม้ ขุดแร่ เก็บสมุนไพร',rLife],refine:['ตีบวก · ช่างตีเหล็กฮอลแกน',rRefine],job:['เปลี่ยนอาชีพ · อาจารย์เซเรน',rJob],bank:['คลังฝากของ · ใช้ร่วมกันทุกตัวละคร',rBank],char:['ตัวละคร',rChar],inv:['กระเป๋า',rInv],skill:['สกิล',rSkill],quest:['เควส · ผู้เฒ่าอิลวา',rQuest],shop:['ร้านค้า · พ่อค้าโบรัน',rShop],map:['แผนที่โลก',rMap],party:['ปาร์ตี้',rParty],book:['สมุดมอนสเตอร์',rBook],opt:['ตั้งค่า',rOpt],junk:['นักสะสมจิปาถะ · แลกโอสถถาวร',rJunk]};
+const WIN={bot:['บอทล่าอัตโนมัติ',rBot],cenh:['เสริมพลังการ์ด · นักเวทการ์ดเอลิออส',rCenh],farm:['ปลูกผัก · ฟาร์มชุมชน',rFarm],life:['ทักษะชีวิต · ตัดไม้ ขุดแร่ เก็บสมุนไพร',rLife],refine:['ตีบวก · ช่างตีเหล็กฮอลแกน',rRefine],job:['เปลี่ยนอาชีพ · อาจารย์เซเรน',rJob],bank:['คลังฝากของ · ใช้ร่วมกันทุกตัวละคร',rBank],char:['ตัวละคร',rChar],inv:['กระเป๋า',rInv],skill:['สกิล',rSkill],quest:['เควส · ผู้เฒ่าอิลวา',rQuest],shop:['ร้านค้า · พ่อค้าโบรัน',rShop],map:['แผนที่โลก',rMap],party:['ปาร์ตี้',rParty],book:['สมุดมอนสเตอร์',rBook],opt:['ตั้งค่า',rOpt],junk:['นักสะสมจิปาถะ · แลกโอสถถาวร',rJunk]};
 function openWin(k,force){if(k==='chat'){toggleChat();return}if(curWin===k&&!force){closeWin();return}curWin=k;selInv=-1;selSlot=null;dropArm=-1;delArm=false;$('#win').hidden=false;$('#win').classList.toggle('wide',k==='inv'||k==='bank'||k==='job'||k==='book');$('#wt').innerHTML=`<img src="${glyphURL(WICON[k])}" alt="">${esc(WIN[k][0])}`;rWin();document.querySelectorAll('#menu button').forEach(b=>b.classList.toggle('on',b.dataset.w===k))}
 let WPOS=null;
 function toggleChat(force){const c=$('#chat'),off=force!=null?!force:!c.classList.contains('off');c.classList.toggle('off',off);if(!off){c.classList.add('show');const r=c.getBoundingClientRect(),g=$('#game').getBoundingClientRect();if(r.right<g.left+40||r.left>g.right-40||r.top>g.bottom-20||r.bottom<g.top+20){for(const p of ['left','top','bottom','right','width'])c.style.removeProperty(p);try{localStorage.removeItem('eldria-chatpos')}catch(e){}}}try{localStorage.setItem('eldria-chatoff',off?'1':'0')}catch(e){}toast(off?'ซ่อนแชท · กด H เพื่อเปิด':'เปิดแชท · กด H เพื่อซ่อน')}
@@ -3367,7 +3457,7 @@ $('#wb').addEventListener('click',e=>{const w2=e.target.closest('[data-w2]');if(
   case 'turnin':{const qq=QUESTS.find(x=>x.id===v);if(!inTown())break;if(qq.type==='item')removeItem(qq.item,qq.need);P.quests[v].st='done';P.gold+=qq.rew.gold;addItem(qq.rew.item,qq.rew.q);gainBoth(qq.rew.exp,'เควส '+qq.n);toast('ส่งเควสสำเร็จ! +'+qq.rew.exp+' EXP +'+qq.rew.gold+' ทอง');chat('sys','','ได้รับรางวัลเควส '+qq.n);snd(780,.3,'triangle',.05);break}
   case 'tab':shopTab=v;break;
   case 'refsel':{const [src,k]=v.split(':');const L=refList();refSel=L.find(x=>x.src===src&&String(x.k)===k)||null;break}
-  case 'refine':doRefine();break;case 'cedo':doCenh();break;case 'ce5add':{const L=ceList(),cur=ceMain&&ceMain.plain?ceMain.id:null;if(!cur)break;const av=ce5Avail(cur);if(ce5N()<5&&(ce5[v]||0)<(av[v]||0))ce5[v]=(ce5[v]||0)+1;else if(ce5[v]){ce5[v]--;if(!ce5[v])delete ce5[v]}break}case 'ce5clr':ce5={};break;case 'ce5auto':{const cur=ceMain&&ceMain.plain?ceMain.id:null;if(!cur)break;const av=ce5Avail(cur);ce5={};let need=5;for(const k of Object.keys(av).sort((a,b)=>av[b]-av[a])){const t=Math.min(need,av[k]);if(t){ce5[k]=t;need-=t}if(!need)break}break}case 'cesel':{const L=ceList(),x=L[+v];if(x){ceMain=x.plain?{plain:1,id:x.o.id}:{o:x.o};ceMat=null;ce5={}}break}case 'cemat':{const o=P.inv[+v];if(o&&o.ce)ceMat=o;break}
+  case 'refine':doRefine();break;case 'cedo':doCenh();break;case 'bot':botToggle();break;case 'botsk':{const c=botCfg(),i=+v;c.sk[P.cls+i]=!botSkOn(i);break}case 'botset':{const c=botCfg(),[k,x]=v.split(':');if(x==='!')c[k]=!c[k];else if(/^[+-]/.test(x)){const lim={lv:[0,30],aoe:[1,6],mpKeep:[0,80],hp:[10,90],mp:[0,90]}[k]||[0,999];c[k]=Math.max(lim[0],Math.min(lim[1],(+c[k]||0)+(+x)))}else c[k]=isNaN(+x)?x:+x;save();break}case 'ce5add':{const L=ceList(),cur=ceMain&&ceMain.plain?ceMain.id:null;if(!cur)break;const av=ce5Avail(cur);if(ce5N()<5&&(ce5[v]||0)<(av[v]||0))ce5[v]=(ce5[v]||0)+1;else if(ce5[v]){ce5[v]--;if(!ce5[v])delete ce5[v]}break}case 'ce5clr':ce5={};break;case 'ce5auto':{const cur=ceMain&&ceMain.plain?ceMain.id:null;if(!cur)break;const av=ce5Avail(cur);ce5={};let need=5;for(const k of Object.keys(av).sort((a,b)=>av[b]-av[a])){const t=Math.min(need,av[k]);if(t){ce5[k]=t;need-=t}if(!need)break}break}case 'cesel':{const L=ceList(),x=L[+v];if(x){ceMain=x.plain?{plain:1,id:x.o.id}:{o:x.o};ceMat=null;ce5={}}break}case 'cemat':{const o=P.inv[+v];if(o&&o.ce)ceMat=o;break}
   case 'craft':doCraft(+v);break;
   case 'plant':plantSeed(v);break;
   case 'hotset':{const [t,x]=v.split(':');startAssign(t==='s'?{t:'s',i:+x}:{t:'i',id:x});break}
@@ -3434,7 +3524,8 @@ const keyOf=e=>e.code&&e.code.startsWith('Key')?e.code.slice(3).toLowerCase():e.
 window.addEventListener('keydown',e=>{if(!P||$('#login').hidden===false)return;const k=keyOf(e),inp=document.activeElement===$('#ci');
  if(inp){if(e.key==='Enter'){sendChat($('#ci').value);$('#ci').value='';$('#ci').blur()}else if(e.key==='Escape')$('#ci').blur();return}
  if(document.activeElement&&document.activeElement.tagName==='INPUT')return;
- if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright'].includes(k)){keys[k]=true;e.preventDefault();return}
+ if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright'].includes(k)){keys[k]=true;S.manualT=gt;e.preventDefault();return}
+ if(k==='f'){botToggle();return}
  if(e.key==='Enter'){$('#chat').classList.remove('off');$('#chat').classList.add('show');$('#ci').focus();e.preventDefault();return}
  if(e.key==='Escape'&&pickSlot>=0){closePick();return}
  if(e.key==='Escape'&&S.assign){S.assign=null;buildBar();toast('ยกเลิกการตั้งปุ่มลัด');return}
@@ -3444,7 +3535,7 @@ window.addEventListener('keydown',e=>{if(!P||$('#login').hidden===false)return;c
  if(/^[0-9]$/.test(k)){const j=k==='0'?9:+k-1;if(S.assign)setHot(j,S.assign);else useHot(j);return}
  if(k==='q'||k==='e'){const j=k==='q'?10:11;if(S.assign)setHot(j,S.assign);else useHot(j);return}
  if(k==='h'){toggleChat();return}
- const W={g:'life',c:'char',i:'inv',k:'skill',l:'quest',m:'map',b:'book',p:'party'}[k];if(W)openWin(W)});
+ const W={g:'life',c:'char',i:'inv',k:'skill',l:'quest',m:'map',b:'book',o:'bot',p:'party'}[k];if(W)openWin(W)});
 window.addEventListener('keyup',e=>{keys[keyOf(e)]=false;keys[e.key.toLowerCase()]=false});
 window.addEventListener('blur',()=>{for(const k in keys)keys[k]=false});
 cv.addEventListener('pointerdown',e=>{if(!P||S.dead)return;if(document.activeElement===$('#ci'))$('#ci').blur();
@@ -3457,7 +3548,7 @@ cv.addEventListener('pointerdown',e=>{if(!P||S.dead)return;if(document.activeEle
  for(const d of DROPS)if(Math.hypot(d.x-wx,d.y-8-wy)<18){S.moveTo={x:d.x,y:d.y};S.target=null;S.npcGoal=null;return}
  {const o=objAt(wx,wy)||nodeAt(wx,wy);if(o){S.objGoal=o;S.moveTo={x:o.x+(o.k==='chest'||o.k==='sign'?0:(P.x<o.x?-20:20)),y:o.y+(o.k==='chest'||o.k==='sign'?20:2)};S.target=null;S.npcGoal=null;S.chase=false;return}}
  {const n=npcHit(wx,wy);if(n){S.npcGoal=n;S.moveTo={x:n.x,y:n.y+30};S.target=null;return}}
- S.moveTo={x:wx,y:wy};S.chase=false;S.pend=null;S.npcGoal=null;FX.push({k:'click',x:wx,y:wy,t:0})});
+ S.moveTo={x:wx,y:wy};S.chase=false;S.pend=null;S.npcGoal=null;S.manualT=gt;FX.push({k:'click',x:wx,y:wy,t:0})});
 cv.addEventListener('contextmenu',e=>e.preventDefault());
 $('#ci').addEventListener('keydown',e=>{if(e.key==='Enter'){e.stopPropagation();sendChat(e.target.value);e.target.value='';e.target.blur()}else if(e.key==='Escape'){e.stopPropagation();e.target.blur()}});
 
@@ -3506,6 +3597,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'6.0',d:'6 ต.ค. 2026',t:'บอทล่าอัตโนมัติ',L:['ระบบใหม่ บอทล่าอัตโนมัติ: เมนู 🎯 บอท (ปุ่ม O) · กดปุ่ม F เพื่อเริ่ม/หยุดเร็ว','บอทจะตีมอน ใช้สกิล กินยา และเก็บของให้เอง ในรัศมีรอบจุดที่เริ่ม (6 / 10 / 16 ช่อง หรือทั้งแผนที่)','ฉลาด: ตีตัวที่กำลังโจมตีเราก่อนเสมอ · ใช้สกิลพื้นที่เมื่อมอนรวมกลุ่ม · ใช้สกิลแรงสุดที่พร้อมใช้ · ร่ายบัฟเมื่อหมดเวลา · ฮีลตัวเองเมื่อเลือดต่ำ · เปลี่ยนเป้าถ้าเดินไปไม่ถึง · กลับจุดเริ่มถ้าออกนอกรัศมี','ตั้งค่าได้: เลือกเป้า (ใกล้สุด / เลือดน้อย / EXP สูง) · ไม่ตีมอนที่เลเวลสูงเกิน · ตีบอส/มอนสีรุ้งหรือไม่ · เลือกสกิลที่ให้ใช้ · กินยา HP/MP ที่กี่ % · เก็บ MP สำรอง','ปลอดภัย: ยาหมดและ HP ต่ำมากจะใช้ปีกผีเสื้อกลับเมือง · หยุดเมื่อกระเป๋าเต็มหรือหมดสติ · หยุดชั่วคราว 4 วินาทีเมื่อคุณควบคุมเอง','แถบสถานะบอทด้านบนจอ: เวลา · จำนวนที่ล่า · EXP ที่ได้ · กด ■ เพื่อหยุด']},
  {v:'5.9.1',d:'6 ต.ค. 2026',t:'ข้อความซื้อของ',L:['ซื้อของจากร้านค้า: ข้อความแจ้งแสดงไอคอนไอเทมด้วย และขึ้นอยู่เหนือหน้าต่างร้านค้า ไม่โดนบังแล้ว']},
  {v:'5.9',d:'6 ต.ค. 2026',t:'ปีกผีเสื้อ และแก้จอดำ',L:['ไอเทมใหม่ ปีกผีเสื้อ: วาปกลับเมืองอิลวาเรียทันที · ขายที่พ่อค้าโบรัน 50 ทอง','แก้จอดำ: ถ้ามีข้อผิดพลาดระหว่างวาดภาพ เกมจะไม่หยุดทำงานทั้งหมดอีกต่อไป และข้ามรูปที่โหลดไม่สำเร็จ','ถ้ายังเกิดปัญหา จะมีกล่องข้อความสีแดงบอกสาเหตุด้านบนจอ ให้ถ่ายภาพส่งผู้พัฒนาได้เลย']},
  {v:'5.8',d:'6 ต.ค. 2026',t:'ดาเมจรวมแยกตัว และปรับสกิลนักธนู',L:['ดาเมจรวมแสดงแยกแต่ละตัว: มอนที่โดนสกิลเดียวกันตั้งแต่ 2 ฮิตขึ้นไป จะขึ้นยอดรวมของตัวเองบนหัว','ยิงทะลวง: ผลักมอนถอยหลัง 1 ช่อง (Lv สูงสุด 2 ช่อง) · บอสไม่โดนผลัก','ยิงกระจาย: ทำให้มอนช้าลง 2 วินาที','ฝนธนู: ตรึงมอนเคลื่อนไหวไม่ได้ 2 วินาที (Lv 5 = 3 วินาที · Lv สูงสุด = 5 วินาที) มอนที่ถูกตรึงยังโจมตีได้ถ้าอยู่ในระยะ · ไอคอนสถานะใหม่: ตรึง (โซ่สีเขียว)']},
@@ -3910,7 +4002,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261006114007';
+const BUILDV='20261006114748';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
