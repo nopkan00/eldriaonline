@@ -184,6 +184,25 @@
     ".write": "auth != null && auth.uid === $uid",
     ".validate": "!newData.exists() || (newData.child('t').isNumber() && newData.child('t').val() <= now)"
    }
+  },
+  "feedback": {
+   ".read": "auth != null && auth.token.email === 'nopkan00@gmail.com' && auth.token.email_verified === true",
+   ".indexOn": [
+    "t"
+   ],
+   "$fid": {
+    ".write": "auth != null && ((!data.exists() && newData.child('u').val() === auth.uid) || (auth != null && auth.token.email === 'nopkan00@gmail.com' && auth.token.email_verified === true))",
+    ".validate": "!newData.exists() || (newData.child('u').isString() && newData.child('m').isString() && newData.child('m').val().length <= 1000 && newData.child('t').isNumber() && newData.child('t').val() <= now)"
+   }
+  },
+  "fbmine": {
+   "$uid": {
+    ".read": "auth != null && auth.uid === $uid",
+    "$fid": {
+     ".write": "auth != null && ((auth.uid === $uid && !data.exists()) || (auth != null && auth.token.email === 'nopkan00@gmail.com' && auth.token.email_verified === true))",
+     ".validate": "!newData.exists() || (newData.child('m').isString() && newData.child('m').val().length <= 1000)"
+    }
+   }
   }
  }
 }
