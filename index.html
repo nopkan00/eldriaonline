@@ -779,10 +779,10 @@ const CLS={
  archer:{n:'นักธนู',c:'#5fae6a',tier:1,hp:95,mp:50,main:'dex',range:6,proj:'#efe0a6',base:{str:4,agi:7,vit:5,int:3,dex:10,luk:5},d:'ระยะไกล แม่นยำ คริแรง'},
  thief:{n:'โจร',c:'#7a5a9a',tier:1,hp:100,mp:45,main:'agi',range:1.4,base:{str:6,agi:10,vit:5,int:2,dex:7,luk:6},d:'ประชิด ว่องไว หลบหลีกสูง'},
   acolyte:{n:'อาโคไลท์',c:'#e6dcc0',tier:1,hp:110,mp:75,main:'int',range:1.6,base:{str:5,agi:4,vit:7,int:9,dex:5,luk:4},d:'ประชิด ฟื้นฟู และพรศักดิ์สิทธิ์'},
- frostg:{n:'ผู้พิทักษ์น้ำแข็ง',c:'#7fd0ff',tier:2,from:'warrior',hp:150,mp:60,main:'str',range:1.4,base:{str:9,agi:5,vit:8,int:2,dex:5,luk:3},d:'ประชิด ถึกทน พลังธาตุน้ำแข็ง ทำให้ศัตรูช้าและแช่แข็ง'}
+ frostg:{n:'ผู้พิทักษ์น้ำแข็ง',c:'#7fd0ff',tier:2,from:'warrior',hp:150,mp:60,main:'str',range:1.4,base:{str:7,agi:4,vit:8,int:6,dex:4,luk:3},d:'ประชิด ถึกทน พลังธาตุน้ำแข็ง สาย STR+INT (โจมตีและสกิลแรงตาม STR และ INT เท่ากัน) ทำให้ศัตรูช้าและแช่แข็ง'}
 };
 const STATS=['str','agi','vit','int','dex','luk'];const stCost=v=>1+Math.floor((v||0)/10);
-const STATN={str:['พลัง','STR','พลังโจมตีหลักของนักรบ'],agi:['ว่องไว','AGI','ความเร็วโจมตี และหลบหลีก'],vit:['อึด','VIT','HP สูงสุด การป้องกัน และการฟื้น HP'],int:['ปัญญา','INT','MP สูงสุด การฟื้น MP พลังของจอมเวทและอาโคไลท์'],dex:['แม่นยำ','DEX','ความแม่นยำ พลังโจมตีหลักของนักธนู'],luk:['โชค','LUK','คริติคอล ความแรงคริ และอัตราดรอป']};
+const STATN={str:['พลัง','STR','พลังโจมตีหลักของนักรบ'],agi:['ว่องไว','AGI','ความเร็วโจมตี และหลบหลีก'],vit:['อึด','VIT','HP สูงสุด การป้องกัน และการฟื้น HP'],int:['ปัญญา','INT','MP สูงสุด การฟื้น MP พลังของจอมเวท อาโคไลท์ และผู้พิทักษ์น้ำแข็ง'],dex:['แม่นยำ','DEX','ความแม่นยำ พลังโจมตีหลักของนักธนู'],luk:['โชค','LUK','คริติคอล ความแรงคริ และอัตราดรอป']};
 const SLOTS=[['head','หมวก'],['cape','ผ้าคลุม'],['body','เสื้อเกราะ'],['pants','กางเกง'],['shoes','รองเท้า'],['right','มือขวา'],['left','มือซ้าย'],['acc','เครื่องประดับ'],['rg1','แหวน 1'],['rg2','แหวน 2']];
 const SLOTN=Object.fromEntries(SLOTS);
 const TSLOT={weapon:'right',left:'left',armor:'body',pants:'pants',head:'head',cape:'cape',shoes:'shoes'};
@@ -822,10 +822,10 @@ const SK={
 };
 /* Class 2-1 Frost Guardian: keeps every swordsman skill and adds four ice skills (water element: +25% vs fire, -15% vs water mobs) */
 SK.frostg=[...SK.warrior,
-  {n:'ดาบเยือกแข็ง',type:'dmg',fx:'fblade',pose:'atk',mult:3.6,range:2,slow:2,mp:16,cd:4,lv:30,col:'#9fe4ff',fg:1,d:'ฟันคลื่นดาบน้ำแข็ง {m} ธาตุน้ำ และทำให้ช้าลง {slow} วินาที · แรงตาม STR+INT'},
+  {n:'ดาบเยือกแข็ง',type:'dmg',fx:'fblade',pose:'atk',mult:3.3,range:2,slow:2,mp:16,cd:4,lv:30,col:'#9fe4ff',fg:1,d:'ฟันคลื่นดาบน้ำแข็ง {m} ธาตุน้ำ และทำให้ช้าลง {slow} วินาที · แรงตาม STR และ INT เท่ากัน'},
   {n:'ปราการธารน้ำแข็ง',type:'buff',fx:'fwall',pose:'cast',def:1.5,atk:1.1,dur:20,mp:28,cd:40,lv:34,col:'#bfe8ff',d:'เกราะน้ำแข็งห่อหุ้มตัว ป้องกัน {def} พลังโจมตี {atk} นาน {dur} วินาที'},
-  {n:'หนามน้ำแข็งผงาด',type:'aoe',at:'target',range:5,fx:'fspike',pose:'cast',rad:2.4,mult:2.8,stun:1.2,mp:32,cd:11,lv:38,col:'#7fd0ff',fg:1,d:'หนามน้ำแข็งพุ่งขึ้นจากพื้น {m} ธาตุน้ำ และแช่แข็ง {stun} วินาที · แรงตาม STR+INT'},
-  {n:'พายุหิมะนิรันดร์',type:'aoe',at:'self',fx:'fstorm',pose:'cast',rad:3.4,mult:1,slow:3,mp:52,cd:18,lv:44,col:'#d8f4ff',fg:1,d:'พายุหิมะหมุนรอบตัว 4 ระลอก ระลอกละ {m} ธาตุน้ำ และทำให้ช้าลง {slow} วินาที · แรงตาม STR+INT'}];
+  {n:'หนามน้ำแข็งผงาด',type:'aoe',at:'target',range:5,fx:'fspike',pose:'cast',rad:2.4,mult:2.6,stun:1.2,mp:32,cd:11,lv:38,col:'#7fd0ff',fg:1,d:'หนามน้ำแข็งพุ่งขึ้นจากพื้น {m} ธาตุน้ำ และแช่แข็ง {stun} วินาที · แรงตาม STR และ INT เท่ากัน'},
+  {n:'พายุหิมะนิรันดร์',type:'aoe',at:'self',fx:'fstorm',pose:'cast',rad:3.4,mult:.95,slow:3,mp:52,cd:18,lv:44,col:'#d8f4ff',fg:1,d:'พายุหิมะหมุนรอบตัว 4 ระลอก ระลอกละ {m} ธาตุน้ำ และทำให้ช้าลง {slow} วินาที · แรงตาม STR และ INT เท่ากัน'}];
 /* passive skills: always on once the level is reached */
 const PASV={
  novice:[],
@@ -1250,6 +1250,7 @@ const mmImg=document.createElement('canvas');mmImg.width=MW*2;mmImg.height=MH*2;
 let P=null;           // saved player data
 const S={target:null,moveTo:null,npcGoal:null,atkT:0,cds:{},potCd:0,buffUntil:0,bAtk:1,bDef:1,bAspd:1,pose:null,shake:0,lastHurt:-99,tpCd:0,dead:false,fx:1,combat:0};
 let DROPS=[],M=[],FX=[],TXT=[],timers=[],gt=0,mid=0;
+let CURCB=null;const COMBOS=[];timers.push=function(...a){if(CURCB)for(const o of a)if(o&&!o.cbx)o.cbx=CURCB;return Array.prototype.push.apply(this,a)};FX.push=function(...a){if(CURCB)for(const o of a)if(o&&o.cb&&!o.cbx)o.cbx=CURCB;return Array.prototype.push.apply(this,a)};function withCB(cb,f){const p=CURCB;CURCB=cb;try{return f()}finally{CURCB=p}}
 const cam={x:TWN.x-400,y:TWN.y-300};
 /* 5 character slots in one store; the old single-character save moves into slot 1 */
 const SKEY='eldria-online-save-1',CKEY='eldria-chars-v1',NSLOT=5;let curSlot=0;
@@ -1282,7 +1283,7 @@ function regen(){const v=st('vit'),n=st('int'),f=1+PV('focus',1)/100;return {hr:
 function D(){const c=CLS[P.cls],bOn=S.buffUntil>gt,str=st('str'),agi=st('agi'),vit=st('vit'),int=st('int'),dex=st('dex'),luk=st('luk'),main=st(c.main);
  const mhp=Math.round((c.hp+vit*10+P.lv*14+eqs('hp'))*(1+(PV('iron',0)+PV('grit',0))/100)),rage=hasP('rage')&&P.hp<mhp*.4,b=(bOn?S.bAtk:1)*(rage?1+PV('rage',0)/100:1)*(S.ib&&S.ib.until>gt?S.ib.atk:1),ibd=S.ib&&S.ib.until>gt?S.ib.def:1;
  return {str,agi,vit,int,dex,luk,rage,
-  atk:Math.round((P.equip.right?eqs('atk')+main*2+Math.floor(dex*.5)+P.lv*2:eqs('atk')+str*2+P.lv*2)*b),unarmed:!P.equip.right,
+  atk:Math.round((P.equip.right?eqs('atk')+(P.cls==='frostg'?Math.round(str*1.5+int*1.5):main*2)+Math.floor(dex*.5)+P.lv*2:eqs('atk')+str*2+P.lv*2)*b),unarmed:!P.equip.right,
   def:Math.round((eqs('def')+vit+Math.floor(P.lv/2)+(PV('iron',1)+PV('grit',1)))*(bOn?S.bDef:1)*ibd),
   mhp,mmp:Math.round((c.mp+int*6+P.lv*4+eqs('mmp'))*(1+PV('focus',0)/100)),
   aspd:Math.max(.3,(1.25-agi*.012-dex*.004)/(bOn?S.bAspd:1)/(S.ab&&S.ab.until>gt?S.ab.m:1)),
@@ -1375,18 +1376,19 @@ function musicTick(){if(!AC||!P||!P.opts.music){townMusic(false);fieldMusic(fals
   MUS.step++;MUS.next+=st}}
 function startMusic(){if(!audioInit())return;if(AC.state==='suspended')AC.resume();applyVol();if(!MUS.timer)MUS.timer=setInterval(musicTick,90)}
 
-function float(x,y,s,c,big,k){if(GHOST)return;if(P&&!P.opts.dmg&&!big)return;const t={x:x+(R()-.5)*10,y,s,c,t:0,big};if(k){const dir=R()<.5?-1:1;t.k=k;t.fl=y+(k==='hurt'?14:8);t.life=k==='skill'?1.25:k==='crit'?1.35:1.05;
- if(k==='skill'){t.vx=dir*(10+R()*20);t.vy=-150;t.g=170;t.fl=null;t.s0=2.3}
+function float(x,y,s,c,big,k,hn){if(GHOST)return;if(P&&!P.opts.dmg&&!big)return;const t={x:x+(R()-.5)*10,y,s,c,t:0,big};if(k){const dir=R()<.5?-1:1;t.k=k;t.fl=y+(k==='hurt'?14:8);t.life=k==='skill'?1.25:k==='crit'?1.35:1.05;
+ if(k==='total'){t.x=x;t.s=Number(s).toLocaleString();t.vx=0;t.vy=-34;t.g=0;t.fl=null;t.s0=2.6;t.life=1.7;t.lb='รวม '+hn+' ฮิต'}
+ else if(k==='skill'){t.vx=dir*(10+R()*20);t.vy=-150;t.g=170;t.fl=null;t.s0=2.3}
  else if(k==='crit'){t.vx=dir*(50+R()*40);t.vy=-380;t.g=1000;t.s0=2.8;t.lb='คริ!'}
  else if(k==='hurt'){t.vx=dir*(30+R()*30);t.vy=-260;t.g=900;t.s0=1.9}
  else{t.vx=dir*(35+R()*45);t.vy=-300;t.g=900;t.s0=1.8}}TXT.push(t)}
-function dmgTxt(t,X,Y){const k=t.k,a=Math.min(1,(t.life-t.t)*4),el=1+(t.s0-1)*Math.exp(-t.t*11)*Math.cos(t.t*22),sz=k==='crit'?22:k==='skill'?19:k==='hurt'?16:15;
+function dmgTxt(t,X,Y){const k=t.k,a=Math.min(1,(t.life-t.t)*4),el=1+(t.s0-1)*Math.exp(-t.t*11)*Math.cos(t.t*22),sz=k==='total'?24:k==='crit'?22:k==='skill'?19:k==='hurt'?16:15;
  let sx=0;if(k==='crit'&&t.t<.22)sx=(R()-.5)*5;ctx.save();ctx.globalAlpha=Math.max(0,a);ctx.translate(Math.round(X+sx),Math.round(Y));ctx.scale(el,el);if(k==='skill')ctx.rotate(Math.sin(t.t*9)*.04);
  ctx.font=`italic 800 ${sz}px 'Chakra Petch', Kanit, sans-serif`;ctx.textAlign='center';ctx.lineJoin='round';const s=tr(String(t.s));
- if(k==='crit'||k==='skill'){ctx.shadowColor=t.c;ctx.shadowBlur=k==='crit'?14:10}
+ if(k==='crit'||k==='skill'||k==='total'){ctx.shadowColor=t.c;ctx.shadowBlur=k==='skill'?10:k==='total'?18:14}
  ctx.lineWidth=k==='crit'?5:4;ctx.strokeStyle='#07090a';ctx.strokeText(s,0,0);ctx.shadowBlur=0;
  const g=ctx.createLinearGradient(0,-sz*.8,0,sz*.15);g.addColorStop(0,'#ffffff');g.addColorStop(k==='hit'?.25:.45,k==='hit'?'#ffffff':t.c);g.addColorStop(1,k==='hit'?'#c9d2d6':t.c);ctx.fillStyle=g;ctx.fillText(s,0,0);
- if(t.lb){ctx.font=`800 ${Math.round(sz*.55)}px 'Chakra Petch', Kanit, sans-serif`;ctx.lineWidth=3;const l=tr(t.lb),ly=-sz*.95;ctx.strokeText(l,0,ly);ctx.fillStyle='#ff7a3a';ctx.fillText(l,0,ly)}
+ if(t.lb){ctx.font=`800 ${Math.round(sz*.55)}px 'Chakra Petch', Kanit, sans-serif`;ctx.lineWidth=3;const l=tr(t.lb),ly=-sz*.95;ctx.strokeText(l,0,ly);ctx.fillStyle=k==='total'?'#fff1b8':'#ff7a3a';ctx.fillText(l,0,ly)}
  ctx.restore()}
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const inTown=()=>P&&zoneOf(P.x,P.y)==='town';
@@ -1491,7 +1493,7 @@ function removeMob(m){const i=M.indexOf(m);if(i<0)return;if(ANIM[m.type])FX.push
 /* ================= combat ================= */
 function nearestMob(r){let best=null,bd=r;for(const m of M){const d=dist(m,P);if(d<bd){bd=d;best=m}}return best}
 function dmgMob(m,mult,col,o={}){if(GHOST){if(m&&m.T)hitFx(m,o.kind||'phys',false);return 0}if(S.inv>gt){S.inv=0;toast('สถานะอมตะหายไป · เริ่มโจมตีแล้ว')}const d=D();if(R()*100>Math.max(50,d.hit-m.T.lv*2)){m.agg=true;m.ret=false;S.combat=gt;float(m.x,m.y-m.T.r*1.6,'พลาด','#9aa7a3');return 0}let dmg=(o.atk||d.atk)*mult*(.9+R()*.2)-m.T.def*.5;if(UNDEAD.has(m.type))dmg*=1+PV('ward',1)/100;const crit=R()*100<d.crit+(o.crit||0);if(crit)dmg*=d.critDmg;dmg=Math.max(1,Math.round(dmg));
- m.hp-=dmg;mobHitSend(m,dmg,o);m.agg=true;m.ret=false;m.flash=.12;m.hitT=gt;S.combat=gt;hitFx(m,o.kind||'phys',crit);if(o.stun&&!m.T.boss)m.stun=gt+o.stun;if(o.slow)m.slow=gt+o.slow;if(!m.T.boss&&P){const a=Math.atan2(m.y-P.y,m.x-P.x),nx=m.x+Math.cos(a)*4,ny=m.y+Math.sin(a)*4;if(canStand(nx,ny)){m.x=nx;m.y=ny}}float(m.x,m.y-m.T.r*1.6,dmg,crit?'#ffd166':(col||'#ffffff'),crit,crit?'crit':col?'skill':'hit');
+ m.hp-=dmg;mobHitSend(m,dmg,o);m.agg=true;m.ret=false;m.flash=.12;m.hitT=gt;S.combat=gt;hitFx(m,o.kind||'phys',crit);if(o.stun&&!m.T.boss)m.stun=gt+o.stun;if(o.slow)m.slow=gt+o.slow;if(!m.T.boss&&P){const a=Math.atan2(m.y-P.y,m.x-P.x),nx=m.x+Math.cos(a)*4,ny=m.y+Math.sin(a)*4;if(canStand(nx,ny)){m.x=nx;m.y=ny}}if(CURCB){CURCB.t+=dmg;CURCB.n++;CURCB.last=gt;CURCB.x=m.x;CURCB.y=m.y-m.T.r*2.3-18}float(m.x,m.y-m.T.r*1.6,dmg,crit?'#ffd166':(col||'#ffffff'),crit,crit?'crit':col?'skill':'hit');
  if(m.hp<=0)killMob(m);return dmg}
 function killMob(m){if(MOBON&&!m.__rw&&!mobKillOK(m))return;if(MOBON)DROPOWN=lootOwner(m);const T=m.T;removeMob(m);P.kills++;P.mk=P.mk||{};if(!P.mk[m.type]){P.mk[m.type]=0;toast('📖 บันทึก '+T.n+' ลงสมุดมอนสเตอร์แล้ว')}P.mk[m.type]++;
  const B=m.rb?1.5:1,PB=typeof partyBonus==='function'?partyBonus():1,ex=Math.round(T.exp*B*PB),g=Math.round((T.gold[0]+(R()*(T.gold[1]-T.gold[0]+1)|0))*B);if(m.rb){chat('sys','',P.name+' ปราบ'+mobName(m)+'! รางวัล ×1.5 · เกิดใหม่ใน 5 นาที','#ff9ad5');toast('ปราบ'+mobName(m)+'! รางวัล ×1.5')}
@@ -1535,7 +1537,7 @@ function useSkill(i,pt,go){if(S.dead)return;if(S.cast&&!go)return toast('กำ�
  if(!go){const ct=castTime(s);if(ct>0){S.aim=null;S.pend=null;updCursor();S.moveTo=null;S.path=null;S.npcGoal=null;S.objGoal=null;S.cast={i,t:t,pt:at,t0:gt,dur:ct,n:s.n,col:s.col||'#9fd8ff'};setPose('cast',ct);FX.push({k:'castfx',x:P.x,y:P.y,fol:1,life:Math.max(.9,ct),t:0});snd(520,.12,'sine',.03);return}}
  S.aim=null;S.pend=null;updCursor();if(!go&&(P.cls==='mage'||P.cls==='acolyte'))FX.push({k:'castfx',x:P.x,y:P.y,fol:1,life:.9,t:0});P.mp-=s.mp;S.cds[i]=gt+s.cd*(1-PV('amp',1)/100);S.combat=gt;setPose(s.pose||'cast',s.pose==='atk'?.3:.45);
  if(s.pose!=='atk')parts(P.x+(P.fx||1)*10,P.y-40,10,[s.col,'#ffffff'],{spd:40,life:.4,sh:'star'});
- SKFX[s.fx](hasP('amp')&&s.mult?{...s,mult:s.mult*(1+PV('amp',0)/100)}:s,t,at,d);fxSend(i,L,t,at);sfx(CASTSFX[s.fx]||'cast')}
+ {const cb={t:0,n:0,last:0,st:gt,x:P.x,y:P.y-60};COMBOS.push(cb);withCB(cb,()=>SKFX[s.fx](hasP('amp')&&s.mult?{...s,mult:s.mult*(1+PV('amp',0)/100)}:s,t,at,d))}fxSend(i,L,t,at);sfx(CASTSFX[s.fx]||'cast')}
 /* elemental impact spheres / projectiles per class & skill: fire=mage fireball+meteor, water=ice skills, earth=warrior quake, wind=archer/thief */
 function elSph(key,x,y,diam,o){const im=SWIMG[key];if(!im||!im.complete||!im.naturalWidth)return;fxImg(key,x,y,(o&&o.life)||.6,Object.assign({sc:diam/im.naturalWidth,s0:.25,s1:1.05,fo:.45,a0:.95},o||{}))}
 function elShot(key,sx,sy,tx,ty,life,sc){const im=SWIMG[key];if(!im||!im.complete||!im.naturalWidth)return;const a=Math.atan2(ty-sy,tx-sx);fxImg(key,sx,sy,life,{sc:sc||.3,s0:1,s1:1,dx:tx-sx,dy:ty-sy,r0:a,r1:a,fo:.92})}
@@ -1544,7 +1546,7 @@ function buff(s){if(GHOST)return;S.bAtk=s.atk||1;S.bDef=s.def||1;S.bAspd=s.aspd|
 function coneHit(s,c,mult,kind){const a0=Math.atan2(c.y-P.y,c.x-P.x),R2=s.rad*TS,h=(s.cone||45)/2*Math.PI/180;for(const m of M.slice()){const dx=m.x-P.x,dy=m.y-P.y,dd=Math.hypot(dx,dy);if(dd>R2+m.T.r)continue;let da=Math.abs(Math.atan2(dy,dx)-a0);if(da>Math.PI)da=2*Math.PI-da;if(dd<m.T.r+8||da<=h+Math.atan2(m.T.r,Math.max(1,dd)))dmgMob(m,mult,s.col,{kind})}}
 function aoeHit(s,c,mult,kind){for(const m of M.slice())if(Math.hypot(m.x-c.x,m.y-c.y)<s.rad*TS+m.T.r)dmgMob(m,mult,s.col,{kind,stun:s.stun,slow:s.slow})}
 const elMul=m=>{const e=MELEM[m.type];return e==='ไฟ'?1.25:e==='น้ำ'?.85:1};
-const fAtk=d=>Math.round(d.atk*.8+d.int*3);
+const fAtk=d=>Math.round(d.atk+d.str*.5+d.int*.5);
 function fgHit(m,mult,s,o){return dmgMob(m,mult*elMul(m),s.col,Object.assign({kind:'ice',atk:fAtk(D())},o||{}))}
 const SKFX={
  fblade:(s,t)=>{const f=P.fx||1;fxImg('fgslash',t.x-f*6,t.y-Math.round(t.T.r*.8),.42,{sc:.4,s0:.75,s1:1.08,flip:f<0,fo:.55});fxAnim('icep','all',t.x,t.y+8,.6,.42,{foot:1});fxAnim('bluep','burst',t.x,t.y-t.T.r*.8,.45,.6,{delay:.08});parts(t.x,t.y-10,18,HITC.ice,{spd:110,life:.45,sh:'plus'});fgHit(t,s.mult,s,{slow:s.slow});shake(3)},
@@ -1775,11 +1777,12 @@ function updMob(m,dt){const T=m.T;m.flash=Math.max(0,m.flash-dt);if(m.poison){if
   if(dp>mobReach(m)){m.inr=0;moveEnt(m,P.x,P.y,T.speed*sf,dt)}else{if(!m.inr){m.inr=1;m.cd=Math.min(m.cd,.15)}m.cd-=dt*sf;if(m.cd<=0){m.cd=T.as;m.atkT=gt;m.fx=P.x>=m.x?1:-1;if(T.rng)mobShot(m,P.x,P.y);hitPlayer(m)}}}
  else{m.wt-=dt;if(m.wt<=0){m.wt=2+R()*4;m.wx=m.hx+(R()-.5)*4*TS;m.wy=m.hy+(R()-.5)*4*TS}moveEnt(m,m.wx,m.wy,T.speed*.4,dt)}}
 function update(dt){gt+=dt;
- for(let i=timers.length-1;i>=0;i--)if(timers[i].t<=gt){const f=timers[i].f;timers.splice(i,1);f()}
+ for(let i=timers.length-1;i>=0;i--)if(timers[i].t<=gt){const tm=timers[i];timers.splice(i,1);withCB(tm.cbx||null,tm.f)}
+ for(let i=COMBOS.length-1;i>=0;i--){const c=COMBOS[i];if((c.n&&gt-c.last>.6)||gt-c.st>8){if(c.n>=2)float(c.x,c.y,c.t,'#ffd24a',false,'total',c.n);COMBOS.splice(i,1)}}
  if(P)updPlayer(dt);
  updFx(dt);
  for(const m of M.slice())updMob(m,dt);
- for(let i=FX.length-1;i>=0;i--){const f=FX[i];f.t=(f.t||0)+dt;const life=f.life||(f.k==='proj'?.22:f.k==='warn'?1.1:f.k==='lvl'?1.2:f.k==='click'?.5:.45);if(f.t>=life){if(f.cb)f.cb();FX.splice(i,1)}}
+ for(let i=FX.length-1;i>=0;i--){const f=FX[i];f.t=(f.t||0)+dt;const life=f.life||(f.k==='proj'?.22:f.k==='warn'?1.1:f.k==='lvl'?1.2:f.k==='click'?.5:.45);if(f.t>=life){if(f.cb)withCB(f.cbx||null,f.cb);FX.splice(i,1)}}
  for(let i=TXT.length-1;i>=0;i--){const t=TXT[i];t.t+=dt;if(t.k){t.vy+=t.g*dt;t.x+=t.vx*dt;t.y+=t.vy*dt;if(t.fl!=null&&t.vy>0&&t.y>t.fl){t.y=t.fl;t.vy*=-.38;t.vx*=.55;if(Math.abs(t.vy)<40){t.vy=0;t.g=0;t.vx=0}}}else t.y-=28*dt;if(t.t>(t.life||1.1))TXT.splice(i,1)}
  const fx=P?P.x:TWN.x+Math.cos(gt*.08)*700,fy=P?P.y:TWN.y+Math.sin(gt*.08)*500;
  cam.x+=((fx-VW/2)-cam.x)*Math.min(1,dt*(P?10:2));cam.y+=((fy-VH/2)-cam.y)*Math.min(1,dt*(P?10:2));
@@ -2908,7 +2911,7 @@ const EN={
 'ค่าสถานะ · แต้มว่าง':'Stats · free points','ความสามารถ':'Attributes','สกิลกดใช้ · สูงสุด':'Active skills · max','สกิลติดตัว · สูงสุด':'Passive skills · max','สกิลติดตัวใหม่':'New passive skill','อัปสกิลติดตัว':'Passive upgraded','อัปสกิล':'Skill upgraded','เรียนสกิล':'Skill learned',
 'ปลดล็อกฟรีที่':'Unlocks free at','ปลดล็อกที่':'Unlocks at','ทำงานอยู่':'Active','ทำงาน':'active for','สลับเป้าหมาย':'Switch target','โจมตีตัวใกล้สุด':'Attack nearest','เดิน / เลือกเป้าหมาย':'Move / select target','ปิดหน้าต่าง':'Close window',
 'ตีต่อวินาที':'Hits / sec','ครั้ง/วิ':'hits/s','ความเร็วโจมตี':'Attack speed','ความเร็วเดิน':'Move speed','ความแม่นยำ':'Accuracy','ความแรงคริ':'Crit damage','โอกาสคริติคอล':'crit chance','คริติคอล':'Critical','อัตราดรอป':'Drop rate','ระยะโจมตี':'Attack range','หลบหลีก':'Evasion','พลังโจมตี':'Attack','ป้องกัน':'Defense',
-'พลังโจมตีหลักของนักรบ':'main attack stat of Swordsmen','HP สูงสุด การป้องกัน และการฟื้น HP':'max HP, defense and HP regen','ความเร็วโจมตี และหลบหลีก':'attack speed and evasion','MP สูงสุด การฟื้น MP พลังของจอมเวทและอาโคไลท์':'max MP, MP regen, power of Mages and Acolytes','ความแม่นยำ พลังโจมตีหลักของนักธนู':'accuracy, main attack stat of Archers','คริติคอล ความแรงคริ และอัตราดรอป':'critical, crit damage and drop rate',
+'พลังโจมตีหลักของนักรบ':'main attack stat of Swordsmen','HP สูงสุด การป้องกัน และการฟื้น HP':'max HP, defense and HP regen','ความเร็วโจมตี และหลบหลีก':'attack speed and evasion','MP สูงสุด การฟื้น MP พลังของจอมเวท อาโคไลท์ และผู้พิทักษ์น้ำแข็ง':'max MP, MP regen, power of Mages, Acolytes and Frost Guardians','ความแม่นยำ พลังโจมตีหลักของนักธนู':'accuracy, main attack stat of Archers','คริติคอล ความแรงคริ และอัตราดรอป':'critical, crit damage and drop rate',
 'ว่องไว':'Agility','ปัญญา':'Intellect','แม่นยำ':'Dexterity','พลัง':'Strength','อึด':'Vitality','โชค':'Luck',
 'การฟื้น HP จากสกิลและยาแรงขึ้น':'HP healing from skills and potions +','เมื่อ HP ต่ำกว่า 40% พลังโจมตี':'Below 40% HP, attack','และโจมตีอันเดด (ทหารไพ่ หน้ากากขนนก วิญญาณ) แรงขึ้น':'and damage vs undead (skeleton, zombie, ghost) +',
 'สกิลแรงขึ้น':'Skill damage +','และคูลดาวน์สกิลลดลง':'and skill cooldown −','และฟื้น MP เร็วขึ้น':'and MP regen +','และป้องกัน':'and defense','และคริติคอล':'and critical','และหลบหลีก':'and evasion',
@@ -3460,6 +3463,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'5.4',d:'6 ต.ค. 2026',t:'ดาเมจรวม และผู้พิทักษ์น้ำแข็งสาย STR+INT',L:['สกิลที่โดนมากกว่า 1 ครั้ง (หลายฮิต หรือโดนหลายตัว) จะขึ้นตัวเลขดาเมจรวมสีทองพร้อมจำนวนฮิต หลังโจมตีจบ','ผู้พิทักษ์น้ำแข็ง: โจมตีปกติแรงตาม STR×1.5 + INT×1.5 (เดิม STR×2) · สกิลน้ำแข็งแรงตาม พลังโจมตี + STR×0.5 + INT×0.5 · STR และ INT มีผลเท่ากัน','ปรับสมดุล: ดาบเยือกแข็ง 360%→330% · หนามน้ำแข็งผงาด 280%→260% · พายุหิมะนิรันดร์ 4×100%→4×95% (เพราะไม่มีเวลาร่ายแล้ว)','สกิลนักรบที่ผู้พิทักษ์น้ำแข็งใช้ได้ ก็แรงตาม STR และ INT ด้วย']},
  {v:'5.3',d:'6 ต.ค. 2026',t:'เสริมพลังการ์ด และป้ายชื่อ NPC',L:['NPC ใหม่ นักเวทการ์ดเอลิออส (ใกล้คลังเก็บของ) · เสริมพลังการ์ดได้ 3 ระดับ แต่ละระดับสุ่มค่าพลังเพิ่ม 1 อย่าง','★ Lv 1: ใช้การ์ดชนิดเดียวกัน 5 ใบ สำเร็จ 100% · ★★ Lv 2: ใช้การ์ดที่เสริมพลัง Lv 1 ขึ้นไป (ชนิดไหนก็ได้) 1 ใบ สำเร็จ 50% · ★★★ Lv 3: ใช้การ์ดที่เสริมพลัง Lv 2 ขึ้นไป 1 ใบ สำเร็จ 10%','ล้มเหลว: การ์ดหลักไม่หาย แต่การ์ดวัตถุดิบหายไป','การ์ดที่เสริมพลังมีเอฟเฟกต์ต่างกันแต่ละระดับ: ★ เรืองแสงฟ้า · ★★ ขอบม่วงไหลวน · ★★★ ขอบสีรุ้ง เรืองทอง และประกายดาว · การ์ดใบใหญ่มีแสงวิ่งผ่านและป้ายระดับ','ใส่การ์ดที่เสริมพลังลงในอุปกรณ์ได้ ค่าพลังที่สุ่มได้จะติดไปด้วย','NPC สำคัญมีป้ายชื่อโดดเด่น: กรอบเรืองแสงพร้อมไอคอนและหน้าที่ เช่น 🛒 ร้านค้า · ⚒ ตีบวก · 🃏 เสริมพลังการ์ด']},
  {v:'5.2',d:'6 ต.ค. 2026',t:'GM ล่องหน',L:['GM เข้าเกมจะอยู่ในสถานะล่องหนเสมอ: ผู้เล่นอื่นมองไม่เห็น และมอนสเตอร์ไม่โจมตี','คำสั่ง /hide เปิด-ปิดล่องหน (หรือ /hide on · /hide off) · ตอนล่องหนตัวละครจะโปร่งแสงและมีป้าย [ซ่อน]']},
  {v:'5.1',d:'6 ต.ค. 2026',t:'ท่าโจมตีผู้พิทักษ์น้ำแข็ง',L:['ผู้พิทักษ์น้ำแข็ง: แก้โจมตีปกติที่มีลูกธนูพุ่งออกมา เปลี่ยนเป็นฟันดาบน้ำแข็งระยะประชิด มีรอยฟันสีฟ้า ระเบิดเกล็ดน้ำแข็งที่เป้าหมาย จอสั่นเล็กน้อย','เสียงโจมตีใหม่: เสียงฟันหนัก + เสียงน้ำแข็งแตก']},
@@ -3853,7 +3857,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261006091344';
+const BUILDV='20261006094925';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
