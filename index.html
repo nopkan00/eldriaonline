@@ -618,6 +618,7 @@ img[src^="data:image/webp"]{image-rendering:auto!important}
 .cardv .cvs .cer{border-color:rgba(255,210,74,.5)!important;background:rgba(60,40,10,.55)!important}.cardv .cvs .cer span{color:#ffe7a0}.cardv .cvs .cer b{color:#ffe07a}
 .cebox.c1{border-color:rgba(108,196,255,.6)!important}.cebox.c2{border-color:rgba(192,106,255,.6)!important}.cebox.c3{border-color:rgba(255,210,74,.7)!important}
 #catchup{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%);z-index:9000;background:rgba(14,16,34,.94);border:1px solid rgba(255,200,97,.5);border-radius:14px;padding:14px 20px;display:flex;flex-direction:column;align-items:center;gap:6px;color:#ffe7a8;font:600 14px 'Kanit',sans-serif;min-width:240px;box-shadow:0 10px 30px rgba(0,0,0,.6)}#catchup span{font:400 12px 'Kanit',sans-serif;color:#cfd3e6}#catchup i{display:block;width:100%;height:6px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden}#catchup u{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffb84a,#ffe07a)}
+.aebox{margin-top:10px;padding:10px 12px;border-radius:12px;border:1px solid rgba(120,170,255,.28);background:linear-gradient(180deg,rgba(90,140,255,.10),rgba(255,255,255,.02));display:flex;flex-direction:column;gap:8px}.aeh{display:flex;flex-direction:column}.aeh small{color:var(--muted);font-size:11.5px}.aerow{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.aesel{display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:var(--muted)}.aesel select{width:100%;padding:6px 6px;border-radius:8px;background:#141a30;color:#e8ecff;border:1px solid rgba(160,180,255,.3);font:500 13px 'Kanit',sans-serif}.aenote{font-size:11px;color:var(--muted);line-height:1.45}
 .cemats{max-height:300px;overflow:auto;margin:6px 0 8px;width:100%;text-align:left;padding-right:2px}
 .cegh{font:600 12.5px 'Kanit',sans-serif;margin:8px 0 4px;padding:3px 8px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;gap:6px}.cegh small{color:var(--muted);font-weight:400;margin-left:auto;font-size:11px}
 .cegh.g3{color:#ffd24a;background:linear-gradient(90deg,rgba(255,122,122,.16),rgba(255,210,74,.16),rgba(122,200,255,.16))}.cegh.g2{color:#d08aff;background:rgba(190,100,255,.13)}.cegh.g1{color:#6cc4ff;background:rgba(90,176,255,.12)}.cegh.g0{color:#cfd3e6}.cegh.off{opacity:.55}
@@ -3305,11 +3306,29 @@ function closeWin(){if(PSTAT||PSKILL){pendCancel('stat');pendCancel('skill');toa
 function rWin(){if(!curWin)return;const sc=$('#wb').scrollTop;$('#wb').innerHTML=WIN[curWin][1]();$('#wb').scrollTop=sc;document.querySelectorAll('#wb canvas[data-av]').forEach(c=>{c.getContext('2d').drawImage(heroSprite(classLook(c.dataset.av,P),0),0,-2)});if(curWin==='map')drawBigMap();if(curWin==='char')drawDoll()}
 function refreshWin(list){if(curWin&&(!list||list.includes(curWin)))rWin()}
 function slotBtn(k){const o=P.equip[k];return `<button class="eslot${selSlot===k?' sel':''}${o?' r'+rarOf(o):' empty'}" data-a="eslot" data-v="${k}">${o?icon(o):ghostIcon(k)}<span class="l"><small>${SLOTN[k]}</small>${o?nameOf(o):'<b>ว่าง</b>'}</span></button>`}
+
+const AEK=[['atk','พลังโจมตี'],['def','ป้องกัน'],['hp','HP สูงสุด'],['mmp','MP สูงสุด'],['str','STR'],['agi','AGI'],['vit','VIT'],['int','INT'],['dex','DEX'],['luk','LUK'],['crit','คริติคอล'],['spd','ความเร็วเดิน']],AEN=Object.fromEntries(AEK);
+function aeqPref(){if(!Array.isArray(P.aeq)||P.aeq.length!==3){let r=P.cls;while(CLS[r]&&CLS[r].from)r=CLS[r].from;P.aeq=({warrior:['atk','str','vit'],mage:['int','mmp','dex'],archer:['dex','atk','agi'],acolyte:['int','vit','mmp'],thief:['agi','atk','luk']})[r]||['atk','def','hp']}return P.aeq}
+function aeqHTML(){const pr=aeqPref();const sel=i=>`<label class="aesel"><span>ลำดับ ${i+1}</span><select data-ae="${i}">${i?'<option value="">— ไม่เลือก —</option>':''}${AEK.map(([k,n])=>`<option value="${k}"${pr[i]===k?' selected':''}>${n}</option>`).join('')}</select></label>`;
+ return `<div class="aebox"><div class="aeh"><b>⚙ ติดตั้งอุปกรณ์อัตโนมัติ</b><small>เลือกค่าที่ต้องการเน้น 1 → 3 แล้วกดติดตั้ง</small></div><div class="aerow">${sel(0)}${sel(1)}${sel(2)}</div><button class="btn pri" data-a="autoeq">ติดตั้งอุปกรณ์อัตโนมัติ</button><div class="aenote">เทียบชิ้นที่สวมอยู่กับของในกระเป๋าทีละช่อง · เลือกชิ้นที่ค่าลำดับ 1 สูงสุดก่อน ถ้าเท่ากันดูลำดับ 2 และ 3 · ใช้ได้เฉพาะของที่อาชีพและเลเวลใส่ได้</div></div>`}
+function autoEquip(){const pr=aeqPref().filter(Boolean),okIt=o=>o&&IT[o.id]&&isEquip(o.id)&&canUse(o.id)&&P.lv>=(IT[o.id].lv||1);
+ const tot=o=>['atk','def','hp','mmp','str','agi','vit','int','dex','luk','crit'].reduce((a,k)=>a+instStat(o,k)*(k==='hp'||k==='mmp'?.1:1),0)+(o.ref||0)+(o.r||0);
+ const key=o=>o?pr.map(k=>instStat(o,k)).concat([tot(o)]):null,cmp=(a,b)=>{if(!a)return b?-1:0;if(!b)return 1;for(let i=0;i<a.length;i++){if(a[i]>b[i]+1e-9)return 1;if(a[i]<b[i]-1e-9)return -1}return 0};
+ const slotOf=o=>{const t=IT[o.id].t;return t==='acc'?'acc':t==='ring'?'ring':TSLOT[t]};
+ const pool=P.inv.filter(okIt),changed=[];
+ const take=o=>{const i=P.inv.indexOf(o);if(i>=0)P.inv.splice(i,1)};
+ for(const [sl] of SLOTS){if(sl==='rg1'||sl==='rg2')continue;const cur=P.equip[sl];let best=cur,bk=key(cur);for(const o of pool){if(!P.inv.includes(o)||slotOf(o)!==sl)continue;const k=key(o);if(cmp(k,bk)>0){best=o;bk=k}}
+  if(best&&best!==cur){take(best);P.equip[sl]=best;if(cur)P.inv.push(cur);changed.push(SLOTN[sl]+': '+IT[best.id].n)}}
+ {const old=[P.equip.rg1,P.equip.rg2],rings=old.filter(Boolean).concat(pool.filter(o=>P.inv.includes(o)&&slotOf(o)==='ring'));rings.sort((a,b)=>cmp(key(b),key(a)));
+  const want=[rings[0]||null,rings[1]||null];if(want[0]&&want[1]&&old.includes(want[1])&&!old.includes(want[0])&&old[1]===want[1]){const t=want[0];want[0]=want[1];want[1]=t}
+  if(old[0]!==want[0]||old[1]!==want[1]){for(const o of old)if(o&&!want.includes(o))P.inv.push(o);for(const o of want)if(o&&!old.includes(o)){take(o);changed.push('แหวน: '+IT[o.id].n)}P.equip.rg1=want[0];P.equip.rg2=want[1]}}
+ clampHp();
+ if(changed.length){toast('⚙ ติดตั้งอัตโนมัติ: เปลี่ยน '+changed.length+' ชิ้น');chat('sys','','⚙ ติดตั้งอุปกรณ์อัตโนมัติ (เน้น '+pr.map(k=>AEN[k]).join(' > ')+'): '+changed.join(' · '),'#9fd0ff');snd(500,.08,'triangle')}else toast('⚙ อุปกรณ์ที่สวมอยู่ดีที่สุดแล้วตามลำดับที่เลือก');save()}
 function rChar(){const d=D(),c=CLS[P.cls];
  let h=`<div class="detail"><div class="l"><b style="font-family:var(--disp);font-size:18px;font-weight:500">${esc(P.name)}</b><small>${c.n} · Base Lv ${P.lv} · EXP ${P.exp.toLocaleString()} / ${need(P.lv).toLocaleString()} · Job Lv ${P.jlv}${P.jlv<jmax()?' · Job EXP '+P.jexp.toLocaleString()+' / '+needJ(P.jlv).toLocaleString():''} · ล่ามอนสเตอร์แล้ว ${P.kills.toLocaleString()} ตัว</small></div></div>`;
  h+=`<div class="sec"><h3>อุปกรณ์ที่สวมใส่ · แตะช่องเพื่อดูหรือถอด</h3><div class="doll"><div class="dcol">${['head','cape','body','pants','shoes'].map(slotBtn).join('')}</div><div class="dmid"><canvas id="dollc" width="220" height="260" aria-label="ภาพตัวละครพร้อมอุปกรณ์"></canvas></div><div class="dcol">${['right','left','acc','rg1','rg2'].map(slotBtn).join('')}</div></div>`;
  if(selSlot){const id=P.equip[selSlot];h+=id?`<div class="detail" style="margin-top:8px">${icon(id)}<div class="l">${nameOf(id)} ${rarTag(id)}<small>${itemStats(id)}</small></div><button class="btn" data-a="unequip" data-v="${selSlot}">ถอด</button></div>`:`<div class="note" style="margin-top:8px">ช่อง${SLOTN[selSlot]}ว่างอยู่ สวมใส่ได้จากกระเป๋า หรือซื้อที่ร้านค้า</div>`}
- h+=`</div><div class="sec"><h3>ค่าสถานะ · แต้มว่าง <span class="pts">${P.pts}</span> <small style="font-weight:400;opacity:.7">· ค่าถึงทุก 10 ใช้แต้มเพิ่ม +1</small></h3>${pendBar('stat')}<div class="grid2">`;
+ h+=aeqHTML();h+=`</div><div class="sec"><h3>ค่าสถานะ · แต้มว่าง <span class="pts">${P.pts}</span> <small style="font-weight:400;opacity:.7">· ค่าถึงทุก 10 ใช้แต้มเพิ่ม +1</small></h3>${pendBar('stat')}<div class="grid2">`;
  for(const k of STATS){const b=eqs(k);h+=`<div class="row stat"><div class="l"><b>${STATN[k][0]} <span style="color:var(--muted);font-weight:500">${STATN[k][1]}</span></b><small>${STATN[k][2]}</small></div><b class="num" style="font-size:16px">${P[k]}${b?`<span style="color:var(--xp);font-size:13px"> +${b}</span>`:''}<span class="stc">ใช้ ${stCost(P[k])} แต้ม</span></b><button class="plus" data-a="stat" data-v="${k}" ${P.pts>=stCost(P[k])?'':'disabled'} aria-label="เพิ่ม ${STATN[k][0]} ใช้ ${stCost(P[k])} แต้ม">+</button></div>`}
  h+=`</div></div><div class="sec"><h3>ความสามารถ</h3><div class="grid2">
  <div class="kv"><span>พลังโจมตี${d.unarmed?' <small style="color:var(--muted)">(มือเปล่า · คิดจาก STR)</small>':''}</span><b>${d.atk}</b></div><div class="kv"><span>ป้องกัน</span><b>${d.def}</b></div>
@@ -3559,6 +3578,7 @@ $('#wb').addEventListener('click',e=>{const w2=e.target.closest('[data-w2]');if(
   case 'stat':{const c=stCost(P[v]);if(P.pts>=c){if(!PSTAT){PSTAT={pts:P.pts,st:{}};for(const k of STATS)PSTAT.st[k]=P[k]}P.pts-=c;P[v]++;snd(600,.05,'sine')}else toast('แต้มไม่พอ · เพิ่ม '+STATN[v][1]+' ต้องใช้ '+c+' แต้ม')}break;
   case 'pok':if(v==='stat'&&PSTAT){PSTAT=null;toast('บันทึกค่าสถานะแล้ว');sfx('lvl')}if(v==='skill'&&PSKILL){PSKILL=null;toast('บันทึกสกิลแล้ว');sfx('lvl')}break;
   case 'pcancel':pendCancel(v);toast('ยกเลิกการเติมแต้มแล้ว');break;
+  case 'autoeq':autoEquip();break;
   case 'unequip':if(!P.equip[v])break;if(P.inv.length>=INV)toast('กระเป๋าเต็ม');else{P.inv.push(P.equip[v]);P.equip[v]=null;selSlot=null;clampHp()}break;
   case 'sel':selInv=+v;dropArm=-1;break;
   case 'use':{const s=P.inv[+v];if(s){useItem(s.id);if(!P.inv[+v]||P.inv[+v].id!==s.id)selInv=-1}break}
@@ -3598,7 +3618,7 @@ $('#wb').addEventListener('click',e=>{const w2=e.target.closest('[data-w2]');if(
   case 'delete':if(delArm){deleteSlot(curSlot);P=null;location.reload()}else delArm=true;break;
  }
  rWin();save()});
-$('#wb').addEventListener('change',e=>{const k=e.target.dataset.o;if(k){P.opts[k]=e.target.checked;if(k==='music'||k==='sound'){startMusic();applyVol()}if(k==='bg'||k==='wake'){try{kaSync();wlSync()}catch(e){}}save()}});
+$('#wb').addEventListener('change',e=>{const ae=e.target.dataset.ae;if(ae!=null&&P){aeqPref();P.aeq[+ae]=e.target.value;save();return}const k=e.target.dataset.o;if(k){P.opts[k]=e.target.checked;if(k==='music'||k==='sound'){startMusic();applyVol()}if(k==='bg'||k==='wake'){try{kaSync();wlSync()}catch(e){}}save()}});
 $('#wb').addEventListener('input',e=>{const t=e.target;if(t.dataset.uis){setUiScale(+t.value);const l=$('#uisv');if(l)l.textContent=Math.round(+t.value*100)+'%'}if(t.dataset.ov){P.opts[t.dataset.ov]=+t.value;applyVol()}if(t.dataset.qk){QTY[t.dataset.qk]=t.value;const tot=t.closest('.qrow')&&t.closest('.qrow').querySelector('.tot');if(tot&&t.dataset.unit)tot.textContent=((Math.max(1,Math.floor(+t.value)||1))*+t.dataset.unit).toLocaleString()+' ทอง'}});
 $('#wx').addEventListener('click',closeWin);
 $('#pf').addEventListener('click',e=>{const b=e.target.closest('[data-w]');if(b)openWin(b.dataset.w,true)});
@@ -3713,6 +3733,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'6.7',d:'6 ต.ค. 2026',t:'ติดตั้งอุปกรณ์อัตโนมัติ',L:['หน้าสถานะตัวละคร มีปุ่มติดตั้งอุปกรณ์อัตโนมัติ','เลือกค่าที่ต้องการเน้นได้ 3 ลำดับ: พลังโจมตี ป้องกัน HP MP STR AGI VIT INT DEX LUK คริติคอล ความเร็วเดิน','ระบบเทียบชิ้นที่สวมอยู่กับของในกระเป๋าทุกช่อง (รวมแหวน 2 วง) แล้วเลือกชิ้นที่ค่าลำดับ 1 สูงสุด ถ้าเท่ากันดูลำดับ 2 และ 3 · นับรวมค่าตีบวก ความหายาก และการ์ดที่ใส่','ค่าเริ่มต้นตั้งตามอาชีพ และจำค่าที่เลือกไว้']},
  {v:'6.6',d:'6 ต.ค. 2026',t:'แก้ความแม่นยำ หน้าเสริมพลังการ์ด และบอท',L:['แก้ความแม่นยำ: เดิมค่าแม่นยำถูกจำกัดที่ 100 ก่อนหักเลเวลมอน ทำให้ DEX เกินประมาณ 12 ไม่มีผล · ตอนนี้ DEX เพิ่มโอกาสโดนได้เต็มที่ (หักเลเวลมอน ×1.5 · ต่ำสุด 50% สูงสุด 100%)','ตัวอย่าง: DEX 30 Lv 20 ตีมอน Lv 10–20 โดน 100% · Lv 30 ประมาณ 86% · Lv 40 ประมาณ 71%','หน้าเสริมพลังการ์ด: แก้รายการเลือกการ์ดหลักที่หายไป','บอท: ถ้าโจมตีเป้าหมายไม่โดนหรืออยู่ไกลเกินไปนาน 5 วินาที จะเปลี่ยนไปตีตัวอื่นทันที']},
  {v:'6.5',d:'6 ต.ค. 2026',t:'กระเป๋า 80 ช่อง และเล่นต่อเบื้องหลัง',L:['กระเป๋าตัวละครเพิ่มเป็น 80 ช่อง','เล่นต่อเบื้องหลัง: สลับแท็บหรือย่อหน้าต่าง เกมและบอทยังทำงานต่อ','พับจอมือถือ: ช่วยให้เบราว์เซอร์ไม่พักเกม · ถ้ายังถูกพัก เมื่อกลับมาจะเล่นต่อช่วงที่ขาดให้อัตโนมัติ (โหมดออฟไลน์ สูงสุด 30 นาที)','กันหน้าจอดับระหว่างเปิดเกม · ตั้งค่าเปิด-ปิดได้ที่หน้าตั้งค่า']},
  {v:'6.4',d:'6 ต.ค. 2026',t:'บอท และหน้าเสริมพลังการ์ด',L:['บอทหยุดทำงานหรือกระเป๋าเต็ม จะหยุดอยู่ที่เดิม ไม่วาปกลับเมืองหรือเขตปลอดภัยเองแล้ว','หน้าเสริมพลังการ์ด: แสดงรูปการ์ดหลัก พร้อมรายละเอียด ระดับ มอนที่ดรอป ช่องที่ใส่ได้ ค่าพลัง ค่าที่เสริมแล้ว และราคาขาย','การ์ดวัตถุดิบแบ่งกลุ่มตามระดับ ★★★ / ★★ / ★ / ไม่มีดาว · กลุ่มที่ใช้กับระดับนั้นไม่ได้จะแสดงเป็นสีจาง','เสริมพลัง Lv 1 เลือกการ์ดที่มีดาวเป็นวัตถุดิบได้ด้วย (ปุ่มเลือกอัตโนมัติจะใช้เฉพาะการ์ดไม่มีดาว)']},
@@ -4129,7 +4150,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261006151738';
+const BUILDV='20261006152330';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
