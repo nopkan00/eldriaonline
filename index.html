@@ -3966,6 +3966,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'9.10',d:'7 ต.ค. 2026',t:'แก้มอนล้นแมพ',L:['แก้มอนสะสมเกินจำนวนที่กำหนดในบางแมพ (มอนเก่าค้างจากก่อนปรับสมดุล) · ระบบจะลดมอนส่วนเกินที่ไม่ได้สู้อยู่ออกให้เหลือตามจำนวนที่กำหนด','มอนน้อยลงทำให้การเคลื่อนไหวของมอนลื่นขึ้นสำหรับทุกคน']},
  {v:'9.9',d:'7 ต.ค. 2026',t:'เอฟเฟกต์วังวนราตรีใหม่',L:['แอสแซสซิน · วังวนราตรี: เอฟเฟกต์ใหม่ ใบมีดลมหมุนรวมตัวเป็นวังวนรอบตัว แล้วระเบิดกระจายออกในระลอกสุดท้าย']},
  {v:'9.8',d:'7 ต.ค. 2026',t:'แก้มอนกระตุก',L:['แก้มอนเดินกระตุกหรือหยุดนิ่ง เมื่อผู้เล่นที่ระบบใช้คำนวณมอนพับหน้าจอหรือสลับแท็บ — ตอนนี้ผู้เล่นที่เปิดเกมอยู่จะรับหน้าที่คำนวณมอนแทนทันที','มอนเกิดใหม่ครบทุกแมพแม้ผู้เล่นคนอื่นพับหน้าจอค้างไว้']},
  {v:'9.7',d:'7 ต.ค. 2026',t:'ปรับสกิลแอสแซสซินและฮันเตอร์',L:['ปรับสกิลไม่ให้ซ้ำกับอาชีพ Class 1 และเปลี่ยนไอคอนสกิลใหม่ทั้ง 8 สกิล','แอสแซสซิน · กรงเล็บรัตติกาล: 340% และแรงขึ้น 50% เมื่อเป้าหมาย HP ต่ำกว่า 30% (ปลิดชีพ)','แอสแซสซิน · วังวนราตรี: เปลี่ยนเป็นวังวนรอบตัว ดูดศัตรูเข้าหา 3 ระลอก + เกราะแตก (ไม่ซ้ำกับพายุมีดเงาที่ยิงลงพื้นที่ไกล)','แอสแซสซิน · ฝูงอีกาทมิฬ: เปลี่ยนจากติดพิษเป็นเลือดไหล 50% (ไม่ซ้ำกับระเบิดควันพิษ)','ฮันเตอร์ · ก้าวสายลม (แทนวิถีแห่งสายลมที่ซ้ำกับตาเหยี่ยว): ระเบิดลมผลักศัตรูกระเด็น ทำให้ช้า แล้วกระโดดถอยหนี 4 ช่อง','ฮันเตอร์ · ศรพญาเพลิงทะลวง (แทนห่าศรเพลิงนรกที่ซ้ำกับฝนธนู): ศรเพลิงยักษ์ทะลวงเป็นแนวตรง 9 ช่อง 360% · ติดไฟ 50%']},
@@ -4451,7 +4452,9 @@ function mobNet(){if(!MOBON||!netOK())return;const now=snow();
  if(!ISHOST||!P)return;mobRespawn();if(now-MOBPUBT<200)return;MOBPUBT=now;
  const up={},seen=new Set();for(const m of M){const k='m'+m.id;seen.add(k);const a=mobSer(m),j=JSON.stringify(a);if(MOBLAST[k]!==j){up[k]=a;MOBLAST[k]=j}}
  for(const k in MOBLAST)if(!seen.has(k)){up[k]=null;delete MOBLAST[k]}if(Object.keys(up).length)MOBREF.update(up)}
-function mobRespawn(){if(gt<RESPT)return;RESPT=gt+1;const cnt={},rbc={};for(let i=M.length-1;i>=0;i--){const m=M[i];if((!SPAWN[m.type]&&!m.T.boss)||(m.T.zone==='wild'&&regAt(m.x,m.y)!=='wl')){if(S.target===m)S.target=null;M.splice(i,1);continue}if(m.rb)rbc[m.type]=1;else cnt[m.type]=(cnt[m.type]||0)+1}
+function mobRespawn(){if(gt<RESPT)return;RESPT=gt+1;const cnt={},rbc={};for(let i=M.length-1;i>=0;i--){const m=M[i];let drop=(!SPAWN[m.type]&&!m.T.boss)||(m.T.zone==='wild'&&regAt(m.x,m.y)!=='wl');
+  if(!drop){if(m.rb){if(rbc[m.type])drop=true;else rbc[m.type]=1}else{const c=(cnt[m.type]||0)+1;if(SPAWN[m.type]!=null&&c>SPAWN[m.type]&&!m.agg)drop=true;else cnt[m.type]=c}}
+  if(drop){if(S.target===m)S.target=null;M.splice(i,1)}}
  for(const k in SPAWN){const miss=SPAWN[k]-(cnt[k]||0),q=RESP[k]||(RESP[k]=[]);while(q.length>Math.max(0,miss))q.pop();while(q.length<miss)q.push(gt+(MOBS[k].boss?90:7+R()*5));
   for(let i=q.length-1;i>=0;i--)if(gt>=q[i]){q.splice(i,1);MOBSP=true;spawn(k);MOBSP=false}}
  for(const k of RAINBOW){const key='rb_'+k;if(rbc[k]){RESP[key]=null;continue}if(RESP[key]==null)RESP[key]=gt+300;else if(gt>=RESP[key]){RESP[key]=null;MOBSP=true;spawn(k,true);MOBSP=false}}}
@@ -4493,7 +4496,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261007225335';
+const BUILDV='20261007225609';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
