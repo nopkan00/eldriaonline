@@ -1391,7 +1391,8 @@ function walk(px,py){if(Math.hypot(px-TWN.x,py-TWN.y)<38)return false;return !BL
 function canStand(px,py,r=8){return walk(px-r,py-r)&&walk(px+r,py-r)&&walk(px-r,py+r)&&walk(px+r,py+r)}
 function moveEnt(e,tx,ty,spd,dt){const dx=tx-e.x,dy=ty-e.y,d=Math.hypot(dx,dy);if(d<1)return 0;const s=Math.min(d,spd*dt),nx=e.x+dx/d*s,ny=e.y+dy/d*s;if(Math.abs(dx)>.5)e.fx=dx>0?1:-1;const ox=e.x,oy=e.y,mob=!!e.T;if(canStand(nx,e.y)&&!(mob&&zoneOf(nx,e.y)==='town'))e.x=nx;if(canStand(e.x,ny)&&!(mob&&zoneOf(e.x,ny)==='town'))e.y=ny;if(e.x!==ox||e.y!==oy)e.mv=gt;return d}
 // tile pathfinding for the player (BFS, 8 directions, no corner cutting)
-const botAv=(x,y)=>typeof BOT!=='undefined'&&BOT.on&&P&&(zoneOf(x,y)==='town'||inDSafe(x,y));
+const nearPortal=(x,y)=>{const tx=Math.floor(x/TS),ty=Math.floor(y/TS);for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)if(tAt(tx+dx,ty+dy)===17)return true;return PORTALS.some(q=>q.big&&Math.abs(x-(q.a.x+1)*TS)<2.6*TS&&Math.abs(y-(q.a.y+1)*TS)<2.6*TS)};
+const botAv=(x,y)=>typeof BOT!=='undefined'&&BOT.on&&P&&(zoneOf(x,y)==='town'||inDSafe(x,y)||nearPortal(x,y));
 const botCross=(ax,ay,bx,by)=>{if(!(typeof BOT!=='undefined'&&BOT.on))return false;if(botAv(ax,ay))return false;const d=Math.hypot(bx-ax,by-ay),n=Math.ceil(d/16);for(let i=1;i<=n;i++)if(botAv(ax+(bx-ax)*i/n,ay+(by-ay)*i/n))return true;return false};
 const tBlocked=(x,y)=>BLOCK.has(tAt(x,y))||Math.hypot(x*TS+16-TWN.x,y*TS+16-TWN.y)<46||(botAv(x*TS+16,y*TS+16)&&!botAv(P.x,P.y));
 function findPath(sx,sy,gx,gy){sx=Math.floor(sx/TS);sy=Math.floor(sy/TS);gx=Math.floor(gx/TS);gy=Math.floor(gy/TS);
@@ -1949,7 +1950,7 @@ function updPlayer(dt){if(S.pickGoal&&!DROPS.includes(S.pickGoal))S.pickGoal=nul
  if(S.objGoal&&dist(P,S.objGoal)<46){const o=S.objGoal;S.objGoal=null;S.moveTo=null;S.path=null;objAct(o)}
  updNodes();updVillagers(dt);updCritters(dt);updCat(dt);if(S.gather)updGather(dt);
  pickDrops();
- {const tt=tAt(Math.floor(P.x/TS),Math.floor(P.y/TS));const bpq=PORTALS.find(q=>q.big&&Math.abs(P.x-(q.a.x+1)*TS)<1.8*TS&&Math.abs(P.y-(q.a.y+1)*TS)<1.8*TS);if((tt===17||bpq)&&gt>(S.portT||0)){S.portT=gt+1.5;const ptx=Math.floor(P.x/TS),pty=Math.floor(P.y/TS),pt=bpq||PORTALS.find(q=>!q.big&&Math.abs(q.a.x-ptx)<=1&&Math.abs(q.a.y-pty)<=1)||PORTALS[P.x<OW*TS?0:1],into=pt.t!=null,d=pt.to;S.inv=gt+10;chat('sys','','ได้รับสถานะอมตะ 10 วินาที · มอนสเตอร์มองไม่เห็นคุณ · โจมตีเมื่อไหร่สถานะจะหายไป','#ffe07a');if(into)showTitle(DUNGEONS[pt.t]);P.x=d.x*TS+16;P.y=d.y*TS+16;S.target=null;S.moveTo=null;S.path=null;S.pend=null;S.aim=null;cam.x=P.x-VW/2;cam.y=P.y-VH/2;sfx('holy');FX.push({k:'nova',x:P.x,y:P.y,r:70,c:'#b86cff',life:.6});toast(pt.msg)}}
+ {const tt=tAt(Math.floor(P.x/TS),Math.floor(P.y/TS));const bpq=PORTALS.find(q=>q.big&&Math.abs(P.x-(q.a.x+1)*TS)<1.8*TS&&Math.abs(P.y-(q.a.y+1)*TS)<1.8*TS);if((tt===17||bpq)&&gt>(S.portT||0)&&!(typeof BOT!=='undefined'&&BOT.on)){S.portT=gt+1.5;const ptx=Math.floor(P.x/TS),pty=Math.floor(P.y/TS),pt=bpq||PORTALS.find(q=>!q.big&&Math.abs(q.a.x-ptx)<=1&&Math.abs(q.a.y-pty)<=1)||PORTALS[P.x<OW*TS?0:1],into=pt.t!=null,d=pt.to;S.inv=gt+10;chat('sys','','ได้รับสถานะอมตะ 10 วินาที · มอนสเตอร์มองไม่เห็นคุณ · โจมตีเมื่อไหร่สถานะจะหายไป','#ffe07a');if(into)showTitle(DUNGEONS[pt.t]);P.x=d.x*TS+16;P.y=d.y*TS+16;S.target=null;S.moveTo=null;S.path=null;S.pend=null;S.aim=null;cam.x=P.x-VW/2;cam.y=P.y-VH/2;sfx('holy');FX.push({k:'nova',x:P.x,y:P.y,r:70,c:'#b86cff',life:.6});toast(pt.msg)}}
  const ooc=gt-S.combat>5||inSafe();{const rg=regen();P.hp=Math.min(d.mhp,P.hp+(ooc?rg.hr:rg.hc)*dt);P.mp=Math.min(d.mmp,P.mp+(ooc?rg.mr:rg.mc)*dt)}
  if(d.rage&&Math.floor(gt*10)%3===0)parts(P.x+(R()-.5)*18,P.y-6,1,['#ff5a3b','#ffb13a'],{ang:-1.57,spread:.4,spd:40,life:.5,flat:1});
  }
@@ -2771,13 +2772,15 @@ function botSkills(c,t){if(gt-BOT.lastCast<.35||S.cast)return false;const d=D(),
  return false}
 function botWant(d,c){if(d.gold)return true;const it=IT[d.id];if(!it)return false;if(isEquip(d.id))return c['lfR'+rarOf(d.inst||d.id)]!==false;if(typeof junkSet==='function'&&junkSet().has(d.id))return c.lfJunk!==false;if(it.t==='use')return c.lfPot!==false;return c.lfOther!==false}
 function botLoot(c){if(!c.loot)return null;let b=null,bd=c.rad<99?Math.max(6,c.rad)*TS:14*TS;for(const d of DROPS){if(gt-d.t0<.4||d.pk||d.full)continue;if(BOT.dbl&&BOT.dbl.get(d)>gt)continue;if(typeof dropMine==='function'?(!dropMine(d)&&gt-d.t0<30):(d.owner&&d.owner!==P.name&&gt-d.t0<30))continue;if(botAv(d.x,d.y)||!botWant(d,c))continue;const dd=Math.hypot(d.x-P.x,d.y-P.y);if(c.rad<99&&Math.hypot(d.x-BOT.ax,d.y-BOT.ay)>(c.rad+2)*TS)continue;if(dd<bd){bd=dd;b=d}}return b}
+let BHEAL=null;function botHealIds(k){if(!BHEAL){BHEAL={hp:[],mp:[]};for(const id in IT){const it=IT[id];if(it.t!=='use'||it.perm||it.bind||it.rev||it.tp||it.aspd)continue;if(it.hp>0)BHEAL.hp.push(id);if(it.mp>0)BHEAL.mp.push(id)}}return BHEAL[k].filter(id=>countItem(id)&&!(IT[id].lv&&P.lv<IT[id].lv))}
+function botHeal(k){const d=D(),need=k==='hp'?d.mhp-P.hp:d.mmp-P.mp;const ids=botHealIds(k);if(!ids.length)return false;ids.sort((a,b)=>IT[a][k]-IT[b][k]);const id=ids.find(i=>IT[i][k]>=need)||ids[ids.length-1];useItem(id);return true}
 function botTick(dt){if(!BOT.on||!P)return;const c=botCfg(),d=D();
  if(S.dead){botStop('ตัวละครหมดสติ');return}
  if(gt-BOT.pillT>.5){BOT.pillT=gt;botPill();if(curWin==='bot'&&!document.querySelector('#wb:hover'))rWin()}
  // potions (always, even while paused)
- if(gt-BOT.potT>.3){BOT.potT=gt;if(c.aspd&&!(S.ab&&S.ab.until>gt)&&S.target&&gt-S.combat<4){const id=countItem('aspd2')&&P.lv>=30?'aspd2':countItem('aspd1')?'aspd1':null;if(id)useItem(id)}if(P.hp/d.mhp*100<c.hp&&!(S.potCd>gt)&&(countItem('hp1')||countItem('hp2')))usePot('hp');else if(P.mp/d.mmp*100<c.mp&&!(S.potCd>gt)&&countItem('mp1'))usePot('mp')}
+ if(gt-BOT.potT>.3){BOT.potT=gt;if(c.aspd&&!(S.ab&&S.ab.until>gt)&&S.target&&gt-S.combat<4){const id=countItem('aspd2')&&P.lv>=30?'aspd2':countItem('aspd1')?'aspd1':null;if(id)useItem(id)}if(!(S.potCd>gt)){if(P.hp/d.mhp*100<c.hp&&botHeal('hp'));else if(P.mp/d.mmp*100<c.mp)botHeal('mp')}}
  // safety: very low HP with no potions
- if(P.hp/d.mhp<.25&&!countItem('hp1')&&!countItem('hp2')){botStop('HP ต่ำและยาหมด',true);return}
+ if(P.hp/d.mhp<.25&&!botHealIds('hp').length){botStop('HP ต่ำและยาหมด',true);return}
  if((c.full||c.wingFull)&&P.inv.length>=INV){if(c.wingFull&&countItem('wing')&&!inTown()){botStop('กระเป๋าเต็ม · ใช้ปีกผีเสื้อกลับเมือง',true);useItem('wing');return}botStop(c.wingFull&&!countItem('wing')?'กระเป๋าเต็ม · ไม่มีปีกผีเสื้อ':'กระเป๋าเต็ม',true);return}
  if(gt<BOT.pause){BOT.msg='หยุดชั่วคราว (ควบคุมเอง)';return}
  if((S.manualT&&gt-S.manualT<.2)||(typeof keys!=='undefined'&&(keys.w||keys.a||keys.s||keys.d||keys.arrowup||keys.arrowdown||keys.arrowleft||keys.arrowright))){S.manualT=0;botStop('กดเดินเอง');return}
@@ -2785,7 +2788,7 @@ function botTick(dt){if(!BOT.on||!P)return;const c=botCfg(),d=D();
  let t=S.target&&M.includes(S.target)&&botMobOk(S.target,c)?S.target:null;
  const threat=M.some(m=>botAtkMe(m));
  // loot when nothing is attacking us
- if(!threat&&(!t||!t.agg)){const dr=botLoot(c);if(dr){if(BOT.ld!==dr){BOT.ld=dr;BOT.ldT=gt}else if(gt-BOT.ldT>3){(BOT.dbl||(BOT.dbl=new Map())).set(dr,gt+20);BOT.ld=null}S.target=null;S.chase=false;S.moveTo={x:dr.x,y:dr.y};BOT.msg='เก็บของ';BOT.tgt=null;return}}
+ if(!threat||P.hp/d.mhp>.45){const dr=botLoot(c);if(dr){if(BOT.ld!==dr){BOT.ld=dr;BOT.ldT=gt}else if(gt-BOT.ldT>3){(BOT.dbl||(BOT.dbl=new Map())).set(dr,gt+20);BOT.ld=null}S.target=null;S.chase=false;S.moveTo={x:dr.x,y:dr.y};BOT.msg='เก็บของ';BOT.tgt=null;return}}
  if(!t||(threat&&!botAtkMe(t)&&gt-BOT.tgtT>1.5)){t=botPick(c);if(t&&t!==BOT.tgt){BOT.tgt=t;BOT.tgtT=gt;BOT.bestD=1e9;BOT.bestT=gt}}
  if(!t){BOT.tgt=null;const da=Math.hypot(P.x-BOT.ax,P.y-BOT.ay);if(c.rad<99&&da>2*TS){if(!S.moveTo)S.moveTo={x:BOT.ax,y:BOT.ay};BOT.msg='กลับจุดเริ่ม'}else{BOT.msg='รอมอนสเตอร์เกิด';if(c.rad>=99&&!S.moveTo&&gt-BOT.lootT>4){BOT.lootT=gt;const a=R()*6.283,rx=P.x+Math.cos(a)*5*TS,ry=P.y+Math.sin(a)*5*TS;if(!botAv(rx,ry)&&!botCross(P.x,P.y,rx,ry))S.moveTo={x:rx,y:ry}}}return}
  // stuck detection: no progress toward the target for 4s while out of range
@@ -3860,6 +3863,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'8.3',d:'7 ต.ค. 2026',t:'ปรับปรุงบอท',L:['บอทใช้ของฟื้น HP/MP ได้ทุกชนิด — ยา สมุนไพร ผัก ผลไม้ (เช่น แอปเปิ้ล) โดยเลือกชิ้นที่พอดีกับ HP/MP ที่ขาด','บอทจะไม่เดินเข้าจุดวาปอีก และจะไม่ถูกวาปขณะทำงาน','บอทเก็บของที่ดรอปก่อนแล้วค่อยโจมตีมอนต่อ (ยกเว้น HP ต่ำกว่า 45% ขณะถูกโจมตี จะสู้ก่อน)']},
  {v:'8.2',d:'7 ต.ค. 2026',t:'มังกรแห่งป่าดึกดำบรรพ์',L:['ป่าดึกดำบรรพ์ปรับเป็นสนามล่า Lv 55–65 — มอนชุดเดิมถูกแทนที่ด้วยมังกร 4 ชนิดใหม่','มังกรเจลผลึก Lv 55 · มังกรพฤกษา Lv 57 · มังกรเจลผลึกโบราณ Lv 60 (โจมตีระยะไกล) · มังกรพฤกษาเก่าแก่ Lv 62 (พ่นละอองเกสร)','บอสใหม่ ราชันพฤกษาบรรพกาล Lv 65 แทนราชรถแห่งพงไพร — ดรอปแก่นไม้โบราณ สร้อยและแหวนแห่งพงไพร','การ์ดใหม่ 4 ใบจากมังกรแต่ละชนิด · การ์ดที่สะสมจากมอนชุดเดิมยังใช้งานได้ตามปกติ']},
  {v:'8.1',d:'7 ต.ค. 2026',t:'แผนที่ใหม่ ป่าดึกดำบรรพ์',L:['แผนที่ใหม่ ป่าดึกดำบรรพ์ (Lv 50–58): ทางเข้าอยู่สุดถนนฝั่งตะวันตกของเมืองอิลวาเรีย','ทุ่งหญ้า ป่าทึบ บึงน้ำ และดินแดนแห้งแล้ง · ต้นไม้ ก้อนหิน เห็ด ผลึก ดอกไม้ และกระดูกโบราณ · ถนนดินคดเคี้ยวพาไปถึงถ้ำของบอส','มอนใหม่ 6 ชนิด: หมีเขี้ยวมอส เสือดาวชาด ตุ๊กตาเห็ดยักษ์ ประกายผึ้งเพลิง โกเลมเถาวัลย์ หมึกพงไพร · บอส ราชรถแห่งพงไพร Lv 62','ไอเทมใหม่: แก่นไม้โบราณ · สร้อยแก่นพงไพร · แหวนรากพงไพร · การ์ดใหม่ครบทุกตัว','LUK ไม่เพิ่มอัตราดรอปแล้ว (ยังเพิ่มคริติคอล ความแรงคริ และหลบหลีก)']},
  {v:'8.0',d:'7 ต.ค. 2026',t:'ค่าสถานะไม่ตันอีกต่อไป',L:['แก้ค่าพลังที่หยุดเพิ่มเมื่อค่าสถานะสูง: ความเร็วโจมตี (ตันที่ 0.3 วิ) คริติคอล (ตันที่ 60%) และหลบหลีก (ตันที่ 50%) เปลี่ยนเป็นเพิ่มขึ้นช้าลงเรื่อย ๆ แต่ไม่ตัน ทุกแต้มที่อัปยังมีผลเสมอ','คริติคอล: เพิ่มเต็มที่ถึง 40% แล้วค่อย ๆ ช้าลง สูงสุดเข้าใกล้ 80% · หลบหลีก: เต็มที่ถึง 30% สูงสุดเข้าใกล้ 65%','ความเร็วโจมตี: เร็วขึ้นเต็มที่จนถึง 2 ครั้ง/วิ แล้วค่อย ๆ ช้าลง','STR เพิ่มพลังโจมตีให้ทุกอาชีพ (อาชีพที่ไม่ใช่สาย STR ได้ครึ่งแต้มต่อ STR)']},
@@ -4370,7 +4374,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261007142225';
+const BUILDV='20261007143759';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
