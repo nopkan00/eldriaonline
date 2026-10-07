@@ -1190,7 +1190,7 @@ const MOBS={
  golem:{n:'ป้อมนิทรา',lv:15,hp:2600,atk:52,def:24,exp:1300,gold:[300,500],col:'#b0783f',r:29,speed:44,aggro:true,boss:true,zone:'lair',as:1.8,loot:[['core',1],['hp2',1]],gear:[[3,1],[3,.6],[2,.5]],card:.15,rboost:1.8}
 };
 for(const k of ['bear','frostarcher','icewisp','glacierrat'])if(MOBS[k])MOBS[k].loot.push(['phx',.004]);
-const SPAWN={rt_shroom:14,rt_spider:12,rt_moss:12,rt_wood:10,rt_dark:8,rt_boss:1,wl_crys:16,wl_wood:16,wl_moss:14,wl_crys2:12,wl_wood2:12,wl_dark:10,wl_boss:1,mn_rat:16,mn_bat:14,mn_grub:12,mn_orc:12,mn_spider:12,mn_boss:1,cg_wolf:14,cg_wisp:12,cg_grub:12,cg_spider:12,cg_bear:10,cg_boss:1,frostwolf:18,frostarcher:14,icewisp:12,snowbear:10,icegrub:16,glacierrat:16,crystalspider:14,frostking:1,grub:16,bear:10,rat:24,rat2:20,biter:14,biter2:12,bat:16,orc:20,minotaur:1,slime:30,mushroom:18,bee:14,wolf:22,goblin:16,spider:14,skel:18,zombie:14,ghost:12,golem:1};
+const SPAWN={rt_shroom:10,rt_spider:9,rt_moss:8,rt_wood:7,rt_dark:6,rt_boss:1,wl_crys:14,wl_wood:14,wl_moss:12,wl_crys2:11,wl_wood2:11,wl_dark:9,wl_boss:1,mn_rat:9,mn_bat:8,mn_grub:7,mn_orc:7,mn_spider:7,mn_boss:1,cg_wolf:10,cg_wisp:9,cg_grub:9,cg_spider:9,cg_bear:7,cg_boss:1,frostwolf:18,frostarcher:14,icewisp:12,snowbear:10,icegrub:16,glacierrat:16,crystalspider:14,frostking:1,grub:10,bear:7,rat:12,rat2:10,biter:14,biter2:12,bat:16,orc:11,minotaur:1,slime:22,mushroom:13,bee:10,wolf:22,goblin:16,spider:14,skel:18,zombie:14,ghost:12,golem:1};
 const QUESTS=[
  {id:'q1',n:'ปัญหาแกะนิทรา',d:'แกะนิทราในทุ่งหญ้าสายลมกินพืชผลชาวบ้าน กำจัดให้หน่อย',lv:1,type:'kill',mob:'slime',need:6,rew:{exp:90,gold:60,item:'hp1',q:5}},
  {id:'q2',n:'เขี้ยวแห่งป่าเงาจันทร์',d:'ช่างตีเหล็กต้องการเขี้ยวหมาป่าไปทำหัวลูกศร',lv:4,type:'item',item:'fang',need:5,rew:{exp:320,gold:150,item:'mp1',q:5}},
@@ -3956,6 +3956,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'9.6',d:'7 ต.ค. 2026',t:'มอนเคลื่อนไหวลื่นขึ้น · ปรับจำนวนมอน',L:['มอนสเตอร์ในโหมดออนไลน์เคลื่อนที่ต่อเนื่องลื่นไหล ไม่กระตุกหรือหยุดเป็นช่วง ๆ','ลดจำนวนมอนในแมพที่แน่นเกินไป: Abyssal Cavern 91→50 · เหมืองร้างพสุธา 67→38 · ถ้ำผลึกคราม 61→44 · โพรงรากบรรพกาล 57→40 · ทุ่งหญ้าสายลม 62→45 · ป่าดึกดำบรรพ์ 81→71 (บอสคงเดิม)']},
  {v:'9.5',d:'7 ต.ค. 2026',t:'เอฟเฟกต์สกิลฮันเตอร์ใหม่',L:['ศรเพลิงพิฆาต: ประกายไฟพุ่งออกจากคันธนู และระเบิดเพลิงเมื่อโดนเป้าหมาย','ศรระเบิดเพลิง: ระเบิดเพลิงขนาดใหญ่ 4 จังหวะ พร้อมกลุ่มควันรอบพื้นที่']},
  {v:'9.4',d:'7 ต.ค. 2026',t:'ปรับท่าเดินฮันเตอร์',L:['ฮันเตอร์ถือธนูในมือขณะเดินและยืน ท่าเดินใหม่ 3 เฟรม']},
  {v:'9.3',d:'7 ต.ค. 2026',t:'ดันเจี้ยนใหม่ โพรงรากบรรพกาล',L:['ดันเจี้ยนใหม่ในป่าดึกดำบรรพ์ (Lv 64–70): ทางเข้าคือซุ้มตอไม้ยักษ์ทางเหนือของแมพ — เดินตามถนนแยกขึ้นเหนือ','ภายในเป็นโพรงรากไม้ใต้ดิน 8 โถงเชื่อมด้วยอุโมงค์ราก เต็มไปด้วยเห็ด ผลึก และรากไม้ยักษ์','มอนใหม่ 5 ชนิด: กระต่ายมอสรากพิษ Lv 64 · มังกรผลึกรากเงา Lv 65 (ระยะไกล) · อสูรมอสรากลึก Lv 66 · มังกรรากโบราณ Lv 68 · อสูรเงารากนิรันดร์ Lv 70','บอสใหม่ พฤกษาปีศาจรากนรก Lv 75 — ดรอปอุปกรณ์ Lv 55 อย่างน้อย 3 ชิ้น และเครื่องประดับบรรพกาล','การ์ดใหม่ 6 ใบ','ทางเข้าป่าดึกดำบรรพ์ฝั่งเมืองกลับเป็นจุดวาปแบบเดิม']},
@@ -4390,13 +4391,13 @@ function worldInit(){if(MOBON)return;MOBON=true;M.length=0;S.target=null;
 function mobLoadAll(cb){MOBREF.once('value',s=>{const v=s.val()||{};const keep=new Set();for(const k in v){keep.add(+k.slice(1));mobMirror(+k.slice(1),v[k])}for(let i=M.length-1;i>=0;i--)if(!keep.has(M[i].id))M.splice(i,1);MOBREADY=true;if(cb)cb()})}
 function mobMirror(id,a){if(!Array.isArray(a))a=a&&Object.values(a);if(!a)return;const [t,x,y,hp,mhp,fl,ac,hx,hy]=a;if(!MOBS[t])return;let m=mobById(id);
  if(!m){m={type:t,T:MOBS[t],rb:!!(fl&1),x,y,hx:hx??x,hy:hy??y,hp,mhp,cd:.8,agg:false,ret:false,wt:R()*3,wx:x,wy:y,id,flash:0,fx:fl&4?-1:1,sk:6,nx:x,ny:y,ac:ac|0};M.push(m);if(id>mid)mid=id;return}
- m.nx=x;m.ny=y;if(hx!=null){m.hx=hx;m.hy=hy}m.mhp=mhp;
+ {const iv=Math.min(.6,Math.max(.15,gt-(m.nT==null?gt-.22:m.nT)));m.nT=gt;m.vs=Math.hypot(x-m.x,y-m.y)/iv}m.nx=x;m.ny=y;if(hx!=null){m.hx=hx;m.hy=hy}m.mhp=mhp;
  if(hp<m.hp&&gt-(m.lhit||-9)>.5){m.flash=.12;m.hitT=gt}
  m.hp=gt-(m.lhit||-9)<.7?Math.min(m.hp,hp):hp;m.agg=!!(fl&2);m.fx=fl&4?-1:1;m.stun=fl&8?gt+.4:0;m.slow=fl&16?gt+.4:0;m.poison=fl&32?{until:gt+.5,dps:0,nt:1e9}:null;m.shock=fl&64?gt+.5:0;m.blind=fl&128?gt+.5:0;m.root=fl&1024?gt+.5:0;m.bleed=fl&256?{until:gt+.5,dps:0,nt:1e9}:null;m.armb=fl&512?{until:gt+.5,p:(m.armb&&m.armb.p)||.15}:null;
  if((ac|0)!==(m.ac|0)){m.ac=ac|0;m.atkT=gt;if(m.T.rng){let b=null,bd=1e9;for(const p of PLIST){const d=Math.hypot(p.x-m.x,p.y-m.y);if(d<bd){bd=d;b=p}}if(b&&bd<m.T.rng*TS+60)mobShot(m,b.x,b.y)}}}
 function mobGone(id){const m=mobById(id);if(!m)return;const i=M.indexOf(m);if(ANIM[m.type])FX.push({k:'mobdie',type:m.type,x:m.x,y:m.y,fx:m.fx||1,life:ANIM[m.type].die.length>1?1.1:.8,t:0});M.splice(i,1);if(S.target===m)S.target=null}
 function mirStep(m,dt){m.flash=Math.max(0,m.flash-dt);if(m.poison&&Math.floor(gt*6+m.id)%4===0)parts(m.x+(R()-.5)*m.T.r,m.y-m.T.r,1,['#9ef08a','#5ab04a'],{ang:-1.57,spread:.5,spd:22,life:.6,flat:1});if(m.nx==null)return;const dx=m.nx-m.x,dy=m.ny-m.y;
- if(Math.abs(dx)+Math.abs(dy)>.5){if(Math.hypot(dx,dy)>140){m.x=m.nx;m.y=m.ny}else{const k=Math.min(1,dt*9);m.x+=dx*k;m.y+=dy*k}m.mv=gt}}
+ const dd=Math.hypot(dx,dy);if(dd>.5){if(dd>140){m.x=m.nx;m.y=m.ny}else{const st=Math.max(m.vs||0,30)*dt;if(st>=dd){m.x=m.nx;m.y=m.ny}else{m.x+=dx/dd*st;m.y+=dy/dd*st}}m.mv=gt}}
 const pSafe=(x,y)=>zoneOf(x,y)==='town'||inDSafe(x,y);
 function mobPlist(){PLIST.length=0;if(P&&MOBON)PLIST.push({id:UID,me:1,x:P.x,y:P.y,ok:!S.dead&&!(S.inv>gt)&&!pSafe(P.x,P.y)&&!(ISGM&&GMHIDE)});
  for(const id in OTHERS){const o=OTHERS[id],x=o.tx??o.x,y=o.ty??o.y;if(x==null)continue;PLIST.push({id,x,y,ok:!o.d&&!o.hd&&(o.hp==null||o.hp>0)&&!pSafe(x,y)})}}
@@ -4479,7 +4480,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261007222034';
+const BUILDV='20261007222415';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
