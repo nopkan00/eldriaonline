@@ -801,10 +801,10 @@ html.touch #tbr{z-index:2}html.touch #bar{z-index:3}
 const $=s=>document.querySelector(s);
 const cv=$('#cv'),ctx=cv.getContext('2d');
 const low=document.createElement('canvas'),lc=low.getContext('2d');let LW=0,LH=0;
-const TR=21.5,TS=32,OW=135,DX=140,DN={x0:141,y0:1,x1:229,y1:78},NF={x0:141,y0:84,x1:228,y1:133},ND={x0:233,y0:2,x1:318,y1:78},NENT={x:67,y:3},NFEX={x:184,y:131},NDENT={x:205,y:92},NDEX={x:237,y:4},NBOSS={x:303,y:68},MW=490,MN={x0:322,y0:2,x1:402,y1:78},CG={x0:406,y0:2,x1:488,y1:78},MENT={x:312,y:61},MEX={x:330,y:10},MBOSS={x:386,y:67},CENT={x:394,y:58},CEX={x:423,y:65},CBOSS={x:477,y:67},MH=135,TCX=67,TCY=67,LAIR={x:120,y:120},SAFE=22.2,DENT={x:99,y:36},DEXIT={x:152,y:6},DBOSS={x:213,y:68},DSAFE={x:152,y:10},WLD={x0:324,y0:84,x1:486,y1:132},WENT={x:4,y:67},WEX={x:328,y:107},WBOSS={x:471,y:108};
+const TR=21.5,TS=32,OW=135,DX=140,DN={x0:141,y0:1,x1:229,y1:78},NF={x0:141,y0:84,x1:228,y1:133},ND={x0:233,y0:2,x1:318,y1:78},NENT={x:67,y:3},NFEX={x:184,y:131},NDENT={x:205,y:92},NDEX={x:237,y:4},NBOSS={x:303,y:68},MW=580,MN={x0:322,y0:2,x1:402,y1:78},CG={x0:406,y0:2,x1:488,y1:78},MENT={x:312,y:61},MEX={x:330,y:10},MBOSS={x:386,y:67},CENT={x:394,y:58},CEX={x:423,y:65},CBOSS={x:477,y:67},MH=135,TCX=67,TCY=67,LAIR={x:120,y:120},SAFE=22.2,DENT={x:99,y:36},DEXIT={x:152,y:6},DBOSS={x:213,y:68},DSAFE={x:152,y:10},WLD={x0:494,y0:3,x1:574,y1:79},WENT={x:4,y:67},WEX={x:498,y:40},WBOSS={x:560,y:62};
 const TWN={x:(TCX+1)*TS,y:(TCY+1)*TS};
-const REG={ow:{x0:0,y0:0,x1:OW,y1:MH},dn:{x0:DN.x0-1,y0:0,x1:DN.x1+2,y1:DN.y1+2},nf:{x0:NF.x0-1,y0:NF.y0-1,x1:NF.x1+2,y1:NF.y1+2},nd:{x0:ND.x0-1,y0:0,x1:ND.x1+2,y1:ND.y1+2},mn:{x0:MN.x0-1,y0:0,x1:MN.x1+2,y1:MN.y1+2},cg:{x0:CG.x0-1,y0:0,x1:CG.x1+2,y1:CG.y1+2},wl:{x0:MN.x0-1,y0:81,x1:CG.x1+2,y1:MH}},ZREG={wild:{x0:WLD.x0,y0:WLD.y0,x1:WLD.x1,y1:WLD.y1},dungeon:REG.dn,frost:REG.nf,glacier:REG.nd,mine:REG.mn,crystal:REG.cg};
-const regAt=(px,py)=>{const tx=px/TS,ty=py/TS;return tx<DX?'ow':ty>=81&&tx>=MN.x0-1?'wl':tx>=CG.x0-1?'cg':tx>=MN.x0-1?'mn':tx>=ND.x0-1?'nd':ty>=81?'nf':'dn'};const isCave=()=>P&&(r=>r==='dn'||r==='nd'||r==='mn'||r==='cg')(regAt(P.x,P.y));
+const REG={ow:{x0:0,y0:0,x1:OW,y1:MH},dn:{x0:DN.x0-1,y0:0,x1:DN.x1+2,y1:DN.y1+2},nf:{x0:NF.x0-1,y0:NF.y0-1,x1:NF.x1+2,y1:NF.y1+2},nd:{x0:ND.x0-1,y0:0,x1:ND.x1+2,y1:ND.y1+2},mn:{x0:MN.x0-1,y0:0,x1:MN.x1+2,y1:MN.y1+2},cg:{x0:CG.x0-1,y0:0,x1:CG.x1+2,y1:CG.y1+2},wl:{x0:WLD.x0-3,y0:0,x1:MW,y1:WLD.y1+3}},ZREG={wild:{x0:WLD.x0,y0:WLD.y0,x1:WLD.x1,y1:WLD.y1},dungeon:REG.dn,frost:REG.nf,glacier:REG.nd,mine:REG.mn,crystal:REG.cg};
+const regAt=(px,py)=>{const tx=px/TS,ty=py/TS;return tx<DX?'ow':tx>=WLD.x0-3?'wl':tx>=CG.x0-1?'cg':tx>=MN.x0-1?'mn':tx>=ND.x0-1?'nd':ty>=81?'nf':'dn'};const isCave=()=>P&&(r=>r==='dn'||r==='nd'||r==='mn'||r==='cg')(regAt(P.x,P.y));
 const BIGPA=[DEXIT,NFEX,NDEX,MEX,CEX,WEX],SAFES=BIGPA.map(a=>({x:a.x+.5,y:a.y+.5})),BIGPS=new Set(BIGPA.map(a=>a.y*MW+a.x));
 const ICEX=x=>(x>=ND.x0-1&&x<MN.x0-1)||x>=CG.x0-1;
 let VW=0,VH=0,CW=0,CH=0,AS=2;
@@ -1352,18 +1352,19 @@ function genMap(){
   // Primeval Wilds (far south-east): meadows, forest edge, badlands, ponds, a winding dirt road
   {const R0=WLD,isB=(x,y)=>BLOCK.has(tAt(x,y))||tAt(x,y)===17;
    const nz=(x,y,s0)=>{const gx=x/s0,gy=y/s0,x0=Math.floor(gx),y0=Math.floor(gy),fx=gx-x0,fy=gy-y0,h=(a,b)=>hash(a*7+311,b*13+97),a=h(x0,y0),b=h(x0+1,y0),c=h(x0,y0+1),d=h(x0+1,y0+1),sx=fx*fx*(3-2*fx),sy=fy*fy*(3-2*fy);return a+(b-a)*sx+(c-a)*sy+(a-b-c+d)*sx*sy};
-   const bio=(x,y)=>x>R0.x1-34?'bad':y<R0.y0+12?'forest':'meadow';
+   const bio=(x,y)=>(x>R0.x1-30&&y>R0.y0+30)?'bad':(y<R0.y0+16||(x<R0.x0+14&&y>R0.y1-18))?'forest':'meadow';
    for(let y=R0.y0-3;y<=R0.y1+2;y++)for(let x=R0.x0-3;x<=R0.x1+3;x++){if(x<=0||y<=0||x>=MW-1||y>=MH-1)continue;const e=Math.min(x-R0.x0,R0.x1-x,y-R0.y0,R0.y1-y),h=hash(x*5+1,y*9+3);if(e<0){W(x,y,16);continue}if(e<2||(e<3&&h<.55)){W(x,y,2);continue}const b=bio(x,y),n=nz(x,y,6);W(x,y,b==='bad'?(n>.62?94:93):b==='forest'?(n>.55?95:94):(n>.74?92:n<.2?95:90))}
    const road=(x,y)=>{for(let dy=-1;dy<=1;dy++)for(let dx=0;dx<=1;dx++){const t=tAt(x+dx,y+dy);if(t!==2)W(x+dx,y+dy,91)}};
-   for(let x=WEX.x+1;x<=WBOSS.x;x++)road(x,Math.round(WEX.y+Math.sin((x-WEX.x)/11)*5+Math.sin((x-WEX.x)/5.3)*1.5));
-   {let x=380,y0=Math.round(WEX.y+Math.sin((380-WEX.x)/11)*5+Math.sin((380-WEX.x)/5.3)*1.5);for(let y=y0;y>=R0.y0+4;y--){road(x,y);if(hash(x,y)<.3)x+=hash(y,x)<.5?1:-1}}
-   {let x=422,y0=Math.round(WEX.y+Math.sin((422-WEX.x)/11)*5+Math.sin((422-WEX.x)/5.3)*1.5);for(let y=y0;y<=R0.y1-4;y++){road(x,y);if(hash(x*3,y)<.3)x+=hash(y,x*3)<.5?1:-1}}
+   const ry=x=>Math.round(WEX.y+(WBOSS.y-WEX.y)*Math.max(0,Math.min(1,(x-WEX.x)/(WBOSS.x-WEX.x)))+Math.sin((x-WEX.x)/9)*4+Math.sin((x-WEX.x)/4.3)*1.2);for(let x=WEX.x+1;x<=WBOSS.x;x++)road(x,ry(x));
+   {let x=R0.x0+26;for(let y=ry(x);y>=R0.y0+4;y--){road(x,y);if(hash(x,y)<.3)x+=hash(y,x)<.5?1:-1}}
+   {let x=R0.x0+44;for(let y=ry(x);y<=R0.y1-4;y++){road(x,y);if(hash(x*3,y)<.3)x+=hash(y,x*3)<.5?1:-1}}
+   {let x=R0.x0+58;for(let y=ry(x);y>=R0.y0+6;y--){road(x,y);if(hash(x*5,y)<.3)x+=hash(y,x*5)<.5?1:-1}}
    for(let y=WBOSS.y-7;y<=WBOSS.y+7;y++)for(let x=WBOSS.x-8;x<=WBOSS.x+8;x++)if(Math.hypot((x-WBOSS.x)/1.15,y-WBOSS.y)<6.5&&tAt(x,y)!==2)W(x,y,hash(x,y*3)<.3?94:93);
    const far=(x,y)=>Math.hypot(x-WEX.x-.5,y-WEX.y-.5)>6&&Math.hypot(x-WBOSS.x,y-WBOSS.y)>5;
    const place=(k,tx,ty,force)=>{const m=WLM[k];if(!m)return false;if(!m[4]){const t=tAt(tx,ty);if(isB(tx,ty)||t===91)return false;WLO.push({k:'wl',a:k,x:(tx+.5)*TS+(hash(tx,ty*7)-.5)*14,y:(ty+.5)*TS+(hash(tx*7,ty)-.5)*10+6,nb:1,f:hash(tx*3,ty*5)>.5});return true}
     const fw=m[5],fh=m[6],x0=tx-((fw-1)>>1),y0=ty-fh+1;for(let y=y0-1;y<=ty+1;y++)for(let x=x0-1;x<=x0+fw;x++){const t=tAt(x,y);if(isB(x,y)||t===91||(!force&&!far(x,y)))return false}
     for(let y=y0;y<=ty;y++)for(let x=x0;x<x0+fw;x++)W(x,y,99);WLO.push({k:'wl',a:k,x:(x0+fw/2)*TS,y:(ty+1)*TS-3,f:!/pond|river|cave|skull/.test(k)&&hash(tx*3,ty*5)>.5});return true};
-   for(const [x,y,k] of [[346,123,'pond_big'],[361,95,'pond'],[396,125,'river1'],[410,96,'pond_s'],[434,121,'river2'],[372,117,'pond_s'],[452,95,'pond']])place(k,x,y);
+   for(const [x,y,k] of [[12,64,'pond_big'],[16,9,'pond'],[32,58,'river1'],[44,12,'pond_s'],[66,22,'river2'],[22,34,'pond_s'],[54,44,'pond'],[70,8,'pond_s']])place(k,R0.x0+x,R0.y0+y);
    place('cave',WBOSS.x+1,WBOSS.y-6,true);
    const pick=(L,h)=>L[(h*L.length)|0];
    for(let y=R0.y0+2;y<=R0.y1-2;y++)for(let x=R0.x0+2;x<=R0.x1-2;x++){const b=bio(x,y),h=hash(x*31+7,y*17+5),h2=hash(x*13+3,y*29+11),h3=hash(x*5+9,y*3+1);
@@ -1945,7 +1946,7 @@ const LOSB=new Set([16,6,63]);
 function losOK(x0,y0,x1,y1){const dx=x1-x0,dy=y1-y0,L=Math.hypot(dx,dy);if(L<TS*1.2)return true;const n=Math.ceil(L/6);for(let i=1;i<n;i++){const u=i/n,x=Math.floor((x0+dx*u)/TS),y=Math.floor((y0+dy*u)/TS);if(LOSB.has(tAt(x,y)))return false}return true}
 const inR=(t,r)=>dist(P,t)<=r&&(r<=2.3*TS+t.T.r||losOK(P.x,P.y-8,t.x,t.y-8));
 const keys={};
-function updPlayer(dt){if(S.pickGoal&&!DROPS.includes(S.pickGoal))S.pickGoal=null;if(S.dead)return;if(updCast())return;const d=D();let mx=0,my=0;
+function updPlayer(dt){if(P&&P.y>=81*TS&&P.x>=(MN.x0-1)*TS&&P.x<(WLD.x0-3)*TS){P.x=(WEX.x+.5)*TS;P.y=(WEX.y+3.5)*TS;S.moveTo=null;S.path=null;S.target=null;cam.x=P.x-VW/2;cam.y=P.y-VH/2}if(S.pickGoal&&!DROPS.includes(S.pickGoal))S.pickGoal=null;if(S.dead)return;if(updCast())return;const d=D();let mx=0,my=0;
  if(keys.w||keys.arrowup)my--;if(keys.s||keys.arrowdown)my++;if(keys.a||keys.arrowleft)mx--;if(keys.d||keys.arrowright)mx++;
  const spd=d.spd,t=S.target;
  if(S.autoW&&(mx||my||S.moveTo!==S.autoW.mt||S.dead)){if(S.moveTo===S.autoW.mt&&(mx||my))toast(tr('ยกเลิกการเดินอัตโนมัติ'));S.autoW=null}
@@ -3688,7 +3689,7 @@ function drawBigMap(){const c=$('#bigmap');if(!c)return;const g=c.getContext('2d
  g.fillStyle='#f0d28a';for(const n of NPCS)g.fillRect(n.x*s-2,n.y*s-2,4,4);
  g.font='600 13px Kanit, sans-serif';g.textAlign='center';g.lineWidth=3;g.strokeStyle='rgba(0,0,0,.8)';
  for(const q of PORTALS){const d=q.a,on=S.autoW&&S.autoW.q===q,px=(d.x+(q.big?1:.5))*k,py=(d.y+(q.big?1:.5))*k;g.fillStyle=on?'#ffe07a':'#c880ff';g.beginPath();g.arc(px,py,on?8:6,0,6.283);g.fill();g.strokeStyle='#fff';g.lineWidth=1.5;g.stroke();g.lineWidth=3;g.strokeStyle='rgba(0,0,0,.8)'}
- const L=rg==='nf'?[['วาร์ปกลับ',NFEX.x,NFEX.y-2],['ถ้ำธารน้ำแข็ง',NDENT.x,NDENT.y-3]]:rg==='nd'?[['ทางออก',NDEX.x,NDEX.y-2],['มังกรน้ำแข็งโบราณ',NBOSS.x,NBOSS.y-6],['เหมืองร้างพสุธา ▶',MENT.x-6,MENT.y-3]]:rg==='wl'?[['ทางออก',WEX.x,WEX.y-3],['ราชันพฤกษาบรรพกาล',WBOSS.x,WBOSS.y-8],['ป่าทึบ',372,88],['ทุ่งหญ้า',372,112],['ดินแดนแห้งแล้ง',466,94]]:rg==='mn'?[['ทางออก',MEX.x,MEX.y-2],['ถ้ำผลึกคราม',CENT.x,CENT.y-3],['ราชาโกเลมพสุธา',MBOSS.x,MBOSS.y+8]]:rg==='cg'?[['ทางออก',CEX.x,CEX.y+3],['จักรพรรดิมังกรคราม',CBOSS.x,CBOSS.y-7],['ห้องโถงผลึก',447,32]]:inD?[['ทางออก',DEXIT.x,DEXIT.y-2],['ราชรถฝันร้าย',DBOSS.x,DBOSS.y-5]]:[['◀ ป่าดึกดำบรรพ์',WENT.x+7,WENT.y-3],['ที่ราบหิมะ ▲',NENT.x,NENT.y+5],['ดันเจี้ยน',DENT.x,DENT.y-3],['เมืองอิลวาเรีย',TCX+1,TCY-24],['ทุ่งหญ้าสายลม',TCX+21,TCY-21],['ป่าเงาจันทร์',TCX-42,TCY+1],['สุสานร้าง',20,14],['รังโกเลม',LAIR.x,LAIR.y-8]];
+ const L=rg==='nf'?[['วาร์ปกลับ',NFEX.x,NFEX.y-2],['ถ้ำธารน้ำแข็ง',NDENT.x,NDENT.y-3]]:rg==='nd'?[['ทางออก',NDEX.x,NDEX.y-2],['มังกรน้ำแข็งโบราณ',NBOSS.x,NBOSS.y-6],['เหมืองร้างพสุธา ▶',MENT.x-6,MENT.y-3]]:rg==='wl'?[['ทางออก',WEX.x,WEX.y-3],['ราชันพฤกษาบรรพกาล',WBOSS.x,WBOSS.y-8],['ป่าทึบ',WLD.x0+40,WLD.y0+7],['ทุ่งหญ้า',WLD.x0+24,WLD.y0+46],['ดินแดนแห้งแล้ง',WLD.x1-15,WLD.y0+40]]:rg==='mn'?[['ทางออก',MEX.x,MEX.y-2],['ถ้ำผลึกคราม',CENT.x,CENT.y-3],['ราชาโกเลมพสุธา',MBOSS.x,MBOSS.y+8]]:rg==='cg'?[['ทางออก',CEX.x,CEX.y+3],['จักรพรรดิมังกรคราม',CBOSS.x,CBOSS.y-7],['ห้องโถงผลึก',447,32]]:inD?[['ทางออก',DEXIT.x,DEXIT.y-2],['ราชรถฝันร้าย',DBOSS.x,DBOSS.y-5]]:[['◀ ป่าดึกดำบรรพ์',WENT.x+7,WENT.y-3],['ที่ราบหิมะ ▲',NENT.x,NENT.y+5],['ดันเจี้ยน',DENT.x,DENT.y-3],['เมืองอิลวาเรีย',TCX+1,TCY-24],['ทุ่งหญ้าสายลม',TCX+21,TCY-21],['ป่าเงาจันทร์',TCX-42,TCY+1],['สุสานร้าง',20,14],['รังโกเลม',LAIR.x,LAIR.y-8]];
  for(const [n,x,y] of L){g.strokeText(tr(n),x*k,y*k);g.fillStyle='#f0e6cc';g.fillText(tr(n),x*k,y*k)}
  g.fillStyle='#fff';g.strokeStyle='#000';g.lineWidth=2;g.beginPath();g.arc(P.x*s,P.y*s,5,0,6.283);g.fill();g.stroke();g.restore()}
 function rOpt(){const o=P.opts;const rg=(k,n)=>`<label class="tog"><span>${n}</span><input type="range" id="opt-${k}" data-ov="${k}" min="0" max="1" step="0.05" value="${o[k]}"></label>`;const tg=(k,n,d)=>`<label class="tog"><span>${n}<br><small style="color:var(--muted)">${d}</small></span><input type="checkbox" id="opt-${k}" data-o="${k}" ${o[k]?'checked':''}></label>`;
@@ -3880,6 +3881,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'8.9',d:'7 ต.ค. 2026',t:'ป่าดึกดำบรรพ์ทรงสี่เหลี่ยม',L:['ป่าดึกดำบรรพ์ปรับรูปทรงเป็นสี่เหลี่ยม (80×76 ช่อง) เดินสำรวจได้ทุกทิศ','ป่าทึบอยู่ทางเหนือ ทุ่งหญ้าตรงกลาง ดินแดนแห้งแล้งทางตะวันออกเฉียงใต้ — ถ้ำบอสอยู่ในดินแดนแห้งแล้ง','ถนนหินโบราณจากจุดวาปทางตะวันตกทอดไปถึงถ้ำบอส มีทางแยกขึ้นเหนือ 2 เส้น และลงใต้ 1 เส้น','ผู้เล่นที่ออกจากเกมค้างไว้ในป่าดึกดำบรรพ์ จะกลับมาที่จุดวาปทางเข้าแมพ']},
  {v:'8.8',d:'7 ต.ค. 2026',t:'ป่าดึกดำบรรพ์: ถนนและทุ่งหญ้าใหม่',L:['ถนนในป่าดึกดำบรรพ์เปลี่ยนเป็นทางหินโบราณที่มีหญ้าขึ้นปกคลุม','ทุ่งหญ้าในป่าดึกดำบรรพ์เปลี่ยนเป็นพุ่มหญ้าหนานุ่มแบบใหม่']},
  {v:'8.7',d:'7 ต.ค. 2026',t:'ผู้เล่นออนไลน์ · เดินไปจุดวาปอัตโนมัติ',L:['ใต้มินิแมพแสดงจำนวนผู้เล่นที่ออนไลน์อยู่ในเกมตอนนี้','แผนที่ใหญ่ (M): คลิกจุดวาปสีม่วง ตัวละครจะเดินไปที่จุดวาปนั้นเอง จุดที่เลือกจะเปลี่ยนเป็นสีเหลือง','กดเดินเอง (WASD/ลูกศร/จอยสติ๊ก) หรือคลิกเดินไปที่อื่น จะยกเลิกการเดินอัตโนมัติทันที']},
  {v:'8.6',d:'7 ต.ค. 2026',t:'ป่าดึกดำบรรพ์โฉมใหม่',L:['พื้นดินในป่าดึกดำบรรพ์เปลี่ยนเป็นพื้นหินกรวดดินแบบใหม่','ต้นไม้ในป่าดึกดำบรรพ์เปลี่ยนเป็นต้นไม้ใบหนาแบบใหม่ ทั้งต้นใหญ่และต้นเล็ก','ทางเข้าป่าดึกดำบรรพ์ (ฝั่งตะวันตกของเมือง) เป็นซุ้มตอไม้ยักษ์ปกคลุมด้วยมอส — เดินลอดซุ้มเข้าประตูวาป']},
@@ -4354,7 +4356,7 @@ function mobNet(){if(!MOBON||!netOK())return;const now=snow();
  if(!ISHOST||!P)return;mobRespawn();if(now-MOBPUBT<200)return;MOBPUBT=now;
  const up={},seen=new Set();for(const m of M){const k='m'+m.id;seen.add(k);const a=mobSer(m),j=JSON.stringify(a);if(MOBLAST[k]!==j){up[k]=a;MOBLAST[k]=j}}
  for(const k in MOBLAST)if(!seen.has(k)){up[k]=null;delete MOBLAST[k]}if(Object.keys(up).length)MOBREF.update(up)}
-function mobRespawn(){if(gt<RESPT)return;RESPT=gt+1;const cnt={},rbc={};for(let i=M.length-1;i>=0;i--){const m=M[i];if(!SPAWN[m.type]&&!m.T.boss){if(S.target===m)S.target=null;M.splice(i,1);continue}if(m.rb)rbc[m.type]=1;else cnt[m.type]=(cnt[m.type]||0)+1}
+function mobRespawn(){if(gt<RESPT)return;RESPT=gt+1;const cnt={},rbc={};for(let i=M.length-1;i>=0;i--){const m=M[i];if((!SPAWN[m.type]&&!m.T.boss)||(m.T.zone==='wild'&&regAt(m.x,m.y)!=='wl')){if(S.target===m)S.target=null;M.splice(i,1);continue}if(m.rb)rbc[m.type]=1;else cnt[m.type]=(cnt[m.type]||0)+1}
  for(const k in SPAWN){const miss=SPAWN[k]-(cnt[k]||0),q=RESP[k]||(RESP[k]=[]);while(q.length>Math.max(0,miss))q.pop();while(q.length<miss)q.push(gt+(MOBS[k].boss?90:7+R()*5));
   for(let i=q.length-1;i>=0;i--)if(gt>=q[i]){q.splice(i,1);MOBSP=true;spawn(k);MOBSP=false}}
  for(const k of RAINBOW){const key='rb_'+k;if(rbc[k]){RESP[key]=null;continue}if(RESP[key]==null)RESP[key]=gt+300;else if(gt>=RESP[key]){RESP[key]=null;MOBSP=true;spawn(k,true);MOBSP=false}}}
@@ -4396,7 +4398,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261007165234';
+const BUILDV='20261007170618';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
