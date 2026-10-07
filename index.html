@@ -3968,6 +3968,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'9.13',d:'7 ต.ค. 2026',t:'มอนเคลื่อนไหวลื่นไหล',L:['ปรับวิธีแสดงการเคลื่อนไหวของมอนในโหมดออนไลน์ใหม่ทั้งหมด มอนเดินต่อเนื่องสม่ำเสมอ ไม่สะดุด ไม่หยุดเป็นช่วง ๆ แม้สัญญาณเน็ตไม่นิ่ง','มอนหันหน้าตามทิศที่เดินจริง ไม่สะบัดซ้ายขวา']},
  {v:'9.12',d:'7 ต.ค. 2026',t:'เอฟเฟกต์กรงเล็บรัตติกาลใหม่',L:['แอสแซสซิน · กรงเล็บรัตติกาล: เอฟเฟกต์ใหม่ ฟันโค้งพร้อมวงพายุใบมีดหมุนรอบเป้าหมาย','เมื่อพับหน้าจอหรือสลับแท็บ เกมจะหยุดชั่วคราว (ยกเว้นตอนเปิดบอท บอทยังทำงานต่อ) · มอนจะไม่ไล่ตามผู้เล่นที่พับหน้าจออยู่','ช่วยลดอาการมอนกระตุกสำหรับทุกคน']},
  {v:'9.11',d:'7 ต.ค. 2026',t:'แก้มอนตีไม่ตายและดรอปซ้ำ',L:['แก้มอนบางตัวตีไม่ตาย (มอนซ้อนกัน 2 ตัวในระบบ) ซึ่งเป็นสาเหตุให้มอนบางตัวกระโดดไปมา','แก้ของดรอปซ้ำ 2 ชิ้นเมื่อมอนตายพร้อมกันจากหลายการโจมตี','มอนที่ตายแล้วแต่ค้างบนจอจะหายไปเองภายในไม่กี่วินาที']},
  {v:'9.10',d:'7 ต.ค. 2026',t:'แก้มอนล้นแมพ',L:['แก้มอนสะสมเกินจำนวนที่กำหนดในบางแมพ (มอนเก่าค้างจากก่อนปรับสมดุล) · ระบบจะลดมอนส่วนเกินที่ไม่ได้สู้อยู่ออกให้เหลือตามจำนวนที่กำหนด','มอนน้อยลงทำให้การเคลื่อนไหวของมอนลื่นขึ้นสำหรับทุกคน']},
@@ -4410,13 +4411,15 @@ function worldInit(){if(MOBON)return;MOBON=true;M.length=0;S.target=null;
 function mobLoadAll(cb){MOBREF.once('value',s=>{const v=s.val()||{};const keep=new Set();for(const k in v){keep.add(+k.slice(1));mobMirror(+k.slice(1),v[k])}for(let i=M.length-1;i>=0;i--)if(!keep.has(M[i].id))M.splice(i,1);MOBREADY=true;if(cb)cb()})}
 function mobMirror(id,a){if(!Array.isArray(a))a=a&&Object.values(a);if(!a)return;const [t,x,y,hp,mhp,fl,ac,hx,hy]=a;if(!MOBS[t])return;let m=mobById(id);
  if(!m){m={type:t,T:MOBS[t],rb:!!(fl&1),x,y,hx:hx??x,hy:hy??y,hp,mhp,cd:.8,agg:false,ret:false,wt:R()*3,wx:x,wy:y,id,flash:0,fx:fl&4?-1:1,sk:6,nx:x,ny:y,ac:ac|0};M.push(m);if(id>mid)mid=id;return}
- {const iv=Math.min(.6,Math.max(.15,gt-(m.nT==null?gt-.22:m.nT)));m.nT=gt;m.vs=Math.hypot(x-m.x,y-m.y)/iv}m.nx=x;m.ny=y;if(hx!=null){m.hx=hx;m.hy=hy}m.mhp=mhp;
+ {const B=m.buf||(m.buf=[{t:gt-.2,x:m.nx??m.x,y:m.ny??m.y}]);B.push({t:gt,x,y});if(B.length>10)B.shift()}m.nx=x;m.ny=y;if(hx!=null){m.hx=hx;m.hy=hy}m.mhp=mhp;
  if(hp<m.hp&&gt-(m.lhit||-9)>.5){m.flash=.12;m.hitT=gt}
- m.hp=gt-(m.lhit||-9)<.7?Math.min(m.hp,hp):hp;m.agg=!!(fl&2);m.fx=fl&4?-1:1;m.stun=fl&8?gt+.4:0;m.slow=fl&16?gt+.4:0;m.poison=fl&32?{until:gt+.5,dps:0,nt:1e9}:null;m.shock=fl&64?gt+.5:0;m.blind=fl&128?gt+.5:0;m.root=fl&1024?gt+.5:0;m.bleed=fl&256?{until:gt+.5,dps:0,nt:1e9}:null;m.armb=fl&512?{until:gt+.5,p:(m.armb&&m.armb.p)||.15}:null;
+ m.hp=gt-(m.lhit||-9)<.7?Math.min(m.hp,hp):hp;m.agg=!!(fl&2);m.ffx=fl&4?-1:1;m.stun=fl&8?gt+.4:0;m.slow=fl&16?gt+.4:0;m.poison=fl&32?{until:gt+.5,dps:0,nt:1e9}:null;m.shock=fl&64?gt+.5:0;m.blind=fl&128?gt+.5:0;m.root=fl&1024?gt+.5:0;m.bleed=fl&256?{until:gt+.5,dps:0,nt:1e9}:null;m.armb=fl&512?{until:gt+.5,p:(m.armb&&m.armb.p)||.15}:null;
  if((ac|0)!==(m.ac|0)){m.ac=ac|0;m.atkT=gt;if(m.T.rng){let b=null,bd=1e9;for(const p of PLIST){const d=Math.hypot(p.x-m.x,p.y-m.y);if(d<bd){bd=d;b=p}}if(b&&bd<m.T.rng*TS+60)mobShot(m,b.x,b.y)}}}
 function mobGone(id){const m=mobById(id);if(!m)return;const i=M.indexOf(m);if(ANIM[m.type])FX.push({k:'mobdie',type:m.type,x:m.x,y:m.y,fx:m.fx||1,life:ANIM[m.type].die.length>1?1.1:.8,t:0});M.splice(i,1);if(S.target===m)S.target=null}
 function mirStep(m,dt){m.flash=Math.max(0,m.flash-dt);if(m.hp<=0&&gt-(m.hitT||0)>2.5){const i=M.indexOf(m);if(i>=0){M.splice(i,1);if(S.target===m)S.target=null}return}if(m.poison&&Math.floor(gt*6+m.id)%4===0)parts(m.x+(R()-.5)*m.T.r,m.y-m.T.r,1,['#9ef08a','#5ab04a'],{ang:-1.57,spread:.5,spd:22,life:.6,flat:1});if(m.nx==null)return;const dx=m.nx-m.x,dy=m.ny-m.y;
- const dd=Math.hypot(dx,dy);if(dd>.5){if(dd>140){m.x=m.nx;m.y=m.ny}else{const st=Math.max(m.vs||0,30)*dt;if(st>=dd){m.x=m.nx;m.y=m.ny}else{m.x+=dx/dd*st;m.y+=dy/dd*st}}m.mv=gt}}
+ const B=m.buf;if(!B||!B.length){if(Math.abs(dx)+Math.abs(dy)>.5){m.x=m.nx;m.y=m.ny;m.mv=gt}return}
+ const rt=gt-.3;while(B.length>2&&B[1].t<=rt)B.shift();const a=B[0],b=B[1];let x,y;if(!b||rt<=a.t){x=a.x;y=a.y}else if(rt>=b.t){const ex=Math.min(rt-b.t,.15),dt2=Math.max(.05,b.t-a.t),vx=(b.x-a.x)/dt2,vy=(b.y-a.y)/dt2,mv=Math.hypot(b.x-a.x,b.y-a.y)<140&&gt-b.t<.45;x=b.x+(mv?vx*ex:0);y=b.y+(mv?vy*ex:0)}else{const u=(rt-a.t)/(b.t-a.t);if(Math.hypot(b.x-a.x,b.y-a.y)>140){x=u<.5?a.x:b.x;y=u<.5?a.y:b.y}else{x=a.x+(b.x-a.x)*u;y=a.y+(b.y-a.y)*u}}
+ const mx=x-m.x,my=y-m.y;if(Math.abs(mx)+Math.abs(my)>.15){m.mv=gt;if(Math.abs(mx)>.15)m.fx=mx>0?1:-1}else if(m.ffx!=null&&gt-(m.mv||0)>.2)m.fx=m.ffx;m.x=x;m.y=y}
 const pSafe=(x,y)=>zoneOf(x,y)==='town'||inDSafe(x,y);
 function mobPlist(){PLIST.length=0;if(P&&MOBON)PLIST.push({id:UID,me:1,x:P.x,y:P.y,ok:!S.dead&&!(S.inv>gt)&&!pSafe(P.x,P.y)&&!(ISGM&&GMHIDE)});
  for(const id in OTHERS){const o=OTHERS[id],x=o.tx??o.x,y=o.ty??o.y;if(x==null)continue;PLIST.push({id,x,y,ok:!o.d&&!o.hd&&!o.hid&&(o.hp==null||o.hp>0)&&!pSafe(x,y)})}}
@@ -4501,7 +4504,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261007231230';
+const BUILDV='20261007231809';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
