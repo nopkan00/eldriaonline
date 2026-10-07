@@ -821,7 +821,7 @@ const CLS={
  frostg:{n:'ผู้พิทักษ์น้ำแข็ง',c:'#7fd0ff',tier:2,from:'warrior',hp:150,mp:60,main:'str',range:1.4,base:{str:7,agi:4,vit:8,int:6,dex:4,luk:3},d:'ประชิด ถึกทน พลังธาตุน้ำแข็ง สาย STR+INT (โจมตีและสกิลแรงตาม STR และ INT เท่ากัน) ทำให้ศัตรูช้าและแช่แข็ง'}
 };
 const STATS=['str','agi','vit','int','dex','luk'];const stCost=v=>1+Math.floor((v||0)/10);
-const STATN={str:['พลัง','STR','พลังโจมตีหลักของนักรบ'],agi:['ว่องไว','AGI','ความเร็วโจมตี และหลบหลีก'],vit:['อึด','VIT','HP สูงสุด การป้องกัน และการฟื้น HP'],int:['ปัญญา','INT','MP สูงสุด การฟื้น MP พลังของจอมเวท อาโคไลท์ และผู้พิทักษ์น้ำแข็ง'],dex:['แม่นยำ','DEX','ความแม่นยำ พลังโจมตีหลักของนักธนู'],luk:['โชค','LUK','คริติคอล ความแรงคริ และอัตราดรอป']};
+const STATN={str:['พลัง','STR','พลังโจมตีหลักของนักรบ · อาชีพอื่นได้ครึ่งหนึ่ง'],agi:['ว่องไว','AGI','ความเร็วโจมตี และหลบหลีก'],vit:['อึด','VIT','HP สูงสุด การป้องกัน และการฟื้น HP'],int:['ปัญญา','INT','MP สูงสุด การฟื้น MP พลังของจอมเวท อาโคไลท์ และผู้พิทักษ์น้ำแข็ง'],dex:['แม่นยำ','DEX','ความแม่นยำ พลังโจมตีหลักของนักธนู'],luk:['โชค','LUK','คริติคอล ความแรงคริ และอัตราดรอป']};
 const SLOTS=[['head','หมวก'],['cape','ผ้าคลุม'],['body','เสื้อเกราะ'],['pants','กางเกง'],['shoes','รองเท้า'],['right','มือขวา'],['left','มือซ้าย'],['acc','เครื่องประดับ'],['rg1','แหวน 1'],['rg2','แหวน 2']];
 const SLOTN=Object.fromEntries(SLOTS);
 const TSLOT={weapon:'right',left:'left',armor:'body',pants:'pants',head:'head',cape:'cape',shoes:'shoes'};
@@ -1396,15 +1396,17 @@ const INV=80;
 let _pstOK=false;const _pst=()=>{if(_pstOK)return PSTAT;try{const v=PSTAT;_pstOK=true;return v}catch(e){return null}};
 const st=k=>{const ps=_pst();return (ps&&ps.st&&ps.st[k]!=null?ps.st[k]:(P[k]||0))+eqs(k)+(k==='int'?PV('frostmind',0):0)};
 function regen(){const v=st('vit'),n=st('int'),f=1+PV('focus',1)/100;return {hr:1+v*.2,hc:.1+v*.02,mr:(.5+n*.1)*f,mc:(.1+n*.02)*f}}
+const softCap=(raw,knee,mx)=>raw<=knee?raw:knee+(mx-knee)*(1-Math.exp(-(raw-knee)/(mx-knee)));
+const softFloor=(raw,knee,mn)=>raw>=knee?raw:knee-(knee-mn)*(1-Math.exp(-(knee-raw)/(knee-mn)));
 function D(){const c=CLS[P.cls],bOn=S.buffUntil>gt,str=st('str'),agi=st('agi'),vit=st('vit'),int=st('int'),dex=st('dex'),luk=st('luk'),main=st(c.main);
  const mhp=Math.round((c.hp+vit*10+P.lv*14+eqs('hp'))*(1+(PV('iron',0)+PV('grit',0))/100)),rage=hasP('rage')&&P.hp<mhp*.4,b=(bOn?S.bAtk:1)*(rage?1+PV('rage',0)/100:1)*(S.ib&&S.ib.until>gt?S.ib.atk:1),ibd=S.ib&&S.ib.until>gt?S.ib.def:1;
  return {str,agi,vit,int,dex,luk,rage,
-  atk:Math.round((P.equip.right?eqs('atk')+(P.cls==='frostg'?Math.round(str*1.5+int*1.5):main*2)+Math.floor(dex*.5)+P.lv*2:eqs('atk')+str*2+P.lv*2)*b),unarmed:!P.equip.right,
+  atk:Math.round((P.equip.right?eqs('atk')+(P.cls==='frostg'?Math.round(str*1.5+int*1.5):main*2+(c.main!=='str'?Math.floor(str*.5):0))+Math.floor(dex*.5)+P.lv*2:eqs('atk')+str*2+P.lv*2)*b),unarmed:!P.equip.right,
   def:Math.round((eqs('def')+vit+Math.floor(P.lv/2)+(PV('iron',1)+PV('grit',1)))*(bOn?S.bDef:1)*ibd),
   mhp,mmp:Math.round((c.mp+int*6+P.lv*4+eqs('mmp'))*(1+PV('focus',0)/100)),
-  aspd:Math.max(.3,(1.25-agi*.012-dex*.004)/(bOn?S.bAspd:1)/(S.ab&&S.ab.until>gt?S.ab.m:1)),
-  crit:Math.min(60,3+luk*.7+agi*.15+PV('keen',1)),critDmg:1.6+luk*.01,
-  hit:85+dex*1.2+P.lv*.5+PV('keen',0),flee:Math.min(50,agi*.6+luk*.2+PV('fleet',1)),
+  aspd:Math.max(.15,softFloor(1.25-agi*.012-dex*.004,.5,.22)/(bOn?S.bAspd:1)/(S.ab&&S.ab.until>gt?S.ab.m:1)),
+  crit:softCap(3+luk*.7+agi*.15+PV('keen',1),40,80),critDmg:1.6+luk*.01,
+  hit:85+dex*1.2+P.lv*.5+PV('keen',0),flee:softCap(agi*.6+luk*.2+PV('fleet',1),30,65),
   drop:1+luk*.005,spd:155+eqs('spd')+PV('fleet',0),range:((P.equip.right?c.range:1.4)+(P.equip.right?PV('longshot',0):0))*TS}}
 function emptyEquip(w){const e={};for(const [k] of SLOTS)e[k]=null;e.right=w?makeInst(w,0):null;return e}
 function newPlayer(name,cls){const c=CLS[cls];const p={v:1,name,cls,lv:1,exp:0,pts:0,...c.base,gold:100,hp:1,mp:1,x:TWN.x,y:TWN.y+80,inv:[{id:'hp1',q:5},{id:'mp1',q:3},makeInst('bt1')],equip:Object.assign(emptyEquip(WSTART[cls]),{body:makeInst('ar1'),pants:makeInst('pt1')}),quests:{},kills:0,mapv:2,skl:[1,0,0,0],psl:[1,1],spts:0,jlv:1,jexp:0,opts:{sound:true,dmg:true,names:true}};return p}
@@ -3800,6 +3802,7 @@ function enter(p,fresh){P=p;refreshKeep();if(P.x>=OW*TS&&!canStand(P.x,P.y)){P.x
 
 /* ---------- patch notes ---------- */
 const PATCHES=[
+ {v:'8.0',d:'7 ต.ค. 2026',t:'ค่าสถานะไม่ตันอีกต่อไป',L:['แก้ค่าพลังที่หยุดเพิ่มเมื่อค่าสถานะสูง: ความเร็วโจมตี (ตันที่ 0.3 วิ) คริติคอล (ตันที่ 60%) และหลบหลีก (ตันที่ 50%) เปลี่ยนเป็นเพิ่มขึ้นช้าลงเรื่อย ๆ แต่ไม่ตัน ทุกแต้มที่อัปยังมีผลเสมอ','คริติคอล: เพิ่มเต็มที่ถึง 40% แล้วค่อย ๆ ช้าลง สูงสุดเข้าใกล้ 80% · หลบหลีก: เต็มที่ถึง 30% สูงสุดเข้าใกล้ 65%','ความเร็วโจมตี: เร็วขึ้นเต็มที่จนถึง 2 ครั้ง/วิ แล้วค่อย ๆ ช้าลง','STR เพิ่มพลังโจมตีให้ทุกอาชีพ (อาชีพที่ไม่ใช่สาย STR ได้ครึ่งแต้มต่อ STR)']},
  {v:'7.9',d:'7 ต.ค. 2026',t:'คลิกเพื่อเก็บของ',L:['ของที่ตกพื้นจะไม่เก็บอัตโนมัติเมื่อเดินผ่านแล้ว · คลิกหรือแตะที่ของ ตัวละครจะเดินไปเก็บให้','เอาเมาส์ชี้ของจะเห็นเคอร์เซอร์เก็บของ และในกล่องข้อมูลบอกว่าคลิกเพื่อเดินไปเก็บ','บอทยังเก็บของให้อัตโนมัติตามตัวเลือกที่ตั้งไว้']},
  {v:'7.8',d:'6 ต.ค. 2026',t:'ส่งความคิดเห็นถึงทีมงาน',L:['ระบบความคิดเห็นใหม่: กดปุ่ม 💬 ความคิดเห็น ที่มุมขวาบน หรือในหน้าตั้งค่า หรือพิมพ์ /feedback ในแชท','เลือกประเภท แจ้งบั๊ก / เสนอไอเดีย / ความสมดุล / อื่น ๆ · ให้คะแนนความพอใจ 1–5 ดาว · เขียนได้ถึง 1,000 ตัวอักษร','แนบข้อมูลตัวละคร ตำแหน่ง และอุปกรณ์ได้ เพื่อให้ทีมงานแก้ปัญหาได้เร็วขึ้น','หน้า ของฉัน ดูความคิดเห็นที่เคยส่ง สถานะ (ใหม่ / อ่านแล้ว / แก้ไขแล้ว) และคำตอบจากทีมงาน · เมื่อทีมงานตอบจะมีแจ้งเตือนในเกม']},
  {v:'7.7',d:'6 ต.ค. 2026',t:'ของดรอปกระจายตัว',L:['ของที่ดรอปจากมอนจะกระเด็นกระจายรอบตัวมอน แต่ละชิ้นห่างกันประมาณ 2–4 ช่อง ไม่กองทับกัน มองและเลือกเก็บง่ายขึ้น','ของจะไม่กระเด็นเข้ากำแพงหรือเขตปลอดภัย']},
@@ -4307,7 +4310,7 @@ function lootInit(){FDB.ref('pexp/'+UID).on('child_added',s=>{const v=s.val();s.
 function dropGrant(d){if(d.gold){P.gold+=d.gold;float(d.x,d.y-16,'+'+d.gold+' ทอง','#ffd966');snd(1200,.05,'square',.02);return}
  if(addItem(d.id,1,d.inst)){const r=rarOf(d.inst||d.id),rc=RAR[r].c;chat('loot','','ได้รับ '+IT[d.id].n+(r?' ['+RAR[r].n+']':''),rc);float(d.x,d.y-16,IT[d.id].n,rc,r>=3);if(r>=3)toast('ได้รับไอเทมระดับ '+RAR[r].n+'! '+IT[d.id].n);snd(900,.06,'triangle',.03);refreshWin(['inv','quest'])}}
 /* ---- update notice ---- */
-const BUILDV='20261007115208';
+const BUILDV='20261007134441';
 function verCheck(){if(!/^https?:/.test(location.protocol))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.v||j.v===BUILDV||$('#updbar'))return;
  const d=document.createElement('div');d.id='updbar';d.className='frame';d.innerHTML='<b>🔔 เกมมีการอัปเดตใหม่</b><span>โหลดเกมใหม่เพื่อรับเวอร์ชันล่าสุด (ข้อมูลตัวละครจะถูกบันทึกก่อน)</span><button class="btn pri" id="updgo">รีเกม</button><button class="btn" id="updlater">ภายหลัง</button>';document.getElementById('game').appendChild(d);
  $('#updgo').onclick=()=>{try{if(P)save()}catch(e){}setTimeout(()=>location.replace(location.pathname+'?v='+encodeURIComponent(j.v)),600)};$('#updlater').onclick=()=>{d.remove();setTimeout(verCheck,10*60000)}}).catch(()=>{})}
